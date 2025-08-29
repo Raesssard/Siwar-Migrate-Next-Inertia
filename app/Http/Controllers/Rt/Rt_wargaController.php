@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Rt;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kartu_keluarga;
+use App\Models\Rukun_tetangga;
 use App\Models\User;
 use App\Models\Warga;
+use App\Models\Iuran;
+use App\Models\IuranGolongan;
+use App\Models\Tagihan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class Rt_wargaController extends Controller
 {
@@ -52,60 +57,59 @@ class Rt_wargaController extends Controller
      */
     public function store(Request $request)
     {
-        // validasi input
-        // pastikan nik unik, no_kk ada di tabel kartu_keluarga, nama tidak boleh kosong
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'nik' => 'required|unique:warga,nik|max:16',
-                'no_kk' => 'required|exists:kartu_keluarga,no_kk|max:16',
-                'nama' => 'required|string|max:255',
-                'jenis_kelamin' => 'required|in:laki-laki,perempuan',
-                'tempat_lahir' => 'required|string|max:255',
-                'tanggal_lahir' => 'required|date',
-                'agama' => 'required|string|max:255',
-                'pendidikan' => 'required|string|max:255',
-                'pekerjaan' => 'required|string|max:255',
-                'status_perkawinan' => 'required|string|max:255',
-                'status_hubungan_dalam_keluarga' => 'required|in:kepala keluarga,istri,anak',
-                'golongan_darah' => 'required|in:A,B,AB,O',
-                'kewarganegaraan' => 'required',
-                'nama_ayah' => 'required|string|max:255',
-                'nama_ibu' => 'required|string|max:255',
-                
-                'jenis' => 'required|in:penduduk,pendatang',
-            ],
-            [
-                'nik.required' => 'NIK harus diisi.',
-                'nik.unique' => 'NIK sudah terdaftar.',
-                'no_kk.required' => 'Nomor KK harus diisi.',
-                'no_kk.exists' => 'Nomor KK tidak ditemukan.',
-                'nama.required' => 'Nama harus diisi.',
-                'jenis_kelamin.required' => 'Jenis kelamin harus dipilih.',
-                'tempat_lahir.required' => 'Tempat lahir harus diisi.',
-                'tanggal_lahir.required' => 'Tanggal lahir harus diisi.',
-                'agama.required' => 'Agama harus diisi.',
-                'pendidikan.required' => 'Pendidikan harus diisi.',
-                'pekerjaan.required' => 'Pekerjaan harus diisi.',
-                'status_perkawinan.required' => 'Status perkawinan harus diisi.',
-                'status_hubungan_dalam_keluarga.required' => 'Status hubungan dalam keluarga harus diisi.',
-                'status_hubungan_dalam_keluarga.in' => 'Status hubungan dalam keluarga tidak valid.',
-                'nik.max' => 'NIK tidak boleh lebih dari 16 karakter.',
-                'no_kk.max' => 'Nomor KK tidak boleh lebih dari 16 karakter.',
-                'nama.max' => 'Nama tidak boleh lebih dari 255 karakter.',
-                'tempat_lahir.max' => 'Tempat lahir tidak boleh lebih dari 255 karakter.',
-                'agama.max' => 'Agama tidak boleh lebih dari 255 karakter.',
-                'pendidikan.max' => 'Pendidikan tidak boleh lebih dari 255 karakter.',
-                'pekerjaan.max' => 'Pekerjaan tidak boleh lebih dari 255 karakter.',
-                'golongan_darah.in' => 'Golongan darah tidak valid.',
-                'nama_ayah.required' => 'Nama ayah harus diisi.',
-                'nama_ibu.required' => 'Nama ibu harus diisi.',
-                'golongan_darah.required' => 'Golongan darah harus diisi.',
-                'kewarganegaraan.required' => 'Kewarganegaraan harus diisi.',
-                'jenis.required' => 'Jenis harus diisi.',
-                'jenis.in' => 'Jenis tidak valid.',
-            ]
-        );
+        $validator = Validator::make($request->all(), [
+            'nik' => 'required|unique:warga,nik|max:16',
+            'no_kk' => 'required|exists:kartu_keluarga,no_kk|max:16',
+            'nama' => 'required|string|max:255',
+            'jenis_kelamin' => 'required|in:laki-laki,perempuan',
+            'tempat_lahir' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date',
+            'agama' => 'required|string|max:255',
+            'pendidikan' => 'required|string|max:255',
+            'pekerjaan' => 'required|string|max:255',
+            'status_perkawinan' => 'required|string|max:255',
+            'status_hubungan_dalam_keluarga' => 'required|in:kepala keluarga,istri,anak',
+            'golongan_darah' => 'required|in:A,B,AB,O',
+            'kewarganegaraan' => 'required',
+            'nama_ayah' => 'required|string|max:255',
+            'nama_ibu' => 'required|string|max:255',
+            'status_warga' => 'required|in:penduduk,pendatang',
+            'no_paspor' => 'nullable|string|unique:warga,no_paspor',
+            'tgl_terbit_paspor' => 'nullable|date',
+            'tgl_berakhir_paspor' => 'nullable|date',
+            'no_kitas' => 'nullable|string|unique:warga,no_kitas',
+            'tgl_terbit_kitas' => 'nullable|date',
+            'tgl_berakhir_kitas' => 'nullable|date',
+            'no_kitap' => 'nullable|string|unique:warga,no_kitap',
+            'tgl_terbit_kitap' => 'nullable|date',
+            'tgl_berakhir_kitap' => 'nullable|date',
+        ], [
+            'nik.unique' => 'NIK sudah terdaftar.',
+            'no_kk.exists' => 'Nomor KK tidak ditemukan.',
+            'no_paspor.unique' => 'Nomor Paspor sudah terdaftar.',
+            'no_kitas.unique' => 'Nomor KITAS sudah terdaftar.',
+            'no_kitap.unique' => 'Nomor KITAP sudah terdaftar.',
+            'tgl_terbit_paspor.date' => 'Tanggal terbit paspor harus berupa tanggal yang valid.',
+            'tgl_berakhir_paspor.date' => 'Tanggal berakhir paspor harus berupa tanggal yang valid.',
+            'tgl_terbit_kitas.date' => 'Tanggal terbit KITAS harus berupa tanggal yang valid.',
+            'tgl_berakhir_kitas.date' => 'Tanggal berakhir KITAS harus berupa tanggal yang valid.',
+            'tgl_terbit_kitap.date' => 'Tanggal terbit KITAP harus berupa tanggal yang valid.',
+            'tgl_berakhir_kitap.date' => 'Tanggal berakhir KITAP harus berupa tanggal yang valid.',
+            'jenis_kelamin.in' => 'Jenis kelamin harus laki-laki atau perempuan.',
+            'status_hubungan_dalam_keluarga.in' => 'Status hubungan dalam keluarga harus kepala keluarga, istri, atau anak.',
+            'golongan_darah.in' => 'Golongan darah harus A, B, AB, atau O.',
+            'kewarganegaraan.required' => 'Kewarganegaraan harus diisi.',
+            'status_warga.in' => 'Status warga harus penduduk atau pendatang.',
+            'nama_ayah.required' => 'Nama ayah harus diisi.',
+            'nama_ibu.required' => 'Nama ibu harus diisi.',
+            'nama.required' => 'Nama harus diisi.',
+            'tempat_lahir.required' => 'Tempat lahir harus diisi.',
+            'tanggal_lahir.required' => 'Tanggal lahir harus diisi.',
+            'agama.required' => 'Agama harus diisi.',
+            'pendidikan.required' => 'Pendidikan harus diisi.',
+            'pekerjaan.required' => 'Pekerjaan harus diisi.',
+            'status_perkawinan.required' => 'Status perkawinan harus diisi.',
+        ]);
 
         if ($validator->fails()) {
             return redirect()->back()
@@ -114,9 +118,23 @@ class Rt_wargaController extends Controller
                 ->with('showModal', 'tambah');
         }
 
+        $kk = Kartu_keluarga::where('no_kk', $request->no_kk)->firstOrFail();
 
-        // membuat data warga baru
-        // pastikan no_kk sudah ada di tabel kartu_keluarga
+        // Cek apakah KK ini sudah memiliki kepala keluarga
+        if ($request->status_hubungan_dalam_keluarga === 'kepala keluarga') {
+            $existingKepala = Warga::where('no_kk', $request->no_kk)
+                ->where('status_hubungan_dalam_keluarga', 'kepala keluarga')
+                ->exists();
+
+            if ($existingKepala) {
+                return redirect()->back()
+                    ->withErrors(['status_hubungan_dalam_keluarga' => 'Nomor KK ini sudah memiliki Kepala Keluarga.'])
+                    ->withInput()
+                    ->with('showModal', 'tambah');
+            }
+        }
+
+        // Buat warga baru
         Warga::create([
             'nik' => $request->nik,
             'no_kk' => $request->no_kk,
@@ -133,44 +151,33 @@ class Rt_wargaController extends Controller
             'kewarganegaraan' => $request->kewarganegaraan,
             'nama_ayah' => $request->nama_ayah,
             'nama_ibu' => $request->nama_ibu,
-            'jenis' => $request->jenis, 
+            'status_warga' => $request->status_warga,
+            'no_paspor' => $request->no_paspor,
+            'tgl_terbit_paspor' => $request->tgl_terbit_paspor,
+            'tgl_berakhir_paspor' => $request->tgl_berakhir_paspor,
+            'no_kitas' => $request->no_kitas,
+            'tgl_terbit_kitas' => $request->tgl_terbit_kitas,
+            'tgl_berakhir_kitas' => $request->tgl_berakhir_kitas,
+            'no_kitap' => $request->no_kitap,
+            'tgl_terbit_kitap' => $request->tgl_terbit_kitap,
+            'tgl_berakhir_kitap' => $request->tgl_berakhir_kitap,
+            'id_rt' => $kk->id_rt,
+            'id_rw' => $kk->id_rw,
         ]);
 
-        User::create([
-            'nik' => $request->nik,
-            'nama' => $request->nama,
-            'password' => bcrypt('123456'), // password default
-            'id_rt' => $request->id_rt,
-            'role' => 'warga',
-        ]);
-
-        // ⬇⬇⬇ Tambahkan ini untuk jenis manual
-        if ($request->jenis === 'manual') {
-            $kartuKeluargaList = Kartu_keluarga::all();
-
-            foreach ($kartuKeluargaList as $kk) {
-                Tagihan::create([
-                    'nama' => $iuran->nama,
-                    'tgl_tagih' => $iuran->tgl_tagih,
-                    'tgl_tempo' => $iuran->tgl_tempo,
-                    'jenis' => 'manual',
-                    'nominal' => $iuran->nominal,
-                    'no_kk' => $kk->no_kk,
-                    'status_bayar' => 'belum_bayar',
-                    'tgl_bayar' => null,
-                    'id_iuran' => $iuran->id,
-                    'kategori_pembayaran' => null,
-                    'bukti_transfer' => null,
-                ]);
-            }
+        // Buat user hanya jika status kepala keluarga
+        if ($request->status_hubungan_dalam_keluarga === 'kepala keluarga') {
+            User::create([
+                'nik' => $request->nik,
+                'nama' => $request->nama,
+                'password' => bcrypt('123456'),
+                'id_rt' => $kk->id_rt,
+                'id_rw' => $kk->id_rw,
+                'role' => 'warga',
+            ]);
         }
 
-        // Kalau kamu belum butuh otomatis, bagian ini dikomen saja
-        // if ($request->jenis === 'otomatis') {
-        //     ... logic iuran otomatis ...
-        // }
-
-        return redirect()->route('rt_iuran.index')->with('success', 'Iuran berhasil dibuat beserta tagihannya.');
+        return redirect()->to($request->redirect_to)->with('success', 'Data Warga Berhasil Ditambahkan');
     }
 
 
@@ -182,7 +189,7 @@ class Rt_wargaController extends Controller
         return view('rt.iuran.edit', compact('iuran', 'golongan_list'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $nik)
     {
         // 1. Validasi data
         $validator = Validator::make($request->all(), [

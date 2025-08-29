@@ -61,7 +61,7 @@ class Kartu_keluargaController extends Controller
             ->get();
 
         // ✅ PENTING: Ambil daftar RT LENGKAP (ID dan Nomor RT) untuk DROPDOWN EDIT dan TAMBAH
-    $all_rukun_tetangga = Rukun_tetangga::where('id_rw', $userRwId)
+        $all_rukun_tetangga = Rukun_tetangga::where('id_rw', $userRwId)
                                                 ->orderBy('rt')
                                                 ->get(['id', 'rt']); // Ambil ID dan nomor RT
 

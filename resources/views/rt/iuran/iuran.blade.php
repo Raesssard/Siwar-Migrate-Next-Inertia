@@ -101,7 +101,7 @@
                                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm"></button>
+                                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                                     </form>
                                                     <button type="button" class="btn btn-warning btn-sm"
                                                         data-bs-toggle="modal"
@@ -140,89 +140,75 @@
         </div>
     </div>
 
-    {{-- Modals for Edit --}}
-   
-    
-
-    <div class="modal fade" id="modalTambahIuran" tabindex="-1" aria-labelledby="modalTambahIuranLabel"
-        aria-hidden="true">
+    {{-- Modal Edit Iuran --}}
+    @foreach ($iuran as $item)
+    <div class="modal fade" id="modalEditIuran{{ $item->id }}" tabindex="-1" aria-labelledby="modalEditIuranLabel{{ $item->id }}" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content shadow-lg">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="modalTambahIuranLabel">Tambah Data Iuran</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Tutup"></button>
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="modalEditIuranLabel{{ $item->id }}">Edit Data Iuran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('rt_iuran.store') }}" method="POST" class="p-3">
+                    <form action="{{ route('rt_iuran.update', $item->id) }}" method="POST" class="p-3">
                         @csrf
+                        @method('PUT')
 
                         <div class="mb-3">
-                            <label for="nama" class="form-label">Nama Iuran</label>
-                            <input type="text" name="nama" class="form-control" value="{{ old('nama') }}"
-                                required>
+                            <label for="namaEdit{{ $item->id }}" class="form-label">Nama Iuran</label>
+                            <input type="text" name="nama" class="form-control" id="namaEdit{{ $item->id }}" 
+                                value="{{ $item->nama }}" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="tgl_tagih" class="form-label">Tanggal Tagih</label>
-                            <input type="date" name="tgl_tagih" class="form-control" value="{{ old('tgl_tagih') }}"
-                                required>
+                            <label for="tgl_tagihEdit{{ $item->id }}" class="form-label">Tanggal Tagih</label>
+                            <input type="date" name="tgl_tagih" class="form-control" id="tgl_tagihEdit{{ $item->id }}" 
+                                value="{{ $item->tgl_tagih }}" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="tgl_tempo" class="form-label">Tanggal Tempo</label>
-                            <input type="date" name="tgl_tempo" class="form-control" value="{{ old('tgl_tempo') }}"
-                                required>
+                            <label for="tgl_tempoEdit{{ $item->id }}" class="form-label">Tanggal Tempo</label>
+                            <input type="date" name="tgl_tempo" class="form-control" id="tgl_tempoEdit{{ $item->id }}" 
+                                value="{{ $item->tgl_tempo }}" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="jenis" class="form-label">Jenis Iuran</label>
-                            <select name="jenis" id="jenis" class="form-control" required>
-                                <option value="manual">Manual</option>
-                                <option value="otomatis">Otomatis</option>
+                            <label for="jenisEdit{{ $item->id }}" class="form-label">Jenis Iuran</label>
+                            <select name="jenis" id="jenisEdit{{ $item->id }}" class="form-control" required>
+                                <option value="manual" {{ $item->jenis == 'manual' ? 'selected' : '' }}>Manual</option>
+                                <option value="otomatis" {{ $item->jenis == 'otomatis' ? 'selected' : '' }}>Otomatis</option>
                             </select>
                         </div>
 
-                        {{-- Input untuk Manual --}}
-                        <div class="mb-3" id="manualFields">
-                            <label for="nominal_manual" class="form-label">Nominal Manual</label>
-                            <input type="number" name="nominal" class="form-control"
-                                placeholder="Masukkan nominal manual">
+                        {{-- Manual --}}
+                        <div class="mb-3" id="manualFieldEdit{{ $item->id }}" style="{{ $item->jenis == 'otomatis' ? 'display:none;' : '' }}">
+                            <label for="nominalEdit{{ $item->id }}" class="form-label">Nominal Manual</label>
+                            <input type="number" name="nominal" class="form-control" 
+                                id="nominalEdit{{ $item->id }}" value="{{ $item->nominal }}">
                         </div>
 
-                        {{-- Input untuk Otomatis --}}
-                        <div id="otomatisFields" style="display: none;">
+                        {{-- Otomatis --}}
+                        <div id="otomatisFieldsEdit{{ $item->id }}" style="{{ $item->jenis == 'manual' ? 'display:none;' : '' }}">
                             <label class="form-label">Nominal per Golongan</label>
                             @foreach ($golongan_list as $golongan)
                                 <div class="mb-2">
-                                    <label for="nominal_{{ $golongan }}">Golongan {{ ucfirst($golongan) }}</label>
+                                    <label for="nominal_{{ $golongan }}_{{ $item->id }}">Golongan {{ ucfirst($golongan) }}</label>
                                     <input type="number" name="nominal_{{ $golongan }}" class="form-control"
-                                        placeholder="Masukkan nominal untuk golongan {{ $golongan }}">
+                                        id="nominal_{{ $golongan }}_{{ $item->id }}"
+                                        value="{{ $item['nominal_'.$golongan] ?? '' }}">
                                 </div>
                             @endforeach
                         </div>
 
                         <div class="d-grid mt-4">
-                            <button type="submit" class="btn btn-primary">Simpan Data</button>
+                            <button type="submit" class="btn btn-warning">Update Data</button>
                         </div>
                     </form>
-
-                    {{-- Tampilkan error validasi --}}
-                    @if ($errors->any())
-                        <div class="alert alert-danger mt-3">
-                            <ul class="mb-0">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>
     </div>
-
-    </div>
+@endforeach
 
 @endsection
 <script>

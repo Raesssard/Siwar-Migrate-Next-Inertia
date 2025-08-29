@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Warga;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class Admin_rtController extends Controller
 {
@@ -74,21 +75,25 @@ class Admin_rtController extends Controller
         $user = User::where('nik', $request->nik)->first();
 
         if ($user) {
-            // Kalau user sudah ada → update jadi RT
-            $user->update([
-                'id_rt' => $rt->id,
-                'id_rw' => 1,
-                'role' => 'rt',
-            ]);
+            // Tambah role 'rt' tanpa hapus role lama
+            $currentRoles = $user->roles ?? ['warga']; // Default role 'warga' kalau kepala keluarga
+            if (!in_array('rt', $currentRoles)) {
+                $currentRoles[] = 'rt';
+                $user->update([
+                    'id_rt' => $rt->id,
+                    'id_rw' => 1,
+                    'roles' => array_unique($currentRoles),
+                    'password' => Hash::make('password')
+                ]);
+            }
         } else {
-            // Kalau belum ada → buat baru
             User::create([
                 'nik' => $request->nik,
                 'nama' => $request->nama,
                 'password' => bcrypt('password'),
                 'id_rt' => $rt->id,
                 'id_rw' => 1,
-                'role' => 'rt',
+                'roles' => ['rt'],
             ]);
         }
 

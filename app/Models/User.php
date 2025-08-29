@@ -53,15 +53,14 @@ class User extends Authenticatable
         return in_array($this->role, $roles);
     }
 
-
-    public function warga(): BelongsTo
+    // User.php
+    public function warga()
     {
-        return $this->belongsTo(Warga::class, 'nik', 'nik');
+        return $this->hasOne(Warga::class, 'nik', 'nik');
     }
 
-    public function rukunTetangga(): BelongsTo
+    public function rukunTetangga()
     {
-        // Relasi ini sudah benar, id_rt di users merujuk ke id di rukun_tetangga
         return $this->belongsTo(Rukun_tetangga::class, 'id_rt', 'id');
     }
 

@@ -3,52 +3,65 @@
 namespace App\Http\Controllers\Rt;
 
 use App\Http\Controllers\Controller;
-
-use App\Models\Rt_transaksi;
+use App\Models\Transaksi;
+use App\Models\Rukun_tetangga;
 use Illuminate\Http\Request;
-use App\Models\Transaksi; // kalau pakai model transaksi
 
 class Rt_transaksiController extends Controller
 {
-    /**
-     * Menampilkan daftar semua transaksi.
-     * Tidak ada filter berdasarkan RT karena ini adalah akun RT.
-     *
-     * @return \Illuminate\View\View
-     */
     public function index(Request $request)
     {
-        // Mendapatkan semua data transaksi, diurutkan dari yang terbaru,
-        // tanpa memfilter berdasarkan RT.
-        $transaksi = Transaksi::latest()->paginate(10);
+        $title = "Data Transaksi RT";
 
-        return view('rt_transaksi.index', compact('transaksi'));
+        // filter data transaksi khusus RT yang sedang login
+        $query = Transaksi::query();
+
+        if ($request->filled('search')) {
+            $query->where('nama_transaksi', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('tahun')) {
+            $query->whereYear('tanggal', $request->tahun);
+        }
+
+        if ($request->filled('bulan')) {
+            $query->whereMonth('tanggal', $request->bulan);
+        }
+
+        $transaksi = (clone $query)->orderBy('tanggal', 'desc')->get();
+        $paginatedTransaksi = $query->orderBy('tanggal', 'desc')->paginate(10);
+
+        // daftar tahun unik dari data transaksi
+        $daftar_tahun = Transaksi::selectRaw('YEAR(tanggal) as tahun')
+            ->distinct()
+            ->orderBy('tahun', 'desc')
+            ->pluck('tahun');
+
+        // daftar RT untuk dropdown
+        $rukun_tetangga = Rukun_tetangga::orderBy('rt')->pluck('rt', 'id');
+
+        // pemasukan otomatis (sementara 0, bisa diisi logic iuran)
+        $totalPemasukanBelumTercatat = 0;
+
+        return view('rt.iuran.transaksi', compact(
+            'title',
+            'transaksi',
+            'paginatedTransaksi',
+            'daftar_tahun',
+            'rukun_tetangga',
+            'totalPemasukanBelumTercatat'
+        ));
     }
 
-    /**
-     * Menampilkan formulir untuk membuat transaksi baru.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function create()
-    {
-        return view('rt_transaksi.create');
-    }
-
-    /**
-     * Menyimpan transaksi yang baru dibuat ke database.
-     * Validasi tidak lagi menyertakan 'rt'.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'rt' => 'required|exists:rukun_tetangga,id',
             'tanggal' => 'required|date',
-            'jenis' => 'required|string|in:Pemasukan,Pengeluaran',
-            'keterangan' => 'required|string|max:255',
-            'jumlah' => 'required|numeric',
+            'nama_transaksi' => 'required|string|max:255',
+            'pengeluaran' => 'nullable|numeric|min:0',
+            'pemasukan' => 'nullable|numeric|min:0',
+            'keterangan' => 'nullable|string',
         ]);
 
         Transaksi::create($validated);
@@ -56,59 +69,25 @@ class Rt_transaksiController extends Controller
         return redirect()->route('rt_transaksi.index')->with('success', 'Transaksi berhasil ditambahkan!');
     }
 
-    /**
-     * Menampilkan transaksi tertentu.
-     *
-     * @param  \App\Models\Rt_transaksi  $transaksi
-     * @return \Illuminate\View\View
-     */
-    public function show(Transaksi $transaksi)
-    {
-        return view('rt_transaksi.show', compact('transaksi'));
-    }
-
-    /**
-     * Menampilkan formulir untuk mengedit transaksi.
-     *
-     * @param  \App\Models\Rt_transaksi  $transaksi
-     * @return \Illuminate\View\View
-     */
-    public function edit(Transaksi $transaksi)
-    {
-        return view('rt_transaksi.edit', compact('transaksi'));
-    }
-
-    /**
-     * Memperbarui transaksi yang ada di database.
-     * Validasi tidak lagi menyertakan 'rt'.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Rt_transaksi  $transaksi
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function update(Request $request, Transaksi $transaksi)
+    public function update(Request $request, Transaksi $rt_transaksi)
     {
         $validated = $request->validate([
+            'rt' => 'required|exists:rukun_tetangga,id',
             'tanggal' => 'required|date',
-            'jenis' => 'required|string|in:Pemasukan,Pengeluaran',
-            'keterangan' => 'required|string|max:255',
-            'jumlah' => 'required|numeric',
+            'nama_transaksi' => 'required|string|max:255',
+            'pengeluaran' => 'nullable|numeric|min:0',
+            'pemasukan' => 'nullable|numeric|min:0',
+            'keterangan' => 'nullable|string',
         ]);
 
-        $transaksi->update($validated);
+        $rt_transaksi->update($validated);
 
         return redirect()->route('rt_transaksi.index')->with('success', 'Transaksi berhasil diperbarui!');
     }
 
-    /**
-     * Menghapus transaksi dari database.
-     *
-     * @param  \App\Models\Rt_transaksi  $transaksi
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Transaksi $transaksi)
+    public function destroy(Transaksi $rt_transaksi)
     {
-        $transaksi->delete();
+        $rt_transaksi->delete();
 
         return redirect()->route('rt_transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
     }

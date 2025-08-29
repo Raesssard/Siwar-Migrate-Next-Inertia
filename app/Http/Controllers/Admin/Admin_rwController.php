@@ -66,7 +66,7 @@ class Admin_rwController extends Controller
             'nik' => $request->nik,
             'nama' => $request->nama_ketua_rw,
             'password' => bcrypt('password'),
-            'role' => 'rw',
+            'roles' => ['rw'],
             'id_rw' => $id_rw,
         ]);
 

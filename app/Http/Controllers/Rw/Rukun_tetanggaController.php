@@ -99,42 +99,34 @@ class Rukun_tetanggaController extends Controller
      * Store a newly created resource in storage.
      */
 
-   public function store(Request $request)
+    public function store(Request $request)
     {
         try {
-            // Dapatkan ID RW dari pengguna yang login.
-            // Ini penting untuk validasi dan penugasan data ke RW yang benar.
+            // Dapatkan ID RW dari pengguna yang login
             $id_rw = Auth::user()->id_rw;
             if (!$id_rw) {
-                // Jika ID RW tidak ditemukan, kemungkinan ada masalah dengan data user.
-                // Redirect kembali dengan pesan error.
                 return redirect()->back()
                     ->with('error', 'ID RW tidak ditemukan di akun yang login. Mohon hubungi administrator.')
-                    ->withInput($request->input()) // Mengembalikan input agar tidak hilang di form
-                    ->with('showModal', 'rt_tambah') // Menampilkan kembali modal jika validasi gagal
-                    ->with('form_type', 'rt_tambah'); // Mengidentifikasi jenis form
+                    ->withInput($request->input())
+                    ->with('showModal', 'rt_tambah')
+                    ->with('form_type', 'rt_tambah');
             }
 
-            // --- 1. Validasi Data Masukan ---
-            // Memastikan semua data yang diterima dari form sesuai dengan aturan yang ditetapkan.
+            // Validasi sesuai field di form
             $request->validate([
                 'no_kk' => [
-                    'required', // Wajib diisi
-                    'string',   // Harus berupa teks
-                    'digits:16', // Harus 16 digit
-                    // Memastikan no_kk ada di tabel 'kartu_keluarga'
+                    'required',
+                    'string',
+                    'digits:16',
                     Rule::exists('kartu_keluarga', 'no_kk'),
                 ],
                 'nik' => [
-                    'required', // Wajib diisi
-                    'string',   // Harus berupa teks
-                    'digits:16', // Harus 16 digit
-                    // NIK harus unik di tabel 'rukun_tetangga' HANYA untuk id_rw yang sama
+                    'required',
+                    'string',
+                    'digits:16',
                     Rule::unique('rukun_tetangga', 'nik')->where(function ($query) use ($id_rw) {
                         return $query->where('id_rw', $id_rw);
                     }),
-                    // Validasi kustom: Memastikan NIK ada di tabel 'warga'
-                    // DAN terdaftar sebagai anggota keluarga di Nomor KK yang dipilih.
                     function ($attribute, $value, $fail) use ($request) {
                         $warga = Warga::where('nik', $value)
                                     ->where('no_kk', $request->no_kk)
@@ -145,32 +137,26 @@ class Rukun_tetanggaController extends Controller
                     },
                 ],
                 'rt' => [
-                    'required', // Wajib diisi
-                    'string',   // Harus berupa teks
-
+                    'required',
+                    'string',
                 ],
                 'nama' => [
-                    'required', // Wajib diisi
-                    'string',   // Harus berupa teks
-                    'max:255',  // Maksimal 255 karakter
-                    // Validasi kustom: Memastikan nama yang diinput sesuai dengan nama warga berdasarkan NIK.
+                    'required',
+                    'string',
+                    'max:255',
                     function ($attribute, $value, $fail) use ($request) {
                         $warga = Warga::where('nik', $request->nik)->first();
-                        // Jika warga ditemukan dan namanya tidak cocok, berikan pesan error dengan nama yang benar.
                         if ($warga && $warga->nama !== $value) {
                             $fail('Nama tidak sesuai dengan NIK yang dimasukkan. Nama yang benar adalah: ' . $warga->nama);
                         } elseif (!$warga) {
-                            // Ini adalah kondisi fallback jika NIK tidak ditemukan, meskipun seharusnya sudah dicek oleh validasi NIK sebelumnya.
                             $fail('NIK tidak ditemukan. Pastikan NIK benar.');
                         }
                     },
                 ],
-                'mulai_menjabat' => 'required|date', // Wajib diisi dan format tanggal
-                'akhir_jabatan' => 'required|date|after:mulai_menjabat', // Wajib diisi, format tanggal, dan setelah tanggal mulai menjabat
-                'jabatan' => 'required|in:ketua,sekretaris,bendahara', // Wajib diisi dan salah satu dari pilihan yang tersedia
-
+                'mulai_menjabat' => 'required|date',
+                'akhir_jabatan' => 'required|date|after:mulai_menjabat',
+                'jabatan' => 'required|in:ketua,sekretaris,bendahara',
             ], [
-                // --- Pesan Kustom untuk Validasi ---
                 'no_kk.required' => 'Nomor KK harus diisi.',
                 'no_kk.string' => 'Nomor KK harus berupa teks.',
                 'no_kk.digits' => 'Nomor KK harus 16 digit.',
@@ -183,7 +169,6 @@ class Rukun_tetanggaController extends Controller
 
                 'rt.required' => 'Nomor RT harus diisi.',
                 'rt.string' => 'Nomor RT harus berupa teks.',
-                'rt.unique' => 'Nomor RT ini sudah ada di RW Anda. Mohon masukkan nomor RT yang berbeda.',
 
                 'nama.required' => 'Nama harus diisi.',
                 'nama.string' => 'Nama harus berupa teks.',
@@ -198,9 +183,14 @@ class Rukun_tetanggaController extends Controller
                 'jabatan.in' => 'Jabatan tidak valid. Pilih antara ketua, sekretaris, atau bendahara.',
             ]);
 
-            // --- 2. Pembuatan Data Rukun Tetangga Baru ---
-            // Membuat entri baru di tabel 'rukun_tetangga' dengan data yang divalidasi.
-            $rukun_tetangga = Rukun_tetangga::create([
+            // Ambil no_kk dari tabel warga berdasarkan NIK (sebagai konfirmasi tambahan)
+            $no_kk = DB::table('warga')->where('nik', $request->nik)->value('no_kk');
+            if (!$no_kk) {
+                return redirect()->back()->withErrors(['nik' => 'NIK tidak ditemukan di data warga.']);
+            }
+
+            // Buat record RT
+            $rt = Rukun_tetangga::create([
                 'no_kk' => $request->no_kk,
                 'nik' => $request->nik,
                 'rt' => $request->rt,
@@ -208,53 +198,44 @@ class Rukun_tetanggaController extends Controller
                 'mulai_menjabat' => $request->mulai_menjabat,
                 'akhir_jabatan' => $request->akhir_jabatan,
                 'jabatan' => $request->jabatan,
-                'id_rw' => $id_rw, // Menghubungkan RT dengan RW yang sedang login
+                'id_rw' => $id_rw,
             ]);
 
-            // Ambil ID dari data RT yang baru saja dibuat.
-            $id_rt = $rukun_tetangga->id;
-
-            // --- 3. Pembuatan atau Pembaruan Akun Pengguna (User) untuk RT ---
-            // Memeriksa apakah user dengan NIK ini sudah ada. Jika ada, update; jika tidak, buat baru.
-            $existingUser = User::where('nik', $request->nik)->first();
-
-            if ($existingUser) {
-                // Jika user dengan NIK ini sudah ada, update informasinya.
-                $existingUser->id_rt = $id_rt;
-                $existingUser->id_rw = $id_rw;
-                $existingUser->role = 'rt'; // Tetapkan role sebagai 'rt'
-                $existingUser->save();
+            // Buat atau update user untuk RT
+            $user = User::where('nik', $request->nik)->first();
+            if ($user) {
+                // Tambah role 'rt' tanpa hapus role lama
+                $currentRoles = $user->roles ?? ['warga']; // Default role 'warga' kalau kepala keluarga
+                if (!in_array('rt', $currentRoles)) {
+                    $currentRoles[] = 'rt';
+                    $user->update([
+                        'id_rt' => $rt->id,
+                        'id_rw' => $id_rw,
+                        'roles' => array_unique($currentRoles),
+                        'password' => Hash::make('password'),
+                    ]);
+                }
             } else {
-                // Jika belum ada, buat user baru untuk pengurus RT.
                 User::create([
                     'nik' => $request->nik,
                     'nama' => $request->nama,
-                    // Tetapkan password default. Disarankan untuk menggunakan password yang kuat atau sistem reset password.
                     'password' => Hash::make('password'),
-                    'id_rt' => $id_rt, // Kaitkan dengan ID RT yang baru dibuat
-                    'id_rw' => $id_rw, // Kaitkan dengan ID RW
-                    'role' => 'rt', // Tetapkan role sebagai 'rt'
+                    'id_rt' => $rt->id,
+                    'id_rw' => $id_rw,
+                    'roles' => ['rt'],
                 ]);
             }
 
-            // --- 4. Pengalihan Halaman dan Pesan Sukses ---
-            // Setelah berhasil menyimpan data, redirect pengguna ke halaman indeks Rukun Tetangga
-            // dengan pesan sukses yang akan ditampilkan.
             return redirect()->route('rukun_tetangga.index')
                 ->with('success', 'Data RT dan akun pengguna berhasil ditambahkan.');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Jika terjadi error validasi (misalnya, input tidak sesuai aturan).
-            // Redirect kembali ke halaman sebelumnya dengan error validasi, input lama,
-            // dan instruksi untuk menampilkan modal kembali.
             return redirect()->back()
-                ->withErrors($e->errors()) // Mengirimkan semua error validasi
-                ->withInput($request->input()) // Mengembalikan input agar pengguna tidak perlu mengetik ulang
-                ->with('showModal', 'rt_tambah') // Variabel sesi untuk membuka modal RT
-                ->with('form_type', 'rt_tambah'); // Variabel sesi untuk mengidentifikasi form di old()/errors
+                ->withErrors($e->errors())
+                ->withInput($request->input())
+                ->with('showModal', 'rt_tambah')
+                ->with('form_type', 'rt_tambah');
         } catch (\Exception $e) {
-            // Menangani semua jenis error lainnya yang mungkin terjadi (misalnya, masalah database, dll.).
-            // Redirect kembali dengan pesan error umum.
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat menambahkan data RT: ' . $e->getMessage())
                 ->withInput($request->input())

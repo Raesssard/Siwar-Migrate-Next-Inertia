@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Warga;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -16,15 +17,14 @@ class WargatransaksiController extends Controller
     public function index(Request $request)
     {
         $title = 'Transaksi Keuangan RT Saya';
-        $user = Auth::user(); // Dapatkan user yang sedang login
+        /** @var User $user */
+        $user = Auth::user();
 
-        // Pastikan user adalah warga dan memiliki relasi ke data warga dan RT
-        if (!$user || $user->role !== 'warga' || !$user->rukunTetangga) { // Cek relasi rukunTetangga
+        if (!$user || !$user->hasRole('warga') || !$user->rukunTetangga) {
             Log::warning("Akses tidak sah ke halaman transaksi warga atau data RT tidak ditemukan.", ['user_id' => $user->id ?? 'guest']);
             return redirect('/')->with('error', 'Anda tidak memiliki akses ke halaman ini atau data RT Anda tidak lengkap.');
         }
 
-        // Dapatkan nomor RT dari user yang login melalui relasi rukunTetangga
         $currentRtNumber = $user->rukunTetangga->nomor_rt;
 
         if (!$currentRtNumber) {
@@ -32,26 +32,20 @@ class WargatransaksiController extends Controller
             return redirect('/')->with('error', 'Data RT Anda tidak ditemukan. Silakan hubungi RT/RW Anda.');
         }
 
-        Log::info("Memuat halaman transaksi untuk RT: " . $currentRtNumber, ['user_id' => $user->id]);
+        $query = Transaksi::where('rt', $currentRtNumber);
 
-        // Query data Transaksi (keuangan RW) yang terkait dengan RT ini
-        $query = Transaksi::where('rt', $currentRtNumber); // Filter berdasarkan kolom 'rt' di tabel transaksi
-
-        // Tambahkan filter pencarian jika ada
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('nama_transaksi', 'like', '%' . $search . '%')
-                  ->orWhere('keterangan', 'like', '%' . $search . '%'); // Sesuaikan kolom yang bisa dicari
+                ->orWhere('keterangan', 'like', '%' . $search . '%');
             });
-            Log::info('Filter pencarian diterapkan pada transaksi:', ['search_term' => $search]);
         }
 
-        // Urutkan berdasarkan tanggal transaksi, lalu ID untuk konsistensi saldo berjalan
-        $transaksi = $query->orderBy('tanggal', 'desc')->orderBy('id', 'desc')->paginate(10); 
-        Log::info('Jumlah transaksi yang diambil untuk RT ' . $currentRtNumber . ':', ['count' => $transaksi->count(), 'total' => $transaksi->total()]);
+        $transaksi = $query->orderBy('tanggal', 'desc')->orderBy('id', 'desc')->paginate(10);
 
         return view('warga.iuran.transaksi', compact('title', 'transaksi'));
     }
+
 }
 

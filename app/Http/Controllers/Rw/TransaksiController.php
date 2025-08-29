@@ -55,7 +55,7 @@ class TransaksiController extends Controller
         $daftar_bulan = range(1, 12);
 
         // Mengambil daftar RT dari tabel rukun_tetangga untuk dropdown di form
-        $rukun_tetangga = Rukun_tetangga::orderBy('nomor_rt', 'asc')->pluck('nomor_rt', 'nomor_rt');
+        $rukun_tetangga = Rukun_tetangga::orderBy('rt', 'asc')->pluck('rt', 'rt');
 
         // Mengambil total pemasukan yang belum tercatat (untuk ditampilkan di view)
         // Ini akan memberi tahu user berapa nominal yang akan otomatis masuk
@@ -119,7 +119,7 @@ class TransaksiController extends Controller
 
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'rt' => 'required|string|max:10|exists:rukun_tetangga,nomor_rt',
+            'rt' => 'required|string|max:10|exists:rukun_tetangga,rt',
             'tanggal' => 'required|date',
             'nama_transaksi' => 'required|string|max:255',
             // Pemasukan tidak lagi divalidasi dari input karena akan dihitung otomatis

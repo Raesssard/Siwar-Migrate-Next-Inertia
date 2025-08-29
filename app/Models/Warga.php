@@ -46,11 +46,10 @@ class Warga extends Model
         return $this->belongsTo(Kartu_keluarga::class, 'no_kk', 'no_kk');
     }
 
-    public function user(): BelongsTo
-{
-    return $this->belongsTo(User::class, 'nik', 'nik');
-}
-
-
+    public function user()
+    {
+        // data warga dimiliki oleh 1 user
+        return $this->hasOne(User::class, 'nik', 'nik');
+    }
     
 }

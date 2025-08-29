@@ -90,6 +90,7 @@ class UsersSeeder extends Seeder
             'no_kk' => '2222222222222222',
             'no_registrasi' => '3404.0000002',
             'alamat' => 'Jalan Mawar',
+            'id_rt' => '1',
             'id_rw' => $rw->id,
             'kelurahan' => 'Kelurahan Mawar',
             'kecamatan' => 'Kecamatan Indah',

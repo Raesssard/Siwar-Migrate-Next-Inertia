@@ -33,7 +33,16 @@
             justify-content: center;
             align-items: center;
             font-family: 'Inter', sans-serif;
-            padding: 20px;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
         }
 
         .card {
@@ -114,7 +123,7 @@
         }
 
         .card-body {
-            padding: 2.5rem 2rem;
+            padding: 2.5rem 2rem 1.5rem;
             background: #fff;
         }
 
@@ -139,13 +148,12 @@
             transform: translateX(-50%);
         }
 
-        /* --- Perbaikan Styling Input dan Error di sini --- */
         .form-floating .form-control {
             height: 58px;
             font-size: 1rem;
             border-radius: 10px;
             border: 1px solid var(--border);
-            padding: 1rem 18px 0.5rem 18px;
+            padding: 1rem 18px 0.5rem 45px;
             color: #334155;
             transition: all 0.3s ease;
         }
@@ -162,7 +170,6 @@
             font-size: 0.95rem;
         }
 
-        /* Styling untuk input dengan ikon di dalam form-floating */
         .form-floating.has-icon .form-control {
             padding-left: 45px;
         }
@@ -181,21 +188,15 @@
             z-index: 2;
         }
 
-        /* Perbaikan utama untuk pesan error */
         .form-floating .invalid-feedback {
-            position: absolute; /* Posisi absolut agar tidak mengganggu layout */
-            bottom: -20px; /* Atur posisi di bawah input */
-            left: 0;
-            width: 100%;
-            font-size: 0.8rem; /* Sesuaikan ukuran font */
-            color: var(--bs-danger); /* Pastikan warna merah dari Bootstrap */
-            z-index: 4; /* Pastikan di atas elemen lain jika ada tumpang tindih */
-            padding-left: 18px; /* Sesuaikan padding agar sejajar dengan teks input */
-            white-space: nowrap; /* Mencegah teks terlalu panjang memecah baris */
-            overflow: hidden; /* Sembunyikan jika terlalu panjang */
-            text-overflow: ellipsis; /* Tampilkan elipsis jika tersembunyi */
+            bottom: -22px;
+            font-size: 0.75rem;
+            padding-left: 15px;
+            background-color: rgba(220, 53, 69, 0.1);
+            border-radius: 4px;
+            max-width: calc(100% - 30px);
+            z-index: 4;
         }
-        /* Akhir perbaikan styling error */
 
         .btn-primary {
             background: var(--primary);
@@ -217,7 +218,7 @@
 
         .form-check-label,
         .forgot-password {
-            font-size: .9rem;
+            font-size: 0.9rem;
             color: var(--secondary);
         }
 
@@ -237,11 +238,12 @@
             border: none;
             padding: 0;
             color: var(--secondary);
-            z-index: 5; /* Tingkatkan z-index agar selalu di atas label, input, dan pesan error */
+            z-index: 10;
             position: absolute;
             top: 50%;
             right: 18px;
             transform: translateY(-50%);
+            cursor: pointer;
         }
 
         .toggle-password-btn:hover {
@@ -329,6 +331,25 @@
                 padding: 1.8rem 1.2rem;
             }
 
+            .form-floating .form-control {
+                font-size: 0.9rem;
+                padding: 0.8rem 15px 0.4rem 45px;
+            }
+
+            .form-floating>label {
+                padding: 0.8rem 15px;
+                font-size: 0.9rem;
+            }
+
+            .form-floating .input-icon {
+                left: 15px;
+                font-size: 1rem;
+            }
+
+            .toggle-password-btn {
+                right: 15px;
+            }
+
             .form-title {
                 font-size: 1.4rem;
             }
@@ -354,6 +375,10 @@
             margin-top: 5px;
             font-size: 0.8rem;
         }
+
+        .alert-danger {
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -372,13 +397,11 @@
                     <div class="card-body">
                         <h3 class="form-title">Log In</h3>
 
-                        <form method="POST" action="{{ route('login') }}" novalidate class="needs-validation"
-                            id="loginForm">
+                        <form method="POST" action="{{ route('login') }}" novalidate class="needs-validation" id="loginForm" onsubmit="return validateForm()">
                             @csrf
 
-                            <div class="form-floating mb-4 has-icon"> <input type="text" name="nik"
-                                    class="form-control @error('nik') is-invalid @enderror" id="floatingNik"
-                                    placeholder="NIK" required value="{{ old('nik') }}">
+                            <div class="form-floating mb-4 has-icon">
+                                <input type="text" name="nik" class="form-control @error('nik') is-invalid @enderror" id="floatingNik" placeholder="NIK" required value="{{ old('nik') }}">
                                 <label for="floatingNik">NIK</label>
                                 <i class="bi bi-person-badge input-icon"></i>
                                 @error('nik')
@@ -386,28 +409,23 @@
                                 @enderror
                             </div>
 
-                            <div class="form-floating mb-4 position-relative has-icon"> <input type="password" name="password"
-                                    class="form-control @error('password') is-invalid @enderror" id="floatingPassword"
-                                    placeholder="Password" required minlength="6">
+                            <div class="form-floating mb-4 position-relative has-icon">
+                                <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="floatingPassword" placeholder="Password" required minlength="6">
                                 <label for="floatingPassword">Kata Sandi</label>
                                 <i class="bi bi-lock input-icon"></i>
                                 @error('password')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
-                                <button type="button"
-                                    class="toggle-password-btn"
-                                    onclick="togglePassword()">
+                                <button type="button" class="toggle-password-btn" onclick="togglePassword()">
                                     <i class="bi bi-eye" id="toggleIcon"></i>
                                 </button>
                             </div>
-                            
-                            {{-- Global error for NIK/Password (if any) --}}
+
                             @if ($errors->has('nik') || $errors->has('password'))
                                 <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
                                     NIK atau kata sandi salah.
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             @endif
 
@@ -423,6 +441,28 @@
     </div>
 
     <script>
+        function validateForm() {
+            const nik = document.getElementById('floatingNik');
+            const password = document.getElementById('floatingPassword');
+            let isValid = true;
+
+            if (!nik.value || nik.value.length !== 16) {
+                nik.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                nik.classList.remove('is-invalid');
+            }
+
+            if (!password.value || password.value.length < 6) {
+                password.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                password.classList.remove('is-invalid');
+            }
+
+            return isValid;
+        }
+
         function togglePassword() {
             const passwordInput = document.getElementById('floatingPassword');
             const toggleIcon = document.getElementById('toggleIcon');
@@ -439,6 +479,14 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('loginForm');
+            const inputs = [document.getElementById('floatingNik'), document.getElementById('floatingPassword')];
+            ['input', 'change'].forEach(event => {
+                inputs.forEach(input => {
+                    input.addEventListener(event, function() {
+                        if (this.value) this.classList.remove('is-invalid');
+                    });
+                });
+            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
