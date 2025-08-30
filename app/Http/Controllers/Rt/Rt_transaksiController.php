@@ -6,15 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
 use App\Models\Rukun_tetangga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class Rt_transaksiController extends Controller
 {
+
     public function index(Request $request)
     {
         $title = "Data Transaksi RT";
 
-        // filter data transaksi khusus RT yang sedang login
-        $query = Transaksi::query();
+        /** @var User $user */
+        $user = Auth::user();
+        $idRt = $user->id_rt;
+
+        // filter hanya transaksi untuk RT user login
+        $query = Transaksi::where('rt', $idRt);
 
         if ($request->filled('search')) {
             $query->where('nama_transaksi', 'like', '%' . $request->search . '%');
@@ -31,16 +38,14 @@ class Rt_transaksiController extends Controller
         $transaksi = (clone $query)->orderBy('tanggal', 'desc')->get();
         $paginatedTransaksi = $query->orderBy('tanggal', 'desc')->paginate(10);
 
-        // daftar tahun unik dari data transaksi
         $daftar_tahun = Transaksi::selectRaw('YEAR(tanggal) as tahun')
             ->distinct()
             ->orderBy('tahun', 'desc')
             ->pluck('tahun');
 
-        // daftar RT untuk dropdown
-        $rukun_tetangga = Rukun_tetangga::orderBy('rt')->pluck('rt', 'id');
+        // RT user login saja
+        $rukun_tetangga = $user->rukunTetangga ? [$user->rukunTetangga->id => $user->rukunTetangga->rt] : [];
 
-        // pemasukan otomatis (sementara 0, bisa diisi logic iuran)
         $totalPemasukanBelumTercatat = 0;
 
         return view('rt.iuran.transaksi', compact(
@@ -52,6 +57,7 @@ class Rt_transaksiController extends Controller
             'totalPemasukanBelumTercatat'
         ));
     }
+
 
     public function store(Request $request)
     {

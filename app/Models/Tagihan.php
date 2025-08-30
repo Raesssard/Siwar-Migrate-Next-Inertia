@@ -35,16 +35,14 @@ class Tagihan extends Model
     /**
      * Relasi ke KartuKeluarga
      */
-    public function kartuKeluarga(): BelongsTo
+    public function kartuKeluarga()
     {
         return $this->belongsTo(Kartu_keluarga::class, 'no_kk', 'no_kk');
     }
 
-    /**
-     * Relasi ke Iuran (untuk jenis iuran yang terkait dengan tagihan ini)
-     */
     public function iuran()
     {
-        return $this->belongsTo(Iuran::class, 'id_iuran');
+        return $this->belongsTo(Iuran::class, 'id_iuran', 'id');
     }
+
 }

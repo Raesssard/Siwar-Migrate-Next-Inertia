@@ -17,7 +17,10 @@ class Iuran extends Model
         'tgl_tagih',
         'tgl_tempo',
         'jenis',
-        'nominal', // hanya untuk iuran manual
+        'nominal',   // hanya untuk iuran manual
+        'id_rt',     // nullable → kalau null berarti iuran RW
+        'id_rw',     // wajib → RW induk
+        'level',     // enum: ['rt','rw']
     ];
 
     /**
@@ -27,14 +30,15 @@ class Iuran extends Model
     {
         return $this->hasMany(Tagihan::class, 'id_iuran');
     }
+
     /**
-     * jadi jika iuran dihapus, semua tagihan terkait juga akan dihapus.
+     * Cascade delete ke tagihan
      */
     protected static function booted()
     {
-    static::deleting(function ($iuran) {
-        $iuran->tagihan()->delete();
-    });
+        static::deleting(function ($iuran) {
+            $iuran->tagihan()->delete();
+        });
     }
 
     /**
@@ -45,9 +49,13 @@ class Iuran extends Model
         return $this->hasMany(IuranGolongan::class, 'id_iuran');
     }
 
-    // 🚫 HAPUS atau NONAKTIFKAN ini jika tidak pakai tabel kategori_golongan:
-    // public function golonganKategori() {
-    //     return $this->hasManyThrough(...);
-    // }
+    public function rt()
+    {
+        return $this->belongsTo(Rukun_tetangga::class, 'id_rt');
+    }
 
+    public function rw()
+    {
+        return $this->belongsTo(Rw::class, 'id_rw');
+    }
 }

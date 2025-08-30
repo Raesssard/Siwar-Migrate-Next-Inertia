@@ -25,14 +25,14 @@ class WargatransaksiController extends Controller
             return redirect('/')->with('error', 'Anda tidak memiliki akses ke halaman ini atau data RT Anda tidak lengkap.');
         }
 
-        $currentRtNumber = $user->rukunTetangga->nomor_rt;
+        $idRt = $user->id_rt;
 
-        if (!$currentRtNumber) {
-            Log::warning("Nomor RT tidak ditemukan untuk user login saat melihat transaksi.", ['user_id' => $user->id, 'id_rt' => $user->id_rt]);
+        if (!$idRt) {
+            Log::warning("Nomor RT tidak ditemukan untuk user login saat melihat transaksi.", ['user_id' => $user->id, 'id_rt' => $idRt]);
             return redirect('/')->with('error', 'Data RT Anda tidak ditemukan. Silakan hubungi RT/RW Anda.');
         }
 
-        $query = Transaksi::where('rt', $currentRtNumber);
+        $query = Transaksi::where('rt', $idRt);
 
         if ($request->filled('search')) {
             $search = $request->input('search');

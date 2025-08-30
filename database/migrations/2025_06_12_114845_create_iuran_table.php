@@ -10,10 +10,19 @@ return new class extends Migration
         Schema::create('iuran', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->integer('nominal')->nullable(); // hanya untuk manual
+            $table->integer('nominal')->nullable(); // hanya manual
             $table->date('tgl_tagih');
             $table->date('tgl_tempo');
             $table->enum('jenis', ['otomatis', 'manual']);
+
+            // ⬇⬇ tambahan scope
+            $table->enum('level', ['rt', 'rw']); 
+            $table->unsignedBigInteger('id_rt')->nullable();
+            $table->unsignedBigInteger('id_rw')->nullable();
+
+            $table->foreign('id_rt')->references('id')->on('rukun_tetangga')->onDelete('cascade');
+            $table->foreign('id_rw')->references('id')->on('rw')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

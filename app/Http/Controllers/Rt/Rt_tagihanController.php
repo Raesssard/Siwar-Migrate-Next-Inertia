@@ -11,39 +11,62 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class Rt_tagihanController extends Controller
-{
-    /**
-     * Menampilkan daftar tagihan manual dengan filter dan total nominal.
-     */
-    public function index(Request $request)
+    class Rt_tagihanController extends Controller
+    {
+        /**
+         * Menampilkan daftar tagihan manual dengan filter dan total nominal.
+         */
+        public function index(Request $request)
     {
         $title = 'Data Tagihan Manual';
 
-        $kartuKeluargaForFilter = Kartu_keluarga::select('no_kk')->distinct()->orderBy('no_kk')->get();
-        $iurans = Iuran::select('id', 'nama', 'nominal')->get(); // Opsional
+        /** @var User $user */
+        $user = Auth::user();
+        $idRt = $user->id_rt; 
+        $idRw = $user->id_rw; 
 
-        $query = Tagihan::where('jenis', 'manual');
+        // Ambil daftar KK sesuai RT (buat filter dropdown)
+        $kartuKeluargaForFilter = Kartu_keluarga::where('id_rt', $idRt)
+            ->select('no_kk')
+            ->distinct()
+            ->orderBy('no_kk')
+            ->get();
 
+        // Query tagihan manual sesuai RT user login
+        $query = Tagihan::with('iuran') // relasi ke Iuran
+            ->where('jenis', 'manual')
+            ->whereHas('kartuKeluarga', function ($q) use ($idRt, $idRw, $user) {
+                if ($user->hasRole('rt')) {
+                    $q->where('id_rt', $idRt);
+                }
+                if ($user->hasRole('rw')) {
+                    $q->where('id_rw', $idRw);
+                }
+            });
+
+        // Filter pencarian
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', '%' . $search . '%')
-                  ->orWhere('nominal', 'like', '%' . $search . '%');
+                ->orWhere('nominal', 'like', '%' . $search . '%');
             });
         }
 
+        // Filter berdasarkan no KK
         if ($request->filled('no_kk_filter')) {
             $query->where('no_kk', $request->input('no_kk_filter'));
         }
 
-        // Hitung total tagihan berdasarkan filter
+        // Hitung total tagihan
         $totalNominal = $query->sum('nominal');
 
         // Paginate hasil
         $tagihan = $query->orderBy('tgl_tagih', 'desc')->paginate(10);
 
-        return view('rt.iuran.tagihan', compact('title', 'tagihan', 'kartuKeluargaForFilter', 'iurans', 'totalNominal'));
+        return view('rt.iuran.tagihan', compact(
+            'title', 'tagihan', 'kartuKeluargaForFilter', 'totalNominal'
+        ));
     }
 
     /**

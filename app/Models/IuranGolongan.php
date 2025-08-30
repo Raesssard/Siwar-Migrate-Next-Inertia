@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class IuranGolongan extends Model
 {
@@ -13,14 +14,15 @@ class IuranGolongan extends Model
         'nominal',
     ];
 
-    public function iuran()
+    public function iuran(): BelongsTo
     {
         return $this->belongsTo(Iuran::class, 'id_iuran');
     }
 
-    public function golongan()
+    public function golongan(): BelongsTo
     {
         return $this->belongsTo(Kategori_golongan::class, 'id_golongan');
     }
 }
+
 

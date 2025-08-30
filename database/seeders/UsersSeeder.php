@@ -148,7 +148,7 @@ class UsersSeeder extends Seeder
             'nik' => $rt->nik,
             'nama' => $rt->nama,
             'password' => Hash::make('password'),
-            'roles' => ['rt', 'warga'], // multi-role
+            'roles' => ['warga', 'rt'], // multi-role
             'id_rt' => $rt->id,
             'id_rw' => $rw->id,
         ]);
