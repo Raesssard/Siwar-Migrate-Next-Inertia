@@ -7,6 +7,7 @@ use App\Models\Rukun_tetangga;
 use App\Models\Rw;
 use App\Models\User;
 use App\Models\Warga;
+use App\Models\Kategori_golongan;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,6 +15,9 @@ class UsersSeeder extends Seeder
 {
     public function run(): void
     {
+        // ambil id kategori kampung
+        $kampung = Kategori_golongan::where('jenis', 'kampung')->first();
+
         // 1. Buat RW
         $rw = Rw::create([
             'nik' => '0000000000000001',
@@ -39,7 +43,7 @@ class UsersSeeder extends Seeder
             'provinsi' => 'Provinsi Sejahtera',
             'kode_pos' => '12345',
             'tgl_terbit' => now(),
-            'kategori_iuran' => 'kampung',
+            'kategori_iuran' => $kampung->id, // pakai ID kategori
             'instansi_penerbit' => 'Dinas Dukcapil',
             'kabupaten_kota_penerbit' => 'Kota Bandung',
             'nama_kepala_dukcapil' => 'Budi Santoso S.Kom',
@@ -98,7 +102,7 @@ class UsersSeeder extends Seeder
             'provinsi' => 'Provinsi Sejahtera',
             'kode_pos' => '12345',
             'tgl_terbit' => now(),
-            'kategori_iuran' => 'kampung',
+            'kategori_iuran' => $kampung->id, // sebelumnya 'kampung', sekarang pakai id
             'instansi_penerbit' => 'Dinas Dukcapil',
             'kabupaten_kota_penerbit' => 'Kota Bandung',
             'nama_kepala_dukcapil' => 'Budi Santoso S.Kom',

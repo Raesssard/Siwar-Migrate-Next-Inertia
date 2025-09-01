@@ -108,6 +108,12 @@
             <span>Lihat Tagihan</span>
         </a>
     </li>
+        <li class="nav-item {{ Request::is('warga/transaksi*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('transaksi') }}">
+            <i class="fas fa-dollar-sign"></i>
+            <span>Lihat Transaksi</span>
+        </a>
+    </li>
 
 
     {{-- Tagihan --}}

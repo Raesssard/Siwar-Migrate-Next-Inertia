@@ -78,7 +78,7 @@
 
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion d-none d-md-block" id="accordionSidebar">
 
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/') }}">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('rw') }}">
         <div class="sidebar-brand-icon">
             <img src="{{ asset('img/logo.png') }}" alt="SiWar Logo" class="sidebar-brand-icon-logo">
         </div>

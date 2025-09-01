@@ -55,77 +55,111 @@
             </form>
 
             <!-- Tabel Iuran Manual -->
-            <div class="col-xl-12 col-lg-7">
+            <div class="col-12">
                 <div class="card shadow mb-4">
-                    <div class="card-header py-2 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Tabel Daftar Iuran Manual</h6>
+                    <div class="card-header d-flex justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Daftar Iuran Manual</h6>
                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahIuran">
                             <i class="fas fa-plus"></i> Tambah
                         </button>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive table-container">
-                            <table class="table table-hover table-sm scroll-table text-nowrap">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover text-nowrap">
                                 <thead>
                                     <tr>
                                         <th>No</th>
                                         <th>Nominal</th>
-                                        <th>Nama Iuran</th>
+                                        <th>Nama</th>
                                         <th>Tgl Tagih</th>
                                         <th>Tgl Tempo</th>
-                                        <th>Jenis</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($iuran->where('jenis', 'manual') as $item)
+                                    @forelse ($iuran->where('jenis','manual') as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>Rp{{ number_format($item->nominal, 0, ',', '.') }}</td>
+                                            <td>Rp{{ number_format($item->nominal,0,',','.') }}</td>
                                             <td>{{ $item->nama }}</td>
                                             <td>{{ \Carbon\Carbon::parse($item->tgl_tagih)->translatedFormat('d F Y') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($item->tgl_tempo)->translatedFormat('d F Y') }}</td>
                                             <td>
-                                                <span class="badge bg-{{ $item->jenis == 'otomatis' ? 'primary' : 'secondary' }}">
-                                                    {{ ucfirst($item->jenis) }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <form action="{{ route('rt_iuran.destroy', $item->id) }}" method="POST"
-                                                    class="d-inline"
-                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                                <form action="{{ route('rt_iuran.destroy',$item->id) }}" method="POST" class="d-inline">
+                                                    @csrf @method('DELETE')
+                                                    <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus data ini?')">Hapus</button>
                                                 </form>
-                                                <button type="button" class="btn btn-warning btn-sm"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#modalEditIuran{{ $item->id }}">
-                                                    Edit
-                                                </button>
+                                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#modalEditIuran{{ $item->id }}">Edit</button>
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr>
-                                            <td colspan="7" class="text-center">Tidak ada data iuran manual.</td>
-                                        </tr>
+                                        <tr><td colspan="6" class="text-center">Tidak ada data manual.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-                            <div class="text-muted mb-2">
-                                Menampilkan {{ $iuran->firstItem() ?? '0' }}-{{ $iuran->lastItem() }}
-                                dari total {{ $iuran->total() }} data
-                            </div>
-                            <div>
-                                {{ $iuran->links('pagination::bootstrap-5') }}
-                            </div>
+            <!-- Tabel Iuran Otomatis -->
+            <div class="col-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header d-flex justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Daftar Iuran Otomatis</h6>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahIuran">
+                            <i class="fas fa-plus"></i> Tambah
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover text-nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        @foreach ($golongan_list as $id => $nama)
+                                            <th>{{ $nama }}</th>
+                                        @endforeach
+                                        <th>Nama</th>
+                                        <th>Tgl Tagih</th>
+                                        <th>Tgl Tempo</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($iuran->where('jenis','otomatis') as $item)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            @foreach ($golongan_list as $id => $nama)
+                                                <td>
+                                                    Rp{{ number_format($item->iuran_golongan->firstWhere('id_golongan',$id)->nominal ?? 0,0,',','.') }}
+                                                </td>
+                                            @endforeach
+                                            <td>{{ $item->nama }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item->tgl_tagih)->translatedFormat('d F Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item->tgl_tempo)->translatedFormat('d F Y') }}</td>
+                                            <td>
+                                                <form action="{{ route('rt_iuran.destroy',$item->id) }}" method="POST" class="d-inline">
+                                                    @csrf @method('DELETE')
+                                                    <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus data ini?')">Hapus</button>
+                                                </form>
+                                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                                        data-bs-target="#modalEditIuran{{ $item->id }}">Edit</button>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr><td colspan="{{ 5 + count($golongan_list) }}" class="text-center">Tidak ada data otomatis.</td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
+
+        </div>
+    </div>
             <!-- End Tabel -->
 
         </div>

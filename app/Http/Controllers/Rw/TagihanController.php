@@ -16,32 +16,36 @@ class TagihanController extends Controller
      */
     public function index(Request $request)
     {
-        $title = 'Data Tagihan Manual';
+        $title = 'Data Tagihan';
 
         $kartuKeluargaForFilter = Kartu_keluarga::select('no_kk')->distinct()->orderBy('no_kk')->get();
-        $iurans = Iuran::select('id', 'nama', 'nominal')->get(); // Opsional
+        $iurans = Iuran::select('id', 'nama', 'nominal')->get();
 
-        $query = Tagihan::where('jenis', 'manual');
+        // Query manual
+        $manual = Tagihan::where('jenis', 'manual');
+        // Query otomatis
+        $otomatis = Tagihan::where('jenis', 'otomatis');
 
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', '%' . $search . '%')
-                  ->orWhere('nominal', 'like', '%' . $search . '%');
+            $manual->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%$search%")->orWhere('nominal', 'like', "%$search%");
+            });
+            $otomatis->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%$search%")->orWhere('nominal', 'like', "%$search%");
             });
         }
 
         if ($request->filled('no_kk_filter')) {
-            $query->where('no_kk', $request->input('no_kk_filter'));
+            $kk = $request->input('no_kk_filter');
+            $manual->where('no_kk', $kk);
+            $otomatis->where('no_kk', $kk);
         }
 
-        // Hitung total tagihan berdasarkan filter
-        $totalNominal = $query->sum('nominal');
+        $tagihanManual = $manual->orderBy('tgl_tagih', 'desc')->paginate(10, ['*'], 'manual_page');
+        $tagihanOtomatis = $otomatis->orderBy('tgl_tagih', 'desc')->paginate(10, ['*'], 'otomatis_page');
 
-        // Paginate hasil
-        $tagihan = $query->orderBy('tgl_tagih', 'desc')->paginate(10);
-
-        return view('rw.iuran.tagihan', compact('title', 'tagihan', 'kartuKeluargaForFilter', 'iurans', 'totalNominal'));
+        return view('rw.iuran.tagihan', compact('title', 'tagihanManual', 'tagihanOtomatis', 'kartuKeluargaForFilter', 'iurans'));
     }
 
     /**
@@ -97,7 +101,7 @@ class TagihanController extends Controller
     /**
      * Memperbarui tagihan manual.
      */
-    public function update(Request $request, $id)
+        public function update(Request $request, $id)
     {
         Log::info("Data received for update tagihan ID {$id}:", $request->all());
 
@@ -109,24 +113,37 @@ class TagihanController extends Controller
             'id_iuran' => 'nullable|exists:iuran,id',
             'kategori_pembayaran' => 'nullable|in:transfer,tunai',
             'bukti_transfer' => 'nullable|string|max:255',
+            'nominal' => 'nullable|numeric|min:0',
         ]);
 
         try {
-            $tagihan->update([
+            // Data dasar yang pasti diupdate
+            $dataToUpdate = [
                 'status_bayar' => $validated['status_bayar'],
-                'tgl_bayar' => $validated['tgl_bayar'] ?? null,
-                'id_iuran' => $validated['id_iuran'] ?? null,       
-                'kategori_pembayaran' => $validated['kategori_pembayaran'] ?? null,
-                'bukti_transfer' => $validated['bukti_transfer'] ?? null,
-            ]);
+                'tgl_bayar' => $validated['tgl_bayar'] ?? ($validated['status_bayar'] === 'sudah_bayar' ? now() : null),
+                'kategori_pembayaran' => $validated['kategori_pembayaran'] ?? $tagihan->kategori_pembayaran,
+                'bukti_transfer' => $validated['bukti_transfer'] ?? $tagihan->bukti_transfer,
+            ];
 
-            return redirect()->route('tagihan.index')->with('success', 'Tagihan manual berhasil diperbarui.');
+            // Nominal bisa diupdate
+            if (!empty($validated['nominal'])) {
+                $dataToUpdate['nominal'] = $validated['nominal'];
+            }
 
+            // id_iuran hanya diupdate kalau memang dikirim
+            if (!empty($validated['id_iuran'])) {
+                $dataToUpdate['id_iuran'] = $validated['id_iuran'];
+            }
+
+            $tagihan->update($dataToUpdate);
+
+            return redirect()->route('tagihan.index')->with('success', 'Tagihan berhasil diperbarui.');
         } catch (\Exception $e) {
-            Log::error('Error updating tagihan manual:', ['message' => $e->getMessage()]);
-            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui tagihan manual. Error: ' . $e->getMessage());
+            Log::error('Error updating tagihan:', ['message' => $e->getMessage()]);
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui tagihan. Error: ' . $e->getMessage());
         }
     }
+
 
     /**
      * Menghapus tagihan manual.
