@@ -39,7 +39,7 @@ class RtIuranController extends Controller
 
         $iuran = $query->paginate(5);
 
-        $golongan_list = Kategori_golongan::getEnumNama();
+        $golongan_list = Kategori_golongan::pluck('jenis','id'); 
         $rt = Rukun_tetangga::all(); // 🔹 tambahin ini
         $title = 'Iuran';
 

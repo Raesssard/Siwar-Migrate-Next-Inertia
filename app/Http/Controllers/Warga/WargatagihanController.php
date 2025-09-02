@@ -15,11 +15,10 @@ class WargatagihanController extends Controller
     /**
      * Menampilkan daftar tagihan untuk warga yang sedang login.
      */
-        public function index(Request $request)
+    public function index(Request $request)
     {
         /** @var User $user */
         $user = Auth::user();
-        
 
         $title = 'Tagihan Saya';
         if (!$user || !$user->hasRole('warga') || !$user->warga) {
@@ -34,18 +33,32 @@ class WargatagihanController extends Controller
             return redirect('/')->with('error', 'Data Kartu Keluarga Anda tidak ditemukan. Silakan hubungi RT/RW Anda.');
         }
 
-        $query = Tagihan::where('no_kk', $no_kk_warga);
+        // --- Query Manual
+        $tagihanManual = Tagihan::where('no_kk', $no_kk_warga)
+            ->where('jenis', 'manual')
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $search = $request->search;
+                $q->where(function ($sub) use ($search) {
+                    $sub->where('nama', 'like', "%$search%")
+                        ->orWhere('nominal', 'like', "%$search%");
+                });
+            })
+            ->orderBy('tgl_tagih', 'desc')
+            ->paginate(10, ['*'], 'manual_page');
 
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', '%' . $search . '%')
-                ->orWhere('nominal', 'like', '%' . $search . '%');
-            });
-        }
+        // --- Query Otomatis
+        $tagihanOtomatis = Tagihan::where('no_kk', $no_kk_warga)
+            ->where('jenis', 'otomatis')
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $search = $request->search;
+                $q->where(function ($sub) use ($search) {
+                    $sub->where('nama', 'like', "%$search%")
+                        ->orWhere('nominal', 'like', "%$search%");
+                });
+            })
+            ->orderBy('tgl_tagih', 'desc')
+            ->paginate(10, ['*'], 'otomatis_page');
 
-        $tagihan = $query->orderBy('tgl_tagih', 'desc')->paginate(10);
-
-        return view('warga.iuran.tagihan', compact('title', 'tagihan'));
+        return view('warga.iuran.tagihan', compact('title', 'tagihanManual', 'tagihanOtomatis'));
     }
 }

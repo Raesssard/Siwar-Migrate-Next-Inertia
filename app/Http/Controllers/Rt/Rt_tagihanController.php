@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Log;
         /**
          * Menampilkan daftar tagihan manual dengan filter dan total nominal.
          */
-        public function index(Request $request)
+    public function index(Request $request)
     {
-        $title = 'Data Tagihan Manual';
+        $title = 'Data Tagihan';
 
         /** @var User $user */
         $user = Auth::user();
@@ -32,9 +32,8 @@ use Illuminate\Support\Facades\Log;
             ->orderBy('no_kk')
             ->get();
 
-        // Query tagihan manual sesuai RT user login
-        $query = Tagihan::with('iuran') // relasi ke Iuran
-            ->where('jenis', 'manual')
+        // Base query (untuk dipakai manual & otomatis)
+        $baseQuery = Tagihan::with('iuran')
             ->whereHas('kartuKeluarga', function ($q) use ($idRt, $idRw, $user) {
                 if ($user->hasRole('rt')) {
                     $q->where('id_rt', $idRt);
@@ -47,7 +46,7 @@ use Illuminate\Support\Facades\Log;
         // Filter pencarian
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
+            $baseQuery->where(function ($q) use ($search) {
                 $q->where('nama', 'like', '%' . $search . '%')
                 ->orWhere('nominal', 'like', '%' . $search . '%');
             });
@@ -55,17 +54,20 @@ use Illuminate\Support\Facades\Log;
 
         // Filter berdasarkan no KK
         if ($request->filled('no_kk_filter')) {
-            $query->where('no_kk', $request->input('no_kk_filter'));
+            $baseQuery->where('no_kk', $request->input('no_kk_filter'));
         }
 
-        // Hitung total tagihan
-        $totalNominal = $query->sum('nominal');
+        // Query terpisah
+        $tagihanManual = (clone $baseQuery)->where('jenis', 'manual')
+            ->orderBy('tgl_tagih', 'desc')
+            ->paginate(10, ['*'], 'manual_page');
 
-        // Paginate hasil
-        $tagihan = $query->orderBy('tgl_tagih', 'desc')->paginate(10);
+        $tagihanOtomatis = (clone $baseQuery)->where('jenis', 'otomatis')
+            ->orderBy('tgl_tagih', 'desc')
+            ->paginate(10, ['*'], 'otomatis_page');
 
         return view('rt.iuran.tagihan', compact(
-            'title', 'tagihan', 'kartuKeluargaForFilter', 'totalNominal'
+            'title', 'tagihanManual', 'tagihanOtomatis', 'kartuKeluargaForFilter'
         ));
     }
 
