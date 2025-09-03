@@ -25,7 +25,7 @@ class Kartu_keluarga extends Model
         'provinsi',
         'kode_pos',
         'tgl_terbit',
-        'kategori_iuran',  // 🔹 ini foreign key ke kategori_golongan.id
+        'kategori_iuran',
         'instansi_penerbit',
         'kabupaten_kota_penerbit',
         'nama_kepala_dukcapil',
@@ -53,7 +53,7 @@ class Kartu_keluarga extends Model
         return $this->hasMany(Warga::class, 'no_kk', 'no_kk');
     }
 
-    public function golongan(): BelongsTo
+    public function kategoriGolongan(): BelongsTo
     {
         return $this->belongsTo(Kategori_golongan::class, 'kategori_iuran', 'id');
     }

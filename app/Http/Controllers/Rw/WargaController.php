@@ -199,10 +199,10 @@ class WargaController extends Controller
             User::create([
                 'nik' => $request->nik,
                 'nama' => $request->nama,
-                'password' => bcrypt('123456'),
+                'password' => bcrypt('password'),
                 'id_rt' => $kk->id_rt,
                 'id_rw' => $kk->id_rw,
-                'role' => 'warga',
+                'roles' => ['warga'],
             ]);
         }
 
@@ -339,10 +339,10 @@ class WargaController extends Controller
                 ['nik' => $request->nik], // Gunakan NIK yang berpotensi baru
                 [
                     'nama' => $request->nama,
-                    'password' => bcrypt('123456'),
+                    'password' => bcrypt('password'),
                     'id_rt' => $kk->id_rt,
                     'id_rw' => $kk->id_rw,
-                    'role' => 'warga',
+                    'roles' => ['warga'],
                 ]
             );
         } else {

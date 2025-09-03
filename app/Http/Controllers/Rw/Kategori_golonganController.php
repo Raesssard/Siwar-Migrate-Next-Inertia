@@ -40,18 +40,18 @@ class Kategori_golonganController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'jenis' => 'required|string|max:255',
             'keterangan' => 'nullable|string|max:500',
         ], [
-            'nama.required' => 'Nama kategori golongan harus diisi.',
-            'nama.string' => 'Nama kategori golongan harus berupa teks.',
-            'nama.max' => 'Nama kategori golongan tidak boleh lebih dari 255 karakter.',
+            'jenis.required' => 'jenis kategori golongan harus diisi.',
+            'jenis.string' => 'jenis kategori golongan harus berupa teks.',
+            'jenis.max' => 'jenis kategori golongan tidak boleh lebih dari 255 karakter.',
             'keterangan.string' => 'Keterangan harus berupa teks.',
             'keterangan.max' => 'Keterangan tidak boleh lebih dari 500 karakter.',
         ]);
 
         Kategori_golongan::create([
-            'nama' => $request->nama,
+            'jenis' => $request->jenis,
             'keterangan' => $request->keterangan,
         ]);
 

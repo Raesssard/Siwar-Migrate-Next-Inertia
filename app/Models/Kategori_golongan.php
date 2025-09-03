@@ -7,24 +7,23 @@ use Illuminate\Support\Facades\DB;
 
 class Kategori_golongan extends Model
 {
-    //
     protected $table = 'kategori_golongan';
     protected $fillable = [
-        'nama',
-        
+        'jenis',
     ];
-
-   public static function getEnumNama()
-    {
-        return ['kampung', 'kavling', 'kost', 'kantor', 'kontrakan', 'umkm'];
-    }
 
     public function iuranGolongan()
     {
         return $this->hasMany(IuranGolongan::class, 'id_golongan');
     }
+
     public function keluarga()
     {
-        return $this->hasMany(Kartu_keluarga::class, 'id_golongan');
+        return $this->hasMany(Kartu_keluarga::class, 'kategori_iuran', 'id');
+    }
+
+    public static function getEnumNama()
+    {
+        return ['kampung', 'kavling', 'kost', 'kantor', 'kontrakan', 'umkm'];
     }
 }

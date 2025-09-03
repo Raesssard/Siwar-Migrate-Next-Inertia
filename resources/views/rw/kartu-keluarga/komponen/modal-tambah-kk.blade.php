@@ -6,7 +6,6 @@
         <div class="modal-content shadow border-0">
             <form action="{{ route('kartu_keluarga.store') }}" method="POST">
                 @csrf
-                {{-- Input tersembunyi untuk mengidentifikasi formulir ini secara spesifik untuk old() dan errors --}}
                 <input type="hidden" name="form_type" value="kk_tambah"> 
 
                 <div class="modal-header bg-primary text-white">
@@ -22,7 +21,6 @@
                             <input type="text" name="no_kk" maxlength="16" pattern="\d{16}" required
                                 value="{{ old('form_type') === 'kk_tambah' ? old('no_kk') : '' }}"
                                 class="form-control {{ $errors->has('no_kk') && old('form_type') === 'kk_tambah' ? 'is-invalid' : '' }}">
-                            {{-- Tampilkan kesalahan validasi untuk no_kk --}}
                             @if ($errors->has('no_kk') && old('form_type') === 'kk_tambah')
                                 <div class="invalid-feedback">{{ $errors->first('no_kk') }}</div>
                             @endif
@@ -40,17 +38,17 @@
 
                         <div class="col-md-6">
                             <label class="form-label">No RT</label>
-                            <select name="id_rt" class="form-select @error('id_rt') is-invalid @enderror">
-                                <option value="">-- Pilih RT --</option>
-                                @foreach ($rukun_tetangga as $rt_option)
-                                    {{-- Ubah $rt menjadi $rt_option untuk kejelasan --}}
-                                    <option value="{{ $rt_option->rt }}"
-                                        {{ request('rt') == $rt_option->rt ? 'selected' : '' }}>
+                            <select name="id_rt" class="form-select @error('id_rt') is-invalid @enderror" required>
+                                <option value="" disabled>-- Pilih RT --</option>
+                                @forelse ($all_rukun_tetangga as $rt_option)
+                                    <option value="{{ $rt_option->id }}"
+                                        {{ old('form_type') === 'kk_tambah' && old('id_rt') == $rt_option->id ? 'selected' : '' }}>
                                         RT {{ $rt_option->rt }}
                                     </option>
-                                @endforeach
+                                @empty
+                                    <option value="" disabled>Tidak ada RT tersedia</option>
+                                @endforelse
                             </select>
-                            {{-- Tampilkan kesalahan validasi untuk id_rt --}}
                             @if ($errors->has('id_rt') && old('form_type') === 'kk_tambah')
                                 <div class="invalid-feedback">{{ $errors->first('id_rt') }}</div>
                             @endif
@@ -63,9 +61,9 @@
                                 required>
                                 <option value="">-- Pilih Kategori --</option>
                                 @foreach ($kategori_iuran as $kategori)
-                                    <option value="{{ $kategori }}"
-                                        {{ old('form_type') === 'kk_tambah' && old('kategori_iuran') == $kategori ? 'selected' : '' }}>
-                                        {{ ucfirst($kategori) }}
+                                    <option value="{{ $kategori->id }}"
+                                        {{ old('form_type') === 'kk_tambah' && old('kategori_iuran') == $kategori->id ? 'selected' : '' }}>
+                                        {{ ucfirst($kategori->jenis) }}
                                     </option>
                                 @endforeach
                             </select>
@@ -146,7 +144,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label"> Kabupaten/Kota Penerbit</label>
+                            <label class="form-label">Kabupaten/Kota Penerbit</label>
                             <input type="text" name="kabupaten_kota_penerbit"
                                 value="{{ old('form_type') === 'kk_tambah' ? old('kabupaten_kota_penerbit') : '' }}"
                                 class="form-control {{ $errors->has('kabupaten_kota_penerbit') && old('form_type') === 'kk_tambah' ? 'is-invalid' : '' }}">
@@ -156,7 +154,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label"> Nama Kepala Dukcapil</label>
+                            <label class="form-label">Nama Kepala Dukcapil</label>
                             <input type="text" name="nama_kepala_dukcapil"
                                 value="{{ old('form_type') === 'kk_tambah' ? old('nama_kepala_dukcapil') : '' }}"
                                 class="form-control {{ $errors->has('nama_kepala_dukcapil') && old('form_type') === 'kk_tambah' ? 'is-invalid' : '' }}">
@@ -166,7 +164,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label"> NIP Kepala Dukcapil</label>
+                            <label class="form-label">NIP Kepala Dukcapil</label>
                             <input type="text" name="nip_kepala_dukcapil"
                                 value="{{ old('form_type') === 'kk_tambah' ? old('nip_kepala_dukcapil') : '' }}"
                                 class="form-control {{ $errors->has('nip_kepala_dukcapil') && old('form_type') === 'kk_tambah' ? 'is-invalid' : '' }}">
@@ -186,7 +184,7 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer bg-light border-0 ">
+                    <div class="modal-footer bg-light border-0">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save me-1"></i> Simpan Kartu Keluarga
                         </button>

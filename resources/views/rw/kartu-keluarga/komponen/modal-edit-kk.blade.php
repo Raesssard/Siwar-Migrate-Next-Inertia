@@ -14,7 +14,6 @@
                         aria-label="Tutup"></button>
                 </div>
 
-                {{-- Ini penting: Input hidden untuk menyimpan no_kk yang sedang diedit. --}}
                 <input type="hidden" name="old_no_kk_for_modal" value="{{ $kk->no_kk }}">
 
                 <div class="modal-body px-4 py-3" style="max-height: 85vh; overflow-y: auto;">
@@ -32,37 +31,38 @@
 
                         <div class="col-md-6">
                             <label class="form-label">Nomor Registrasi</label>
-                            <input type="text" name="no_registrasi" maxlength="16" pattern="\d{16}"
-                                value="{{ old('no_registrasi', $kk->no_registrasi) }}" {{-- Hapus 'required' jika nullable --}}
+                            <input type="text" name="no_registrasi" maxlength="50"
+                                value="{{ old('no_registrasi', $kk->no_registrasi) }}"
                                 class="form-control @error('no_registrasi') is-invalid @enderror">
                             @error('no_registrasi')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">No RT</label>
-                            @php
-                                // Pastikan old('id_rt') digunakan jika ada error validasi
-                                $selectedRtId = old('id_rt') !== null ? old('id_rt') : ($kk->id_rt ?? '');
-                            @endphp
-                            <select name="id_rt" class="form-select @error('id_rt') is-invalid @enderror">
-                                <option value="" {{ $selectedRtId === '' ? 'selected' : '' }}>
-                                    Pilih No RT
-                                </option>
-                                {{-- Gunakan variabel yang di-compact dari controller untuk dropdown edit --}}
-                                @foreach ($all_rukun_tetangga as $rt_data)
-                                    <option value="{{ $rt_data->id }}"
-                                        {{ $selectedRtId == $rt_data->id ? 'selected' : '' }}>
-                                        RT {{ $rt_data->rt }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('id_rt')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
+<div class="col-md-6">
+    <label class="form-label">No RT</label>
+    @php
+        $selectedRtId = old('id_rt', $kk->id_rt ?? '');
+    @endphp
+    <select name="id_rt" class="form-select @error('id_rt') is-invalid @enderror" required>
+        @if ($rukun_tetangga->isEmpty())
+            <option value="" disabled selected>Tidak ada RT tersedia</option>
+        @else
+            <option value="" disabled {{ empty($selectedRtId) ? 'selected' : '' }}>
+                Pilih No RT
+            </option>
+            @foreach ($rukun_tetangga as $rt_data)
+                <option value="{{ $rt_data->id }}"
+                    {{ old('id_rt', (string)$kk->id_rt) === (string)$rt_data->id ? 'selected' : '' }}>
+                    RT {{ $rt_data->rt }}
+                </option>
+            @endforeach
+        @endif
+    </select>
+    @error('id_rt')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
                         <div class="col-md-6">
                             <label class="form-label">Kategori Iuran</label>
                             @php
@@ -74,9 +74,9 @@
                                     Pilih Kategori Iuran
                                 </option>
                                 @foreach ($kategori_iuran as $kategori)
-                                    <option value="{{ $kategori }}"
-                                        {{ $selectedKategori == $kategori ? 'selected' : '' }}>
-                                        {{ ucfirst($kategori) }}
+                                    <option value="{{ $kategori->id }}"
+                                        {{ $selectedKategori == $kategori->id ? 'selected' : '' }}>
+                                        {{ ucfirst($kategori->jenis) }}
                                     </option>
                                 @endforeach
                             </select>
@@ -200,7 +200,6 @@
                         </button>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
