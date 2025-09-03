@@ -30,7 +30,7 @@
 
                         <div class="col-md-6">
                             <label class="form-label">Nomor Registrasi</label>
-                            <input type="text" name="no_registrasi"
+                            <input type="text" name="no_registrasi" maxlength="16"
                                 value="{{ old('form_type') === 'kk_tambah' ? old('no_registrasi') : '' }}"
                                 class="form-control {{ $errors->has('no_registrasi') && old('form_type') === 'kk_tambah' ? 'is-invalid' : '' }}">
                             @if ($errors->has('no_registrasi') && old('form_type') === 'kk_tambah')

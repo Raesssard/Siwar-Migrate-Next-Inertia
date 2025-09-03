@@ -359,7 +359,7 @@
                                                     {{ $item->kartuKeluarga->rukunTetangga->nomor_rt }}/{{ $item->kartuKeluarga->rw->nomor_rw }}
                                                 </p>
                                                 <p class="mb-1"><strong>Golongan:</strong>
-                                                    {{ $item->kartuKeluarga->golongan->jenis }}
+                                                    {{ $item->kartuKeluarga->kategoriGolongan->jenis }}
                                                 </p>
                                                 <p class="mb-1"><strong>Kode Pos:</strong>
                                                     {{ $item->kartuKeluarga->kode_pos }}

@@ -65,11 +65,11 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">NO</th>
-                                            <th scope="col">NO KK</th>
+                                            <th scope="col">NOMOR KK</th>
                                             <th scope="col">KEPALA KELUARGA</th>
                                             <th scope="col">ALAMAT</th>
-                                            <th scope="col">RT</th>
-                                            <th scope="col">RW</th>
+                                            <th scope="col">NOMOR RT</th>
+                                            <th scope="col">NOMOR RW</th>
                                             <th scope="col">KATEGORI IURAN</th>
                                             <th scope="col" class="text-center">AKSI</th>
                                         </tr>
@@ -91,7 +91,7 @@
                                                 <td>{{ $kk->alamat }}</td>
                                                 <td>{{ $kk->rukunTetangga->rt ?? '-' }}</td>
                                                 <td>{{ $kk->rw->nomor_rw }}</td>
-                                                <td>{{ $kk->golongan->jenis }}</td>
+                                                <td>{{ $kk->kategoriGolongan->jenis }}</td>
                                                 <td class="text-center align-middle">
                                                     <div class="d-flex justify-content-center gap-1 flex-wrap">
                                                         <form action="{{ route('rt_kartu_keluarga.destroy', $kk->no_kk) }}"

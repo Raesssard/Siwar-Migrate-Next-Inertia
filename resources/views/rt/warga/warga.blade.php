@@ -63,8 +63,8 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">NO</th>
-                                            <th scope="col">NO KK</th> {{-- No. Kartu Keluarga dari warga tersebut --}}
                                             <th scope="col">NIK</th>
+                                            <th scope="col">NO KK</th> {{-- No. Kartu Keluarga dari warga tersebut --}}
                                             <th scope="col">NAMA LENGKAP</th>
                                             <th scope="col">JENIS KELAMIN</th>
                                             <th scope="col">TEMPAT LAHIR</th>
@@ -141,7 +141,7 @@
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#modalEditwarga{{ $item->nik }}"
                                                             title="Edit Warga">
-                                                            <i class="fas fa-edit"></i>
+                                                            <i class="fas fa-user-edit"></i>
                                                         </button>
                                                     </div>
                                                 </td>
