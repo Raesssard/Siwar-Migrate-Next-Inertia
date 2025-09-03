@@ -34,71 +34,79 @@ class Admin_rtController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-        public function store(Request $request)
-    {
-        // ✅ Validasi sesuai field di form
-        $request->validate([
-            'nik' => 'required|unique:rukun_tetangga,nik',
-            'rt' => 'required|string',
-            'nama' => 'required|string|max:255',
-            'mulai_menjabat' => 'required|date',
-            'akhir_jabatan' => 'required|date',
-        ], [
-            'nik.required' => 'NIK harus diisi.',
-            'nik.unique' => 'NIK sudah terdaftar.',
-            'rt.required' => 'Nomor Rukun Tetangga harus diisi.',
-            'nama.required' => 'Nama Ketua Rukun Tetangga harus diisi.',
-            'mulai_menjabat.required' => 'Mulai Menjabat harus diisi.',
-            'akhir_jabatan.required' => 'Akhir Menjabat harus diisi.',
-        ]);
+public function store(Request $request)
+{
+    // ✅ Validasi dasar
+    $request->validate([
+        'nik' => 'required|unique:rukun_tetangga,nik',
+        'rt' => ['required', 'regex:/^[0-9]{2}$/', 'unique:rukun_tetangga,rt'],
+        'nama' => 'required|string|max:255',
+        'mulai_menjabat' => 'required|date',
+        'akhir_jabatan' => 'required|date|after:mulai_menjabat',
+    ], [
+        'nik.required' => 'NIK harus diisi.',
+        'nik.unique' => 'NIK sudah terdaftar.',
+        'rt.required' => 'Nomor RT harus diisi.',
+        'rt.regex' => 'Nomor RT harus terdiri dari 2 digit (contoh: 01, 02, 10).',
+        'rt.unique' => 'Nomor RT sudah digunakan.',
+        'nama.required' => 'Nama Ketua RT harus diisi.',
+        'mulai_menjabat.required' => 'Mulai menjabat harus diisi.',
+        'akhir_jabatan.required' => 'Akhir menjabat harus diisi.',
+        'akhir_jabatan.after' => 'Akhir menjabat harus setelah mulai menjabat.',
+    ]);
 
-        // ✅ Ambil no_kk dari tabel warga berdasarkan NIK
-        $no_kk = DB::table('warga')->where('nik', $request->nik)->value('no_kk');
+    // ✅ Cek apakah NIK ada di tabel warga
+    $warga = DB::table('warga')->where('nik', $request->nik)->first();
 
-        if (!$no_kk) {
-            return redirect()->back()->withErrors(['nik' => 'NIK tidak ditemukan di data warga.']);
-        }
-
-        // ✅ Buat record RT
-        $rt = Rukun_tetangga::create([
-            'nik' => $request->nik,
-            'no_kk' => $no_kk,
-            'rt' => $request->rt,
-            'nama' => $request->nama,
-            'mulai_menjabat' => $request->mulai_menjabat,
-            'akhir_jabatan' => $request->akhir_jabatan,
-            'id_rw' => 1, // default
-        ]);
-
-        // ✅ Buat user untuk RT
-        // ✅ Update atau create user RT
-        $user = User::where('nik', $request->nik)->first();
-
-        if ($user) {
-            // Tambah role 'rt' tanpa hapus role lama
-            $currentRoles = $user->roles ?? ['warga']; // Default role 'warga' kalau kepala keluarga
-            if (!in_array('rt', $currentRoles)) {
-                $currentRoles[] = 'rt';
-                $user->update([
-                    'id_rt' => $rt->id,
-                    'id_rw' => 1,
-                    'roles' => array_unique($currentRoles),
-                    'password' => Hash::make('password')
-                ]);
-            }
-        } else {
-            User::create([
-                'nik' => $request->nik,
-                'nama' => $request->nama,
-                'password' => bcrypt('password'),
-                'id_rt' => $rt->id,
-                'id_rw' => 1,
-                'roles' => ['rt'],
-            ]);
-        }
-
-        return redirect()->route('data_rt.index')->with('success', 'Rukun Tetangga berhasil ditambahkan.');
+    if (!$warga) {
+        return back()->withErrors(['nik' => 'NIK tidak ditemukan di data warga.'])->withInput();
     }
+
+    // ✅ Cek apakah nama sesuai dengan NIK
+    if ($warga->nama !== $request->nama) {
+        return back()->withErrors(['nama' => 'Nama tidak sesuai dengan NIK yang dipilih.'])->withInput();
+    }
+
+    // ✅ Buat record RT
+    $rt = Rukun_tetangga::create([
+        'nik' => $request->nik,
+        'no_kk' => $warga->no_kk,
+        'rt' => $request->rt,
+        'nama' => $request->nama,
+        'mulai_menjabat' => $request->mulai_menjabat,
+        'akhir_jabatan' => $request->akhir_jabatan,
+        'id_rw' => 1, // default sementara
+    ]);
+
+    // ✅ Buat atau update user untuk RT
+    $user = User::where('nik', $request->nik)->first();
+
+    if ($user) {
+        $currentRoles = $user->roles ?? ['warga'];
+        if (!in_array('rt', $currentRoles)) {
+            $currentRoles[] = 'rt';
+        }
+
+        $user->update([
+            'id_rt' => $rt->id,
+            'id_rw' => 1,
+            'roles' => array_unique($currentRoles),
+            'password' => Hash::make('password'), // reset password default
+        ]);
+    } else {
+        User::create([
+            'nik' => $request->nik,
+            'nama' => $request->nama,
+            'password' => bcrypt('password'),
+            'id_rt' => $rt->id,
+            'id_rw' => 1,
+            'roles' => ['rt'],
+        ]);
+    }
+
+    return redirect()->route('data_rt.index')->with('success', 'Rukun Tetangga berhasil ditambahkan.');
+}
+
 
     /**
      * Display the specified resource.
@@ -123,34 +131,83 @@ class Admin_rtController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-        $request->validate([
-            "nik" => 'required',
-            'nomor_rt' => 'required|string|max:255',
-            'nama_ketua_rt' => 'required|string|max:255',
-            'mulai_menjabat' => 'required',
-            'akhir_jabatan' => 'required',
-        ], [
-            'nomor_rt.required' => 'Nama Rukun Tetangga harus diisi.',
-            'nama_ketua_rt.required' => 'Nama Ketua Rukun Tetangga harus diisi.',
-            'mulai_menjabat.required' => 'Mulai Menjabat harus diisi.',
-            'akhir_jabatan.required' => 'Akhir Jabatan harus diisi.',
-        ]);
-        $rukun_tetangga = Rukun_tetangga::findOrFail($id);
-        $rukun_tetangga->update([
-            'nik' => $request->nik,
-            'rt'  => $request->nomor_rt,
-            'nama' => $request->nama_ketua_rt,
-            'mulai_menjabat' => $request->mulai_menjabat,
-            'akhir_jabatan'  => $request->akhir_jabatan,
-        ]);
-        return redirect()->route('data_rt.index')->with('success', 'Rukun Tetangga berhasil diperbarui.');
+public function update(Request $request, string $id)
+{
+    // ✅ Validasi dasar
+    $request->validate([
+        'nik' => 'required|exists:warga,nik',
+        'rt' => ['required', 'regex:/^[0-9]{2}$/', 'unique:rukun_tetangga,rt,' . $id],
+        'nama' => 'required|string|max:255',
+        'mulai_menjabat' => 'required|date',
+        'akhir_jabatan' => 'required|date|after:mulai_menjabat',
+    ], [
+        'nik.required' => 'NIK harus diisi.',
+        'nik.exists' => 'NIK tidak ditemukan di data warga.',
+        'rt.required' => 'Nomor RT harus diisi.',
+        'rt.regex' => 'Nomor RT harus terdiri dari 2 digit (contoh: 01, 02, 10).',
+        'rt.unique' => 'Nomor RT sudah digunakan.',
+        'nama.required' => 'Nama Ketua RT harus diisi.',
+        'mulai_menjabat.required' => 'Mulai menjabat harus diisi.',
+        'akhir_jabatan.required' => 'Akhir menjabat harus diisi.',
+        'akhir_jabatan.after' => 'Akhir menjabat harus setelah mulai menjabat.',
+    ]);
+
+    // ✅ Ambil data warga
+    $warga = DB::table('warga')->where('nik', $request->nik)->first();
+
+    if (!$warga) {
+        return back()
+            ->withErrors(['nik' => 'NIK tidak ditemukan di data warga.'])
+            ->withInput($request->all() + ['id' => $id, '_method' => 'PUT']);
     }
-    /**
-     * Remove the specified resource from storage.
-     */
+
+    // ✅ Cek nama sesuai
+    if ($warga->nama !== $request->nama) {
+        return back()
+            ->withErrors(['nama' => 'Nama tidak sesuai dengan NIK yang dipilih.'])
+            ->withInput($request->all() + ['id' => $id, '_method' => 'PUT']);
+    }
+
+    // ✅ Update data RT
+    $rukun_tetangga = Rukun_tetangga::findOrFail($id);
+    $rukun_tetangga->update([
+        'nik' => $request->nik,
+        'no_kk' => $warga->no_kk,
+        'rt'  => $request->rt,
+        'nama' => $request->nama,
+        'mulai_menjabat' => $request->mulai_menjabat,
+        'akhir_jabatan'  => $request->akhir_jabatan,
+    ]);
+
+    // ✅ Update juga data user RT
+    $user = User::where('nik', $request->nik)->first();
+
+    if ($user) {
+        $currentRoles = $user->roles ?? ['warga'];
+        if (!in_array('rt', $currentRoles)) {
+            $currentRoles[] = 'rt';
+        }
+
+        $user->update([
+            'id_rt' => $rukun_tetangga->id,
+            'id_rw' => 1,
+            'roles' => array_unique($currentRoles),
+        ]);
+    } else {
+        User::create([
+            'nik' => $request->nik,
+            'nama' => $request->nama,
+            'password' => bcrypt('password'),
+            'id_rt' => $rukun_tetangga->id,
+            'id_rw' => 1,
+            'roles' => ['rt'],
+        ]);
+    }
+
+    return redirect()->route('data_rt.index')->with('success', 'Rukun Tetangga berhasil diperbarui.');
+}
+    
+
     public function destroy(string $id)
     {
         //

@@ -20,7 +20,7 @@ class UsersSeeder extends Seeder
 
         // 1. Buat RW
         $rw = Rw::create([
-            'nik' => '0000000000000001',
+            'nik' => '1234567890123452',
             'nomor_rw' => '01',
             'nama_ketua_rw' => 'Pak RW',
             'mulai_menjabat' => now(),
@@ -142,7 +142,7 @@ class UsersSeeder extends Seeder
 
         User::create([
             'nik' => '1234567890123452',
-            'nama' => 'User RW Test',
+            'nama' => 'Pak RW',
             'password' => Hash::make('password'),
             'roles' => ['rw'],
             'id_rw' => $rw->id,
@@ -162,6 +162,7 @@ class UsersSeeder extends Seeder
             'nama' => $warga_biasa->nama,
             'password' => Hash::make('password'),
             'roles' => ['warga'],
+            'id_rt' => $rt->id,
             'id_rw' => $rw->id,
         ]);
     }
