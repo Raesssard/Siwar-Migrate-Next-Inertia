@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Rt;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pengeluaran;
 use App\Models\Transaksi;
 use App\Models\Rukun_tetangga;
 use Illuminate\Http\Request;
@@ -46,7 +47,11 @@ class Rt_transaksiController extends Controller
         // RT user login saja
         $rukun_tetangga = $user->rukunTetangga ? [$user->rukunTetangga->id => $user->rukunTetangga->rt] : [];
 
+        $pengeluaran = $request->pengeluaran ?? 0;
+
         $totalPemasukanBelumTercatat = 0;
+
+        $jumlah = $totalPemasukanBelumTercatat - $pengeluaran;
 
         return view('rt.iuran.transaksi', compact(
             'title',
@@ -54,7 +59,9 @@ class Rt_transaksiController extends Controller
             'paginatedTransaksi',
             'daftar_tahun',
             'rukun_tetangga',
-            'totalPemasukanBelumTercatat'
+            'totalPemasukanBelumTercatat',
+            'pengeluaran',
+            'jumlah',
         ));
     }
 
@@ -67,8 +74,11 @@ class Rt_transaksiController extends Controller
             'nama_transaksi' => 'required|string|max:255',
             'pengeluaran' => 'nullable|numeric|min:0',
             'pemasukan' => 'nullable|numeric|min:0',
+            'jumlah' => 'nullable|numeric',
             'keterangan' => 'nullable|string',
         ]);
+
+        $validated['jumlah'] = ($validated['pemasukan'] ?? 0) - ($validated['pengeluaran'] ?? 0);
 
         Transaksi::create($validated);
 
@@ -83,8 +93,11 @@ class Rt_transaksiController extends Controller
             'nama_transaksi' => 'required|string|max:255',
             'pengeluaran' => 'nullable|numeric|min:0',
             'pemasukan' => 'nullable|numeric|min:0',
+            'jumlah' => 'nullable|numeric',
             'keterangan' => 'nullable|string',
         ]);
+
+        $validated['jumlah'] = ($validated['pemasukan'] ?? 0) - ($validated['pengeluaran'] ?? 0);
 
         $rt_transaksi->update($validated);
 

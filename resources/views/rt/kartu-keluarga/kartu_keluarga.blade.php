@@ -17,7 +17,8 @@
             <!-- Content Row -->
 
             <div class="row ">
-                <form action="{{ route('rt_kartu_keluarga.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rt_kartu_keluarga.index') }}" method="GET"
+                    class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -90,7 +91,7 @@
                                                 <td>{{ $kk->alamat }}</td>
                                                 <td>{{ $kk->rukunTetangga->rt ?? '-' }}</td>
                                                 <td>{{ $kk->rw->nomor_rw }}</td>
-                                                <td>{{ $kk->kategori_iuran }}</td>
+                                                <td>{{ $kk->golongan->jenis }}</td>
                                                 <td class="text-center align-middle">
                                                     <div class="d-flex justify-content-center gap-1 flex-wrap">
                                                         <form action="{{ route('rt_kartu_keluarga.destroy', $kk->no_kk) }}"

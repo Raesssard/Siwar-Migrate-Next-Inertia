@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Rt;
 
 use App\Http\Controllers\Controller;
@@ -17,7 +18,7 @@ class Rt_kartu_keluargaController extends Controller
     /**
      * Display a listing of the resource.
      */
- public function index(Request $request)
+    public function index(Request $request)
     {
         $search = $request->search;
         $title = 'Kartu Keluarga';
@@ -35,8 +36,8 @@ class Rt_kartu_keluargaController extends Controller
         // Dapatkan ID RT dari tabel rukun_tetangga berdasarkan nomor RT dan ID RW user yang login
         // Ini memastikan kita mendapatkan ID yang benar untuk RT tersebut
         $rt_id_from_nomor = Rukun_tetangga::where('rt', $nomorRtUser)
-                                        ->where('id_rw', $idRwUser)
-                                        ->value('id');
+            ->where('id_rw', $idRwUser)
+            ->value('id');
 
         if (!$rt_id_from_nomor) {
             return redirect()->back()->with('error', 'Tidak dapat menemukan ID RT berdasarkan nomor RT Anda. Mohon hubungi administrator.');
@@ -50,12 +51,12 @@ class Rt_kartu_keluargaController extends Controller
             ->where('id_rt', $rt_id_from_nomor) // Filter berdasarkan ID RT yang ditemukan dari nomor RT
             ->when($search, function ($query) use ($search) {
                 $query->where('alamat', 'like', '%' . $search . '%')
-                      ->orWhere('no_kk', 'like', '%' . $search . '%')
-                      // Tambahkan pencarian berdasarkan nama kepala keluarga
-                      ->orWhereHas('warga', function($q) use ($search) {
-                          $q->where('nama', 'like', '%' . $search . '%')
+                    ->orWhere('no_kk', 'like', '%' . $search . '%')
+                    // Tambahkan pencarian berdasarkan nama kepala keluarga
+                    ->orWhereHas('warga', function ($q) use ($search) {
+                        $q->where('nama', 'like', '%' . $search . '%')
                             ->where('status_hubungan_dalam_keluarga', 'Kepala Keluarga');
-                      });
+                    });
             })
             ->orderBy('created_at', 'desc')
             ->paginate(5)
@@ -65,10 +66,10 @@ class Rt_kartu_keluargaController extends Controller
         $kategori_iuran = Kategori_golongan::getEnumNama();
 
         // Query untuk Warga: Hanya tampilkan warga yang kartu keluarganya ada di RT yang sesuai
-        $warga = Warga::whereHas('kartuKeluarga', function($q) use ($rt_id_from_nomor) {
+        $warga = Warga::whereHas('kartuKeluarga', function ($q) use ($rt_id_from_nomor) {
             $q->where('id_rt', $rt_id_from_nomor);
         })
-        ->get();
+            ->get();
 
         return view('rt.kartu-keluarga.kartu_keluarga', compact(
             'kartu_keluarga',
@@ -165,8 +166,7 @@ class Rt_kartu_keluargaController extends Controller
 
             return redirect()->route('rt_kartu_keluarga.index')
                 ->with('success', 'Data Kartu Keluarga berhasil disimpan. Sekarang, silakan unggah foto Kartu Keluarga.');
-        }
-         catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()
                 ->withErrors($e->errors())
                 ->withInput($request->input())
@@ -271,27 +271,27 @@ class Rt_kartu_keluargaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-      public function destroy(string $id)
-{
-    $kartu_keluarga = Kartu_keluarga::with('warga')->findOrFail($id);
+    public function destroy(string $id)
+    {
+        $kartu_keluarga = Kartu_keluarga::with('warga')->findOrFail($id);
 
-    // Hapus semua warga yang terkait dengan KK ini
-    foreach ($kartu_keluarga->warga as $warga) {
-        $warga->delete();
+        // Hapus semua warga yang terkait dengan KK ini
+        foreach ($kartu_keluarga->warga as $warga) {
+            $warga->delete();
+        }
+
+        // Hapus file KK dari storage jika ada
+        if ($kartu_keluarga->foto_kk) {
+            Storage::delete('public/kartu_keluarga/' . $kartu_keluarga->foto_kk);
+        }
+
+        // Hapus data KK
+        $kartu_keluarga->delete();
+
+        return redirect()->back()->with('success', 'KK dan semua anggota keluarganya berhasil dihapus.');
     }
 
-    // Hapus file KK dari storage jika ada
-    if ($kartu_keluarga->foto_kk) {
-        Storage::delete('public/kartu_keluarga/' . $kartu_keluarga->foto_kk);
-    }
-
-    // Hapus data KK
-    $kartu_keluarga->delete();
-
-    return redirect()->back()->with('success', 'KK dan semua anggota keluarganya berhasil dihapus.');
-}
-
-public function uploadFoto(Request $request, Kartu_keluarga $kartuKeluarga)
+    public function uploadFoto(Request $request, Kartu_keluarga $kartuKeluarga)
     {
         $request->validate([
             'kk_file' => 'required|file|mimes:jpeg,png,jpg,pdf|max:5120', // Validasi file: gambar atau PDF, maks 5MB
