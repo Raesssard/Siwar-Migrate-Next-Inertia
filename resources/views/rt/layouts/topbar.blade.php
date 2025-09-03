@@ -16,6 +16,7 @@
             'rt_kartu_keluarga' => 'Kartu Keluarga',
             'rt_tagihan' => 'Tagihan',
             'rt_iuran' => 'Iuran',
+            'rt_transaksi' => 'Transaksi',
             'rt_pengeluaran' => 'Pengeluaran',
             'rt_laporan_pengeluaran_bulanan' => 'Laporan Pengeluaran Bulanan',
             default => ucwords(str_replace('-', ' ', $segment)),

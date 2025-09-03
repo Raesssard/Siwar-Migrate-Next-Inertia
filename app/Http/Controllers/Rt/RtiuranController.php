@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Rt;
 
 use App\Http\Controllers\Controller;
@@ -25,9 +26,9 @@ class RtIuranController extends Controller
         if ($user->hasRole('rt')) {
             $query->where(function ($q) use ($user) {
                 $q->where('level', 'rt')->where('id_rt', $user->id_rt)
-                ->orWhere(function ($q2) use ($user) {
-                    $q2->where('level', 'rw')->where('id_rw', $user->id_rw);
-                });
+                    ->orWhere(function ($q2) use ($user) {
+                        $q2->where('level', 'rw')->where('id_rw', $user->id_rw);
+                    });
             });
         } elseif ($user->hasRole('rw')) {
             $query->where('level', 'rw')->where('id_rw', $user->id_rw);
@@ -39,13 +40,12 @@ class RtIuranController extends Controller
 
         $iuran = $query->paginate(5);
 
-        $golongan_list = Kategori_golongan::pluck('jenis','id'); 
+        $golongan_list = Kategori_golongan::all();
         $rt = Rukun_tetangga::all(); // 🔹 tambahin ini
         $title = 'Iuran';
 
         return view('rt.iuran.iuran', compact('iuran', 'golongan_list', 'title', 'rt'));
     }
-
 
     public function store(Request $request)
     {
@@ -57,7 +57,7 @@ class RtIuranController extends Controller
             'tgl_tagih' => 'required|date',
             'tgl_tempo' => 'required|date',
             'jenis' => 'required|in:manual,otomatis',
-            'nominal' => 'required_if:jenis,manual|numeric|min:0',
+            'nominal' => 'nullable|required_if:jenis,manual|numeric|min:0',
         ]);
 
         // 🔹 Tentukan scope RT atau RW
@@ -75,21 +75,20 @@ class RtIuranController extends Controller
         $iuran = Iuran::create($data);
 
         // 🔹 Ambil KK sesuai scope
-        if ($iuran->level === 'rt') {
-            $kkList = Kartu_keluarga::where('id_rt', $iuran->id_rt)->get();
-        } else { // level = rw
-            $kkList = Kartu_keluarga::where('id_rw', $iuran->id_rw)->get();
-        }
+        $kkList = $iuran->level === 'rt' 
+          ? Kartu_keluarga::where('id_rt', $iuran->id_rt)->get()
+          : Kartu_keluarga::where('id_rw', $iuran->id_rw)->get();
+        
 
         // Manual
         if ($request->jenis === 'manual') {
             foreach ($kkList as $kk) {
                 Tagihan::create([
                     'nama' => $iuran->nama,
+                    'nominal' => $iuran->nominal,
                     'tgl_tagih' => $iuran->tgl_tagih,
                     'tgl_tempo' => $iuran->tgl_tempo,
                     'jenis' => 'manual',
-                    'nominal' => $iuran->nominal,
                     'no_kk' => $kk->no_kk,
                     'status_bayar' => 'belum_bayar',
                     'id_iuran' => $iuran->id,
@@ -137,8 +136,6 @@ class RtIuranController extends Controller
         return redirect()->route('rt_iuran.index')->with('success', 'Iuran berhasil dibuat beserta tagihannya.');
     }
 
-
-
     public function edit(string $id)
     {
         $iuran = Iuran::with('iuran_golongan')->findOrFail($id);
@@ -148,56 +145,56 @@ class RtIuranController extends Controller
     }
 
     public function update(Request $request, string $id)
-{
-    $iuran = Iuran::findOrFail($id);
+    {
+        $iuran = Iuran::findOrFail($id);
 
-    $request->validate([
-        'nama' => 'required|string|max:255',
-        'tgl_tagih' => 'required|date',
-        'tgl_tempo' => 'required|date',
-        'jenis' => 'required|in:manual,otomatis',
-    ]);
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'tgl_tagih' => 'required|date',
+            'tgl_tempo' => 'required|date',
+            'jenis' => 'required|in:manual,otomatis',
+        ]);
 
-    $iuran->update([
-        'nama' => $request->nama,
-        'tgl_tagih' => $request->tgl_tagih,
-        'tgl_tempo' => $request->tgl_tempo,
-        'jenis' => $request->jenis,
-        'nominal' => $request->jenis === 'manual' ? $request->nominal : null,
-    ]);
+        $iuran->update([
+            'nama' => $request->nama,
+            'tgl_tagih' => $request->tgl_tagih,
+            'tgl_tempo' => $request->tgl_tempo,
+            'jenis' => $request->jenis,
+            'nominal' => $request->jenis === 'manual' ? $request->nominal : null,
+        ]);
 
-    IuranGolongan::where('id_iuran', $iuran->id)->delete();
+        IuranGolongan::where('id_iuran', $iuran->id)->delete();
 
-    if ($request->jenis === 'otomatis') {
-        foreach ($request->input('nominal', []) as $id_golongan => $nominal) {
-            if ($nominal !== null) {
-                IuranGolongan::create([
-                    'id_iuran'   => $iuran->id,
-                    'id_golongan'=> $id_golongan,
-                    'nominal'    => $nominal,
-                ]);
+        if ($request->jenis === 'otomatis') {
+            foreach ($request->input('nominal', []) as $id_golongan => $nominal) {
+                if ($nominal !== null) {
+                    IuranGolongan::create([
+                        'id_iuran'   => $iuran->id,
+                        'id_golongan' => $id_golongan,
+                        'nominal'    => $nominal,
+                    ]);
+                }
+            }
+
+            // Ambil KK sesuai scope iuran
+            $kkList = $iuran->level === 'rt'
+                ? Kartu_keluarga::where('id_rt', $iuran->id_rt)->get()
+                : Kartu_keluarga::where('id_rw', $iuran->id_rw)->get();
+
+            $iuranNominals = IuranGolongan::where('id_iuran', $iuran->id)
+                ->pluck('nominal', 'id_golongan');
+
+            foreach ($kkList as $kk) {
+                $nominalTagihan = $iuranNominals[$kk->kategori_iuran] ?? 0;
+
+                Tagihan::where('id_iuran', $iuran->id)
+                    ->where('no_kk', $kk->no_kk)
+                    ->update(['nominal' => $nominalTagihan]);
             }
         }
 
-        // Ambil KK sesuai scope iuran
-        $kkList = $iuran->level === 'rt'
-            ? Kartu_keluarga::where('id_rt', $iuran->id_rt)->get()
-            : Kartu_keluarga::where('id_rw', $iuran->id_rw)->get();
-
-        $iuranNominals = IuranGolongan::where('id_iuran', $iuran->id)
-            ->pluck('nominal', 'id_golongan');
-
-        foreach ($kkList as $kk) {
-            $nominalTagihan = $iuranNominals[$kk->kategori_iuran] ?? 0;
-
-            Tagihan::where('id_iuran', $iuran->id)
-                ->where('no_kk', $kk->no_kk)
-                ->update(['nominal' => $nominalTagihan]);
-        }
+        return redirect()->route('rt_iuran.index')->with('success', 'Iuran berhasil diperbarui.');
     }
-
-    return redirect()->route('rt_iuran.index')->with('success', 'Iuran berhasil diperbarui.');
-}
 
     public function destroy(string $id)
     {
@@ -217,46 +214,45 @@ class RtIuranController extends Controller
     }
 
     public function generateMonthlyTagihan()
-{
-    $today = now()->startOfDay();
+    {
+        $today = now()->startOfDay();
 
-    $iurans = Iuran::where('jenis', 'otomatis')
-        ->whereDay('tgl_tagih', $today->day)
-        ->get();
+        $iurans = Iuran::where('jenis', 'otomatis')
+            ->whereDay('tgl_tagih', $today->day)
+            ->get();
 
-    foreach ($iurans as $iuran) {
-        $iuranNominals = IuranGolongan::where('id_iuran', $iuran->id)
-            ->pluck('nominal', 'id_golongan');
+        foreach ($iurans as $iuran) {
+            $iuranNominals = IuranGolongan::where('id_iuran', $iuran->id)
+                ->pluck('nominal', 'id_golongan');
 
-        $kkList = $iuran->level === 'rt'
-            ? Kartu_keluarga::where('id_rt', $iuran->id_rt)->get()
-            : Kartu_keluarga::where('id_rw', $iuran->id_rw)->get();
+            $kkList = $iuran->level === 'rt'
+                ? Kartu_keluarga::where('id_rt', $iuran->id_rt)->get()
+                : Kartu_keluarga::where('id_rw', $iuran->id_rw)->get();
 
-        foreach ($kkList as $kk) {
-            $nominalTagihan = $iuranNominals[$kk->kategori_iuran] ?? 0;
+            foreach ($kkList as $kk) {
+                $nominalTagihan = $iuranNominals[$kk->kategori_iuran] ?? 0;
 
-            $exists = Tagihan::where('id_iuran', $iuran->id)
-                ->where('no_kk', $kk->no_kk)
-                ->whereMonth('tgl_tagih', $today->month)
-                ->whereYear('tgl_tagih', $today->year)
-                ->exists();
+                $exists = Tagihan::where('id_iuran', $iuran->id)
+                    ->where('no_kk', $kk->no_kk)
+                    ->whereMonth('tgl_tagih', $today->month)
+                    ->whereYear('tgl_tagih', $today->year)
+                    ->exists();
 
-            if (!$exists) {
-                Tagihan::create([
-                    'nama' => $iuran->nama,
-                    'tgl_tagih' => $today,
-                    'tgl_tempo' => $iuran->tgl_tempo ?? $today->copy()->addDays(10),
-                    'jenis' => 'otomatis',
-                    'nominal' => $nominalTagihan,
-                    'no_kk' => $kk->no_kk,
-                    'status_bayar' => 'belum_bayar',
-                    'id_iuran' => $iuran->id,
-                ]);
+                if (!$exists) {
+                    Tagihan::create([
+                        'nama' => $iuran->nama,
+                        'tgl_tagih' => $today,
+                        'tgl_tempo' => $iuran->tgl_tempo ?? $today->copy()->addDays(10),
+                        'jenis' => 'otomatis',
+                        'nominal' => $nominalTagihan,
+                        'no_kk' => $kk->no_kk,
+                        'status_bayar' => 'belum_bayar',
+                        'id_iuran' => $iuran->id,
+                    ]);
+                }
             }
         }
+
+        return redirect()->route('rt_iuran.index')->with('success', 'Tagihan bulanan berhasil dibuat.');
     }
-
-    return redirect()->route('rt_iuran.index')->with('success', 'Tagihan bulanan berhasil dibuat.');
 }
-}
-

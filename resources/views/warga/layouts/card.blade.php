@@ -104,26 +104,6 @@
 <div class="row">
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
-        <div class="card border-left-success shadow h-100 py-2 card-clickable">
-            <a href="/iuran" class="text-decoration-none">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Total Iuran Masuk Bulan Ini
-                            </div>
-                            <div class="h4 mb-0 font-weight-bolder text-gray-800">$215,000</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-3x text-gray-400"></i>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
-
-    <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-warning shadow h-100 py-2 card-clickable">
             <a href="{{ route('pengumuman-main') }}" class="text-decoration-none">
                 <div class="card-body">
@@ -142,21 +122,44 @@
             </a>
         </div>
     </div>
-        <div class="col-6 col-md-4 col-xl-3 mb-4">
-        <div class="card border-left-success shadow h-100 py-2 card-clickable">
-            <a href="{{ route('transaksi') }}" class="text-decoration-none">
+
+    <div class="col-6 col-md-4 col-xl-3 mb-4">
+        <div class="card border-left-danger shadow h-100 py-2 card-clickable">
+            <a href="{{ route('tagihan') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Total Pemasukan
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Tagihan
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
-                                Rp{{ number_format($total_pemasukan, 0, ',', '.') }}
+                                {{ $jumlah_tagihan }}
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-dollar-sign fa-3x text-gray-400"></i>
+                            <i class="fas fa-receipt fa-3x text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-6 col-md-4 col-xl-3 mb-4">
+        <div class="card border-left-danger shadow h-100 py-2 card-clickable">
+            <a href="{{ route('tagihan') }}" class="text-decoration-none">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Total Tagihan
+                            </div>
+                            <div class="h4 mb-0 font-weight-bolder text-gray-800">
+                                Rp. {{ number_format($total_tagihan, 0, ',', '.') }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-hand-holding-usd fa-3x text-gray-400"></i>
                         </div>
                     </div>
                 </div>
@@ -166,16 +169,16 @@
 
     <!-- Card Total Pengeluaran -->
     <div class="col-6 col-md-4 col-xl-3 mb-4">
-        <div class="card border-left-danger shadow h-100 py-2 card-clickable">
+        <div class="card border-left-primary shadow h-100 py-2 card-clickable">
             <a href="{{ route('transaksi') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
-                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                Total Pengeluaran
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Transaksi
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
-                                Rp{{ number_format($total_pengeluaran, 0, ',', '.') }}
+                                {{ $jumlah_transaksi }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -187,20 +190,17 @@
         </div>
     </div>
 
-    {{-- ==================================================================== --}}
-    {{-- CARD BARU: Saldo Akhir --}}
-    {{-- ==================================================================== --}}
     <div class="col-6 col-md-4 col-xl-3 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2 card-clickable"> {{-- Anda bisa pilih warna border lain, misal border-left-info --}}
+        <div class="card border-left-success shadow h-100 py-2 card-clickable"> {{-- Anda bisa pilih warna border lain, misal border-left-info --}}
             <a href="{{ route('transaksi') }}" class="text-decoration-none"> {{-- Link ke halaman transaksi --}}
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Saldo Akhir
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Transaksi
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
-                                Rp{{ number_format($total_saldo_akhir, 0, ',', '.') }}
+                                Rp. {{ number_format($total_transaksi, 0, ',', '.') }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -210,7 +210,6 @@
                 </div>
             </a>
         </div>
-    {{-- ==================================================================== --}}
 
 </div>
 </div>

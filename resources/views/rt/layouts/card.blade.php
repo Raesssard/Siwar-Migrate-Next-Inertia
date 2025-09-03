@@ -102,27 +102,6 @@
 </style>
 
 <div class="row">
-    
-    <div class="col-6 col-md-4 col-xl-3 mb-4">
-        <div class="card border-left-info shadow h-100 py-2 card-clickable">
-            <a href="{{ route('rt_kartu_keluarga.index') }}" class="text-decoration-none">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Jumlah KK</div>
-                            <div class="d-flex align-items-center">
-                                <div class="h4 mb-0 font-weight-bolder text-gray-800 me-2">{{ $jumlah_kk }}</div>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-3x text-gray-400"></i>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
-
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-primary shadow h-100 py-2 card-clickable">
             <a href="{{ route('rt_warga.index') }}" class="text-decoration-none">
@@ -146,8 +125,8 @@
             </a>
         </div>
     </div>
-
     
+
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-primary shadow h-100 py-2 card-clickable">
             <a href="{{ route('rt_warga.index') }}" class="text-decoration-none">
@@ -188,6 +167,46 @@
     </div>
 
 
+    <div class="col-6 col-md-4 col-xl-3 mb-4">
+        <div class="card border-left-info shadow h-100 py-2 card-clickable">
+            <a href="{{ route('rt_kartu_keluarga.index') }}" class="text-decoration-none">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Jumlah KK</div>
+                            <div class="d-flex align-items-center">
+                                <div class="h4 mb-0 font-weight-bolder text-gray-800 me-2">{{ $jumlah_kk }}</div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-3x text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-6 col-md-4 col-xl-3 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2 card-clickable">
+            <a href="{{ route('rt_pengumuman.index') }}" class="text-decoration-none">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Jumlah Pengumuman
+                            </div>
+                            <div class="h4 mb-0 font-weight-bolder text-gray-800">{{ $jumlah_pengumuman }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-bullhorn fa-3x text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
     <!-- Card Total Pengeluaran -->
         <!-- Card Total Pemasukan -->
     <div class="col-6 col-md-4 col-xl-3 mb-4">
@@ -200,7 +219,7 @@
                                 Total Pemasukan
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
-                                Rp{{ number_format($total_pemasukan, 0, ',', '.') }}
+                                Rp. {{ number_format($total_pemasukan, 0, ',', '.') }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -223,7 +242,7 @@
                                 Total Pengeluaran
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
-                                Rp{{ number_format($total_pengeluaran, 0, ',', '.') }}
+                                Rp. {{ number_format($total_pengeluaran, 0, ',', '.') }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -248,30 +267,11 @@
                                 Saldo Akhir
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
-                                Rp{{ number_format($total_saldo_akhir, 0, ',', '.') }}
+                                Rp. {{ number_format($total_saldo_akhir, 0, ',', '.') }}
                             </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-wallet fa-3x text-gray-400"></i> {{-- Icon dompet atau sejenisnya --}}
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="col-6 col-md-4 col-xl-3 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2 card-clickable">
-            <a href="{{ route('rt_pengumuman.index') }}" class="text-decoration-none">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Jumlah Pengumuman
-                            </div>
-                            <div class="h4 mb-0 font-weight-bolder text-gray-800">{{ $jumlah_pengumuman }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-comments fa-3x text-gray-400"></i>
                         </div>
                     </div>
                 </div>

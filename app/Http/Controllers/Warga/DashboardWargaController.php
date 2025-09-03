@@ -13,11 +13,11 @@ class DashboardWargaController extends Controller
 {
     //
 
-   public function index()
-{
-    $title = 'Dashboard';
+    public function index()
+    {
+        $title = 'Dashboard';
 
-   // Mengambil ID RT dan RW dari pengguna yang sedang login
+        // Mengambil ID RT dan RW dari pengguna yang sedang login
         // Menggunakan null coalescing operator untuk menghindari error jika relasi tidak ada
         $userRtId = Auth::user()->warga->kartuKeluarga->rukunTetangga->id ?? null;
         $userRwId = Auth::user()->warga->kartuKeluarga->rw->id ?? null;
@@ -47,18 +47,30 @@ class DashboardWargaController extends Controller
                 // (id_rw = X AND id_rt IS NULL)
                 $query->orWhere(function ($subQuery) use ($userRwId) {
                     $subQuery->where('id_rw', $userRwId)
-                             ->whereNull('id_rt'); // Penting: Hanya pengumuman tingkat RW
+                        ->whereNull('id_rt'); // Penting: Hanya pengumuman tingkat RW
                 });
             }
         });
 
         // Menghitung total pengumuman berdasarkan baseQuery
+        $nik = Auth::user()->nik;
         $jumlah_pengumuman = (clone $baseQuery)->count();
+        $jumlah_tagihan = Tagihan::where('status_bayar', 'belum_bayar')
+            ->whereIn('no_kk', function ($kk) use ($nik) {
+                $kk->select('no_kk')
+                    ->from('warga')
+                    ->where('nik', $nik);
+            })->count();
+        $jumlah_transaksi = Transaksi::count();
+        $total_tagihan = Tagihan::where('status_bayar', 'belum_bayar')
+            ->whereIn('no_kk', function ($kk) use ($nik) {
+                $kk->select('no_kk')
+                    ->from('warga')
+                    ->where('nik', $nik);
+            })
+            ->sum('nominal');
+        $total_transaksi = Transaksi::sum('pengeluaran');
 
-        $total_pemasukan = Tagihan::where('status_bayar', 'sudah_bayar')->sum('nominal');
-        $total_pengeluaran = Transaksi::sum('pengeluaran');
-        $total_saldo_akhir = $total_pemasukan - $total_pengeluaran;
-
-    return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman','total_pemasukan', 'total_pengeluaran', 'total_saldo_akhir'));
-}
+        return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman', 'total_tagihan', 'total_transaksi', 'jumlah_tagihan', 'jumlah_transaksi'));
+    }
 }
