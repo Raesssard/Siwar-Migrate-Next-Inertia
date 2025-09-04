@@ -137,7 +137,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-receipt fa-3x text-gray-400"></i>
+                            <i class="fas fa-money-check-alt fa-3x text-gray-400"></i>
                         </div>
                     </div>
                 </div>

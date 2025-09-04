@@ -63,7 +63,7 @@ class Rt_kartu_keluargaController extends Controller
             ->withQueryString();
 
         // Kategori golongan
-        $kategori_iuran = Kategori_golongan::getEnumNama();
+        $kategori_iuran = Kategori_golongan::pluck('jenis', 'id');
 
         // Query untuk Warga: Hanya tampilkan warga yang kartu keluarganya ada di RT yang sesuai
         $warga = Warga::whereHas('kartuKeluarga', function ($q) use ($rt_id_from_nomor) {
@@ -86,7 +86,7 @@ class Rt_kartu_keluargaController extends Controller
      */
     public function create()
     {
-        $kategori_golongan = Kategori_golongan::getEnumNama();
+        $kategori_iuran = Kategori_golongan::pluck('jenis', 'id');
         $title = 'Tambah Kartu Keluarga';
         return view('rt.kartu_keluarga.create', compact('kategori_golongan', 'title'));
     }
@@ -194,7 +194,7 @@ class Rt_kartu_keluargaController extends Controller
         $kartu_keluarga = Kartu_keluarga::findOrFail($id);
         $this->authorizeRt($kartu_keluarga);
 
-        $kategori_golongan = Kategori_golongan::getEnumNama();
+        $kategori_iuran = Kategori_golongan::pluck('jenis', 'id');
         $title = 'Edit Kartu Keluarga';
 
         return view('rt_kartu_keluarga.edit', compact('kartu_keluarga', 'kategori_golongan', 'title'));
@@ -227,7 +227,7 @@ class Rt_kartu_keluargaController extends Controller
                 'provinsi' => 'required|string|max:100',
                 'kode_pos' => 'required|string|max:10',
                 'tgl_terbit' => 'required|date',
-                'kategori_iuran' => ['required', Rule::in(Kategori_golongan::getEnumNama())],
+                'kategori_iuran' => ['required', Rule::in(Kategori_golongan::pluck('id')->toArray())],
                 'instansi_penerbit' => 'required|string|max:100',
                 'kabupaten_kota_penerbit' => 'required|string|max:100',
                 'nama_kepala_dukcapil' => 'required|string|max:100',
@@ -291,8 +291,9 @@ class Rt_kartu_keluargaController extends Controller
         return redirect()->back()->with('success', 'KK dan semua anggota keluarganya berhasil dihapus.');
     }
 
-    public function uploadFoto(Request $request, Kartu_keluarga $kartuKeluarga)
+    public function uploadFoto(Request $request, $no_kk)
     {
+        $kartuKeluarga = Kartu_keluarga::where('no_kk', $no_kk)->firstOrFail();
         $request->validate([
             'kk_file' => 'required|file|mimes:jpeg,png,jpg,pdf|max:5120', // Validasi file: gambar atau PDF, maks 5MB
         ]);
@@ -317,11 +318,13 @@ class Rt_kartu_keluargaController extends Controller
         return redirect()->back()->with('success', 'Dokumen Kartu Keluarga berhasil diunggah!');
     }
 
-    public function deleteFoto(Kartu_keluarga $kartuKeluarga)
+    public function deleteFoto($no_kk)
     {
+        $kartuKeluarga = Kartu_keluarga::where('no_kk', $no_kk)->firstOrFail();
+
         if ($kartuKeluarga->foto_kk) {
             Storage::disk('public')->delete($kartuKeluarga->foto_kk);
-            $kartuKeluarga->foto_kk = null; // Setel kolom ke null setelah dihapus
+            $kartuKeluarga->foto_kk = null;
             $kartuKeluarga->save();
             return redirect()->back()->with('success', 'Dokumen Kartu Keluarga berhasil dihapus!');
         }

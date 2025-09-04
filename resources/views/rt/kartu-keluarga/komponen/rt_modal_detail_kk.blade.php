@@ -283,15 +283,15 @@
 
                     <hr class="my-4" style="border-top: 2px solid #e0e0e0;">
 
-                    <div class="mx-auto text-end mb-3">
+                    {{-- <div class="mx-auto text-end mb-3">
                         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#modalTambahWarga" data-no_kk="{{ $kk->no_kk }}" {{-- Mengambil nama kepala keluarga dari relasi warga yang sudah di-eager load --}}
+                            data-bs-target="#modalTambahWarga" data-no_kk="{{ $kk->no_kk }}" Mengambil nama kepala keluarga dari relasi warga yang sudah di-eager load
                             data-nama_ayah="{{ $kk->warga->firstWhere('status_hubungan_dalam_keluarga', 'kepala keluarga')->nama ?? '' }}"
-                            {{-- Mengambil nama istri dari relasi warga yang sudah di-eager load (jika ada) --}}
+                            Mengambil nama istri dari relasi warga yang sudah di-eager load (jika ada)
                             data-nama_ibu="{{ $kk->warga->firstWhere('status_hubungan_dalam_keluarga', 'istri')->nama ?? '' }}">
                             <i class="fas fa-plus"></i> Tambah Anggota Keluarga
                         </button>
-                    </div>
+                    </div> --}}
 
                     <h6 class="text-dark mb-3 fw-bold text-center">DAFTAR ANGGOTA KELUARGA</h6>
                     <div class="table-responsive">
@@ -313,7 +313,7 @@
                                     <th colspan="2">Dokumen Imigrasi</th>
                                     <th colspan="2">Nama Orang Tua</th>
                                     <th rowspan="2">Status Warga</th>
-                                    <th rowspan="2">Aksi</th>
+                                    {{-- <th rowspan="2">Aksi</th> --}}
                                 </tr>
                                 <tr>
                                     <th>Tempat Lahir</th>
@@ -350,7 +350,7 @@
                                         <td>{{ $data->nama_ayah ?? '-' }}</td>
                                         <td>{{ $data->nama_ibu ?? '-' }}</td>
                                         <td class="text-center">{{ $data->status_warga ?? '-' }}</td>
-                                        <td class="text-center">
+                                        {{-- <td class="text-center">
                                             <div
                                                 class="d-flex justify-content-center align-items-center gap-1 flex-nowrap">
                                                 <form action="{{ route('rt_warga.destroy', $data->nik) }}" method="POST"
@@ -373,7 +373,7 @@
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                             </div>
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                 @empty
                                     <tr>
