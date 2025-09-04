@@ -54,6 +54,12 @@
                     </div>
                 </form>
 
+                <div class="mb-3">
+                    <a href="{{ route('rt.iuran.export') }}" class="btn btn-success">
+                        <i class="fas fa-file-excel"></i> Export Iuran ke Excel
+                    </a>
+                </div>
+
                 <!-- Tabel Iuran Manual -->
                 <div class="col-12">
                     <div class="card shadow mb-4">
