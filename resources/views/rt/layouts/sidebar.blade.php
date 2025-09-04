@@ -103,7 +103,7 @@
 
     <li class="nav-item {{ Request::is('rt/rt_pengumuman*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('rt_pengumuman.index') }}">
-            <i class="fas fa-bullhorn"></i>
+            <i class="fas fa-comments"></i>
             <span>Pengumuman</span>
         </a>
     <li class="nav-item {{ Request::is('rt/rt_iuran*') ? 'active' : '' }}">

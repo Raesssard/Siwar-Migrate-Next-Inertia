@@ -43,17 +43,18 @@
                         <div class="col-md-6">
                             <label class="form-label">Kategori Iuran</label>
                             @php
-                                $selectedKategori = old('kategori_iuran') !== null ? old('kategori_iuran') : ($kk->kategori_iuran ?? '');
+                                $selectedKategori =
+                                    old('kategori_iuran') !== null ? old('kategori_iuran') : $kk->kategori_iuran ?? '';
                             @endphp
                             <select name="kategori_iuran"
                                 class="form-select @error('kategori_iuran') is-invalid @enderror" required>
                                 <option value="" disabled {{ $selectedKategori === '' ? 'selected' : '' }}>
                                     Pilih Kategori Iuran
                                 </option>
-                                @foreach ($kategori_iuran as $kategori)
-                                    <option value="{{ $kategori }}"
-                                        {{ $selectedKategori == $kategori ? 'selected' : '' }}>
-                                        {{ ucfirst($kategori) }}
+                                @foreach ($kategori_iuran as $id => $nama)
+                                    <option value="{{ $id }}"
+                                        {{ $selectedKategori == $id ? 'selected' : '' }}>
+                                        {{ ucfirst($nama) }}
                                     </option>
                                 @endforeach
                             </select>
@@ -64,8 +65,7 @@
 
                         <div class="col-md-12">
                             <label class="form-label">Alamat</label>
-                            <textarea name="alamat" rows="2" required
-                                class="form-control @error('alamat') is-invalid @enderror">{{ old('alamat', $kk->alamat) }}</textarea>
+                            <textarea name="alamat" rows="2" required class="form-control @error('alamat') is-invalid @enderror">{{ old('alamat', $kk->alamat) }}</textarea>
                             @error('alamat')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

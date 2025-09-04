@@ -199,7 +199,7 @@
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">{{ $jumlah_pengumuman }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-bullhorn fa-3x text-gray-400"></i>
+                            <i class="fas fa-comments fa-3x text-gray-400"></i>
                         </div>
                     </div>
                 </div>
@@ -258,12 +258,12 @@
     {{-- CARD BARU: Saldo Akhir --}}
     {{-- ==================================================================== --}}
     <div class="col-6 col-md-4 col-xl-3 mb-4">
-        <div class="card border-left-primary shadow h-100 py-2 card-clickable"> {{-- Anda bisa pilih warna border lain, misal border-left-info --}}
+        <div class="card border-left-{{ $total_saldo_akhir < 0 ? 'danger' : 'success' }} shadow h-100 py-2 card-clickable"> {{-- Anda bisa pilih warna border lain, misal border-left-info --}}
             <a href="{{ route('rt_transaksi.index') }}" class="text-decoration-none"> {{-- Link ke halaman transaksi --}}
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-{{ $total_saldo_akhir < 0 ? 'danger' : 'success' }} text-uppercase mb-1">
                                 Saldo Akhir
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
