@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Admin_dashboardController;
 use App\Http\Controllers\Admin\Admin_rtController;
 use App\Http\Controllers\Admin\Admin_rwController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Rt\{
     Rt_kartu_keluargaController,
@@ -42,6 +43,7 @@ use App\Http\Controllers\UserController;
 | Admin Routes
 |--------------------------------------------------------------------------
 */
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [Admin_dashboardController::class, 'index'])->name('dashboard-admin');
     Route::resource('admin/data_rt', Admin_rtController::class);
@@ -109,6 +111,11 @@ Route::middleware(['auth', 'role:rt'])->group(function () {
         ->name('rt_kartu_keluarga.delete_foto');
     Route::get('rt/rt_kartu_keluarga/{rt_kartu_keluarga}/upload-form', [Rt_kartu_keluargaController::class, 'uploadForm'])
         ->name('rt_kartu_keluarga.upload_form');
+
+    // Export khusus RT
+    Route::get('/rt/export/iuran', [ExportController::class, 'exportIuran'])->name('rt.iuran.export');
+    Route::get('/rt/export/tagihan', [ExportController::class, 'exportTagihan'])->name('rt.tagihan.export');
+    Route::get('/rt/export/transaksi', [ExportController::class, 'exportTransaksi'])->name('rt.transaksi.export');
 });
 
 /*
@@ -149,4 +156,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/choose-role', [LoginController::class, 'chooseRole'])->name('choose-role'); // tampilan pilih role
     Route::post('/choose-role', [LoginController::class, 'setRole'])->name('choose.role');   // submit role terpilih
 });
-
