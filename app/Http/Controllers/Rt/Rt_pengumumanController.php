@@ -99,6 +99,8 @@ class Rt_pengumumanController extends Controller
             ->paginate(10)
             ->withQueryString();
 
+        $daftar_penngumuman = Pengumuman::whereHas('rukunTetangga');
+
         return view('rt.pengumuman.pengumuman', compact(
             'pengumuman',
             'title',
@@ -279,7 +281,7 @@ class Rt_pengumumanController extends Controller
      * Hapus pengumuman.
      */
     public function destroy($id)
-{
+    {
         // Pastikan hanya pengumuman yang relevan dengan RT ini yang bisa dihapus
         $userRtData = Auth::user()->rukunTetangga;
         if (!$userRtData) {
@@ -299,16 +301,16 @@ class Rt_pengumumanController extends Controller
                 });
         })->findOrFail($id);
 
-       // ... di dalam public function destroy($id)(kode otorisasi dan findOrFail) ...
+        // ... di dalam public function destroy($id)(kode otorisasi dan findOrFail) ...
 
-    // Hapus file dokumen terkait jika ada
-    if ($pengumuman->dokumen_path && Storage::disk('public')->exists($pengumuman->dokumen_path)) {
-        Storage::disk('public')->delete($pengumuman->dokumen_path);
+        // Hapus file dokumen terkait jika ada
+        if ($pengumuman->dokumen_path && Storage::disk('public')->exists($pengumuman->dokumen_path)) {
+            Storage::disk('public')->delete($pengumuman->dokumen_path);
+        }
+
+        $pengumuman->delete();
+
+        return redirect()->route('rt_pengumuman.index')
+            ->with('success', 'Pengumuman berhasil dihapus.');
     }
-
-    $pengumuman->delete();
-
-    return redirect()->route('rt_pengumuman.index')
-        ->with('success', 'Pengumuman berhasil dihapus.');
-}
 }

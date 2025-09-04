@@ -313,7 +313,7 @@
                                     <th colspan="2">Dokumen Imigrasi</th>
                                     <th colspan="2">Nama Orang Tua</th>
                                     <th rowspan="2">Status Warga</th>
-                                    <th rowspan="2">Aksi</th>
+                                    {{-- <th rowspan="2">Aksi</th> --}}
                                 </tr>
                                 <tr>
                                     <th>Tempat Lahir</th>
@@ -350,7 +350,7 @@
                                         <td>{{ $data->nama_ayah ?? '-' }}</td>
                                         <td>{{ $data->nama_ibu ?? '-' }}</td>
                                         <td class="text-center">{{ $data->status_warga ?? '-' }}</td>
-                                        <td class="text-center">
+                                        {{-- <td class="text-center">
                                             <div
                                                 class="d-flex justify-content-center align-items-center gap-1 flex-nowrap">
                                                 <form action="{{ route('rt_warga.destroy', $data->nik) }}" method="POST"
@@ -373,7 +373,7 @@
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                             </div>
-                                        </td>
+                                        </td> --}}
                                     </tr>
                                 @empty
                                     <tr>

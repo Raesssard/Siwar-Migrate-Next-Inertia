@@ -106,11 +106,11 @@
                                                                 <!-- Ikon hapus --></button>
                                                         </form> --}}
 
-                                                        <button type="button" class="btn btn-warning btn-sm"
+                                                        {{-- <button type="button" class="btn btn-warning btn-sm"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#modalEditkk{{ $kk->no_kk }}">
                                                             <i class="fas fa-edit"></i> <!-- Ikon edit -->
-                                                        </button>
+                                                        </button> --}}
 
                                                         <button type="button" class="btn btn-success btn-sm"
                                                             data-bs-toggle="modal"
