@@ -104,7 +104,7 @@
                                                 <td>{{ $kk->alamat }}</td>
                                                 <td>{{ $kk->rukunTetangga->rt ?? '-' }}</td>
                                                 <td>{{ $kk->rw->nomor_rw }}</td>
-                                                <td>{{ $kk->kategori_iuran }}</td>
+                                                <td>{{ $kk->kategoriGolongan->jenis ?? '-' }}</td>
                                                 <td class="text-center align-middle">
                                                     <div class="d-flex justify-content-center gap-1 flex-wrap">
                                                         <form action="{{ route('kartu_keluarga.destroy', $kk->no_kk) }}"

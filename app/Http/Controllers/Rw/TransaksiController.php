@@ -213,7 +213,7 @@ class TransaksiController extends Controller
 
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'rt' => 'required|string|max:10|exists:rukun_tetangga,nomor_rt',
+            'rt' => 'required|string|max:10|exists:rukun_tetangga,rt',
             'tanggal' => 'required|date',
             'nama_transaksi' => 'required|string|max:255',
             'pemasukan' => 'nullable|numeric|min:0', // Pemasukan di update bisa diinput manual

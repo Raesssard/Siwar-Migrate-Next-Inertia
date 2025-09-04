@@ -262,17 +262,21 @@ public function edit(string $id)
     {
         $kartu_keluarga = Kartu_keluarga::with('warga')->findOrFail($id);
 
-        foreach ($kartu_keluarga->warga as $warga) {
-            $warga->delete();
+        // Cek apakah masih ada warga
+        if ($kartu_keluarga->warga()->exists()) {
+            return redirect()->back()
+                ->with('error', 'Tidak bisa menghapus KK karena masih ada data warga.');
         }
 
+        // Hapus foto KK jika ada
         if ($kartu_keluarga->foto_kk) {
             Storage::delete('public/kartu_keluarga/' . $kartu_keluarga->foto_kk);
         }
 
+        // Hapus KK → tagihan akan ikut terhapus otomatis karena ON DELETE CASCADE
         $kartu_keluarga->delete();
 
-        return redirect()->back()->with('success', 'KK dan semua anggota keluarganya berhasil dihapus.');
+        return redirect()->back()->with('success', 'Kartu Keluarga berhasil dihapus.');
     }
 
     public function uploadFoto(Request $request, Kartu_keluarga $kartuKeluarga)

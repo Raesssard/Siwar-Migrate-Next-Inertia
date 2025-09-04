@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pengumuman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PengumumanRtController extends Controller
 {
@@ -140,5 +141,17 @@ class PengumumanRtController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function export($id)
+    {
+        $pengumuman = Pengumuman::findOrFail($id);
+
+        $pdf = Pdf::loadView('export.pengumuman', [
+            'pengumuman' => $pengumuman,
+            'jenis' => 'RT'
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->download("Pengumuman-RT-{$pengumuman->id}.pdf");
     }
 }
