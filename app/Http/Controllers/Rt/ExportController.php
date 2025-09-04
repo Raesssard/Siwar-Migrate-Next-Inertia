@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Rt;
 
+use App\Http\Controllers\Controller;
 use App\Models\Iuran;
 use App\Models\IuranGolongan;
 use App\Models\Kategori_golongan;
@@ -29,30 +30,30 @@ class ExportController extends Controller
         foreach (range('A', 'R') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
-        $sheet->setCellValue('A1', 'Iuran Manual');
-        $sheet->mergeCells('A1:F1');
-        $sheet->setCellValue('A2', 'No.');
-        $sheet->setCellValue('B2', 'Nama');
-        $sheet->setCellValue('C2', 'Nominal');
-        $sheet->setCellValue('D2', 'Tanggal Tagih');
-        $sheet->setCellValue('E2', 'Tanggal Tempo');
+        $sheet->setCellValue('B1', 'Iuran Manual');
+        $sheet->mergeCells('B1:F1');
+        $sheet->setCellValue('B2', 'No.');
+        $sheet->setCellValue('C2', 'Nama');
+        $sheet->setCellValue('D2', 'Nominal');
+        $sheet->setCellValue('E2', 'Tanggal Tagih');
+        $sheet->setCellValue('F2', 'Tanggal Tempo');
 
         $row = 3;
         $iurans = Iuran::where('id_rt', $id_rt)->where('jenis', 'manual')->get();
         $no_urut = 1;
 
         foreach ($iurans as $iuran) {
-            $sheet->setCellValue("A{$row}", $no_urut);
-            $sheet->setCellValue("B{$row}", $iuran->nama);
-            $sheet->setCellValue("C{$row}", $iuran->nominal);
-            $sheet->setCellValue("D{$row}", $iuran->tgl_tagih);
-            $sheet->setCellValue("E{$row}", $iuran->tgl_tempo);
+            $sheet->setCellValue("B{$row}", $no_urut);
+            $sheet->setCellValue("C{$row}", $iuran->nama);
+            $sheet->setCellValue("D{$row}", $iuran->nominal);
+            $sheet->setCellValue("E{$row}", $iuran->tgl_tagih);
+            $sheet->setCellValue("F{$row}", $iuran->tgl_tempo);
             $row++;
             $no_urut++;
         }
 
         $sheet->setCellValue('I1', 'Iuran Otomatis');
-        $sheet->mergeCells('I1:O1');
+        $sheet->mergeCells('I1:R1');
         $sheet->setCellValue('I2', 'No.');
         $sheet->setCellValue('J2', 'Nama');
         $sheet->setCellValue('K2', 'Kampung');
@@ -89,7 +90,7 @@ class ExportController extends Controller
         $rowEnd = $row - 1;
         $rowEnds = $row_otomatis - 1;
 
-        $sheet->getStyle("A2:E{$rowEnd}")->applyFromArray([
+        $sheet->getStyle("B2:F{$rowEnd}")->applyFromArray([
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN, // bisa THICK, DASHED, dll.
@@ -109,7 +110,7 @@ class ExportController extends Controller
 
         $rowStart = 3;
 
-        $sheet->getStyle("A2:E2")->applyFromArray([
+        $sheet->getStyle("B2:F2")->applyFromArray([
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
                 'startColor' => ['argb' => '40bf40'], // kuning
@@ -120,7 +121,7 @@ class ExportController extends Controller
             $isEven = $r % 2 == 0; // baris genap
             $color = $isEven ? '79d279' : 'b3e6b3';
 
-            $sheet->getStyle("A{$r}:E{$r}")->applyFromArray([
+            $sheet->getStyle("B{$r}:F{$r}")->applyFromArray([
                 'fill' => [
                     'fillType' => Fill::FILL_SOLID,
                     'startColor' => ['argb' => $color],

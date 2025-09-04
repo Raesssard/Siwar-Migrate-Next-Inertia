@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\Admin_dashboardController;
 use App\Http\Controllers\Admin\Admin_rtController;
 use App\Http\Controllers\Admin\Admin_rwController;
-use App\Http\Controllers\ExportController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Rt\{
     Rt_kartu_keluargaController,
@@ -13,6 +12,7 @@ use App\Http\Controllers\Rt\{
     Rt_pengumumanController,
     Rt_tagihanController,
     Rt_transaksiController,
+    ExportController,
     RtiuranController
 };
 use App\Http\Controllers\Rw\{
