@@ -54,11 +54,11 @@
                                     <span class="fw-semibold text-dark">Total: {{ $total_kk }} KK</span>
                                 </div>
 
-                                {{-- Tombol tambah (akan berada di kanan) --}}
+                                {{-- Tombol tambah (akan berada di kanan)
                                 <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#modalTambahKK">
                                     <i class="fas fa-plus"></i> Tambah
-                                </button>
+                                </button> --}}
                             </div>
                             <div class="table-responsive table-container">
                                 <table class="table table-hover table-sm scroll-table text-nowrap">
@@ -94,7 +94,7 @@
                                                 <td>{{ $kk->kategoriGolongan->jenis }}</td>
                                                 <td class="text-center align-middle">
                                                     <div class="d-flex justify-content-center gap-1 flex-wrap">
-                                                        <form action="{{ route('rt_kartu_keluarga.destroy', $kk->no_kk) }}"
+                                                        {{-- <form action="{{ route('rt_kartu_keluarga.destroy', $kk->no_kk) }}"
                                                             method="POST"
                                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                             @csrf
@@ -104,7 +104,7 @@
                                                             <button type="submit" class="btn btn-danger btn-sm"><i
                                                                     class="fas fa-trash-alt"></i>
                                                                 <!-- Ikon hapus --></button>
-                                                        </form>
+                                                        </form> --}}
 
                                                         <button type="button" class="btn btn-warning btn-sm"
                                                             data-bs-toggle="modal"
@@ -166,29 +166,16 @@
             @include('rt.kartu-keluarga.komponen.rt_modal_dokumen')
             {{-- End Modal Document --}}
         </div>
-        <!-- /.container-fluid -->
-        <!-- Modal Tambah Kartu Keluarga -->
-        @include('rt.kartu-keluarga.komponen.rt_modal_tambah_kk')
-        {{-- End Modal Tambah KK --}}
-
-        <!-- Modal Tambah Warga -->
-        @include('rt.kartu-keluarga.komponen.rt_modal_tambah_warga')
-        {{-- End Modal Tambah Warga --}}
-
+        {{--@include('rt.kartu-keluarga.komponen.rt_modal_tambah_kk')
+        @include('rt.kartu-keluarga.komponen.rt_modal_tambah_warga') --}}
         @foreach ($kartu_keluarga as $kk)
-            <!-- Modal Edit kartu keluarga -->
             @include('rt.kartu-keluarga.komponen.rt_modal_edit_kk')
-            {{-- End Modal Edit KK  --}}
-            <!-- Modal Detail kartu keluarga -->
             @include('rt.kartu-keluarga.komponen.rt_modal_detail_kk')
-            {{-- End Modal Detail KK --}}
         @endforeach
-        @foreach ($warga as $item)
+        {{-- @foreach ($warga as $item)
             <!-- Modal Edit Warga -->
             @include('rt.kartu-keluarga.komponen.rt_modal_edit_warga')
-            {{-- End Modal Edit Warga --}}
-        @endforeach
-
+        @endforeach --}}
     </div>
     <!-- End of Main Content -->
 

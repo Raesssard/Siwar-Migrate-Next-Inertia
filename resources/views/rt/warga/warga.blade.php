@@ -82,7 +82,6 @@
                                             <th scope="col">NAMA IBU</th>
                                             <th scope="col">STATUS WARGA</th>
                                             <th scope="col">RT</th> {{-- RT dari KK warga tersebut --}}
-                                            <th scope="col">AKSI</th>
                                         </tr>
                                     </thead>
 
@@ -123,33 +122,10 @@
                                                 <td class="text-center">{{ ucwords($item->status_warga ?? '-') }}</td>
                                                 <td>{{ $item->kartuKeluarga->rukunTetangga->rt ?? '-' }}</td>
                                                 {{-- Pastikan relasi kartuKeluarga dan rukunTetangga dimuat --}}
-                                                <td class="text-center align-middle d-flex">
-                                                    <div class="d-flex justify-content-center gap-1">
-                                                        <form action="{{ route('rt_warga.destroy', $item->nik) }}"
-                                                            method="POST"
-                                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <input type="hidden" name="redirect_to"
-                                                                value="{{ route('rt_warga.index') }}"> {{-- Kembali ke halaman index warga --}}
-                                                            <button type="submit" class="btn btn-danger btn-sm"
-                                                                title="Hapus Warga">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
-                                                        <button type="button" class="btn btn-warning btn-sm"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalEditwarga{{ $item->nik }}"
-                                                            title="Edit Warga">
-                                                            <i class="fas fa-user-edit"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
                                             </tr>
 
 
 
-                                            @include('rt.warga.komponen.edit_warga_modal')
                                         @endforeach
 
                                     </tbody>
@@ -190,14 +166,5 @@
 
     </div>
     <!-- End of Main Content -->
-
-    @if (session('open_edit_modal'))
-        <script>
-            var modalId = 'modalEditwarga{{ session('open_edit_modal') }}';
-            var modal = new bootstrap.Modal(document.getElementById(modalId));
-            modal.show();
-        </script>
-    @endif
-
 
 @endsection

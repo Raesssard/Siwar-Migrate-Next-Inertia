@@ -283,15 +283,15 @@
 
                     <hr class="my-4" style="border-top: 2px solid #e0e0e0;">
 
-                    <div class="mx-auto text-end mb-3">
+                    {{-- <div class="mx-auto text-end mb-3">
                         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#modalTambahWarga" data-no_kk="{{ $kk->no_kk }}" {{-- Mengambil nama kepala keluarga dari relasi warga yang sudah di-eager load --}}
+                            data-bs-target="#modalTambahWarga" data-no_kk="{{ $kk->no_kk }}" Mengambil nama kepala keluarga dari relasi warga yang sudah di-eager load
                             data-nama_ayah="{{ $kk->warga->firstWhere('status_hubungan_dalam_keluarga', 'kepala keluarga')->nama ?? '' }}"
-                            {{-- Mengambil nama istri dari relasi warga yang sudah di-eager load (jika ada) --}}
+                            Mengambil nama istri dari relasi warga yang sudah di-eager load (jika ada)
                             data-nama_ibu="{{ $kk->warga->firstWhere('status_hubungan_dalam_keluarga', 'istri')->nama ?? '' }}">
                             <i class="fas fa-plus"></i> Tambah Anggota Keluarga
                         </button>
-                    </div>
+                    </div> --}}
 
                     <h6 class="text-dark mb-3 fw-bold text-center">DAFTAR ANGGOTA KELUARGA</h6>
                     <div class="table-responsive">
