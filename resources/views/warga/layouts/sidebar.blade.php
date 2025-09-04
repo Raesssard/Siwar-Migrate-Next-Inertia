@@ -83,7 +83,7 @@
 
     <li class="nav-item {{ Route::is('dashboard-main') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('dashboard-main') }}">
-            <i class="fas fa-bullhorn"></i>
+            <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
         </a>
     </li>
@@ -104,13 +104,13 @@
     </li>
     <li class="nav-item {{ Request::is('warga/tagihan*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('tagihan') }}">
-            <i class="fas fa-dollar-sign"></i>
+            <i class="fas fa-hand-holding-usd"></i>
             <span>Lihat Tagihan</span>
         </a>
     </li>
         <li class="nav-item {{ Request::is('warga/transaksi*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('transaksi') }}">
-            <i class="fas fa-dollar-sign"></i>
+            <i class="fas fa-money-bill-wave"></i>
             <span>Lihat Transaksi</span>
         </a>
     </li>
