@@ -8,6 +8,8 @@ use App\Models\Tagihan;
 use App\Models\Iuran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Exports\TagihanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TagihanController extends Controller
 {
@@ -165,5 +167,20 @@ class TagihanController extends Controller
             Log::error('Error deleting tagihan manual:', ['message' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Gagal menghapus tagihan manual. Error: ' . $e->getMessage());
         }
+    }
+    
+    public function exportManual()
+    {
+        return Excel::download(new TagihanExport('manual'), 'Tagihan-Manual.xlsx');
+    }
+
+    public function exportOtomatis()
+    {
+        return Excel::download(new TagihanExport('otomatis'), 'Tagihan-Otomatis.xlsx');
+    }
+
+    public function exportSemua()
+    {
+        return Excel::download(new TagihanExport('all'), 'Tagihan-Semua.xlsx');
     }
 }

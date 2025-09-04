@@ -75,6 +75,9 @@ Route::middleware(['auth', 'role:rw'])->group(function () {
 
     Route::get('/iuran/export/{jenis?}', [IuranController::class, 'export'])->name('iuran.export');
 
+    Route::get('/tagihan/export/manual', [TagihanController::class, 'exportManual'])->name('tagihan.export.manual');
+    Route::get('/tagihan/export/otomatis', [TagihanController::class, 'exportOtomatis'])->name('tagihan.export.otomatis');
+    Route::get('/tagihan/export/semua', [TagihanController::class, 'exportSemua'])->name('tagihan.export.semua');
 
 
     // Upload / delete foto KK
@@ -99,8 +102,6 @@ Route::middleware(['auth', 'role:rt'])->group(function () {
     Route::resource('rt/rt_iuran', RtiuranController::class);
     Route::resource('rt/rt_tagihan', Rt_tagihanController::class);
     Route::resource('rt/rt_transaksi', Rt_transaksiController::class);
-    Route::get('rt/pengumuman/{id}/export', [PengumumanRtController::class, 'export'])
-    ->name('rt.pengumuman.export');
     // Upload / delete foto KK RT
     Route::put('rt/rt_kartu_keluarga/{rt_kartu_keluarga}/upload-foto', [Rt_kartu_keluargaController::class, 'uploadFoto'])
         ->name('rt_kartu_keluarga.upload_foto');
