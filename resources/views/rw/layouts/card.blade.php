@@ -249,7 +249,7 @@
         </div>
     </div>
 
-    <!-- Card Jumlah Pengumuman -->
+    <!-- Card Jumlah Iuran Bulan Ini -->
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-success shadow h-100 py-2 card-clickable">
             <a href="/rw/iuran" class="text-decoration-none">
@@ -259,7 +259,9 @@
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                 Total Iuran Masuk Bulan Ini
                             </div>
-                            <div class="h4 mb-0 font-weight-bolder text-gray-800">$215,000</div>
+                            <div class="h4 mb-0 font-weight-bolder text-gray-800">
+                                Rp{{ number_format($total_iuran_bulan_ini, 0, ',', '.') }}
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-3x text-gray-400"></i>

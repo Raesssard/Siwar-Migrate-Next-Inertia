@@ -81,6 +81,7 @@ Route::middleware(['auth', 'role:rw'])->group(function () {
     Route::get('/tagihan/export/otomatis', [TagihanController::class, 'exportOtomatis'])->name('tagihan.export.otomatis');
     Route::get('/tagihan/export/semua', [TagihanController::class, 'exportSemua'])->name('tagihan.export.semua');
 
+    Route::get('/transaksi/export/{jenis}', [TransaksiController::class, 'export'])->name('transaksi.export');
 
     // Upload / delete foto KK
     Route::put('rw/kartu_keluarga/{kartu_keluarga}/upload-foto', [Kartu_keluargaController::class, 'uploadFoto'])
