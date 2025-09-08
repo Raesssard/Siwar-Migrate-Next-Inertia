@@ -246,7 +246,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-money-bill-wave fa-3x text-gray-400"></i>
+                            <i class="fas fa-donate fa-3x text-gray-400"></i>
                         </div>
                     </div>
                 </div>
