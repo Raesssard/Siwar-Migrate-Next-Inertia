@@ -165,23 +165,126 @@ class ExportController extends Controller
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Tagihan');
+        $sheet->getStyle("A1:T2")->getFont()->setBold(true);
+        foreach (range('A', 'Z') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
 
-        $sheet->setCellValue('A1', 'ID');
-        $sheet->setCellValue('B1', 'No KK');
-        $sheet->setCellValue('C1', 'Nominal');
-        $sheet->setCellValue('D1', 'Status Bayar');
-        $sheet->setCellValue('E1', 'Tanggal');
+        $sheet->setCellValue('B1', 'Belum Bayar');
+        $sheet->mergeCells('B1:H1');
 
-        $row = 2;
-        $tagihans = Tagihan::where('id_rt', $id_rt)->get();
+        $sheet->setCellValue('B2', 'No.');
+        $sheet->setCellValue('C2', 'Tagihan');
+        $sheet->setCellValue('D2', 'No KK');
+        $sheet->setCellValue('E2', 'Nominal');
+        $sheet->setCellValue('F2', 'Jenis');
+        $sheet->setCellValue('G2', 'Tanggal Tagih');
+        $sheet->setCellValue('H2', 'Tanggal Tempo');
 
-        foreach ($tagihans as $tagihan) {
-            $sheet->setCellValue("A{$row}", $tagihan->id);
-            $sheet->setCellValue("B{$row}", $tagihan->no_kk);
-            $sheet->setCellValue("C{$row}", $tagihan->nominal);
-            $sheet->setCellValue("D{$row}", $tagihan->status_bayar);
-            $sheet->setCellValue("E{$row}", $tagihan->created_at);
+
+        $belum = Tagihan::where('status_bayar', 'belum_bayar')->get();
+        $row = 3;
+        $no = 1;
+
+        foreach ($belum as $tagihan) {
+            $sheet->setCellValue("B{$row}", $no);
+            $sheet->setCellValue("C{$row}", $tagihan->nama);
+            $sheet->setCellValue("D{$row}", $tagihan->no_kk);
+            $sheet->setCellValue("E{$row}", $tagihan->nominal);
+            $sheet->setCellValue("F{$row}", $tagihan->jenis);
+            $sheet->setCellValue("G{$row}", $tagihan->tgl_tagih);
+            $sheet->setCellValue("H{$row}", $tagihan->tgl_tempo);
             $row++;
+            $no++;
+        }
+
+        $sheet->setCellValue('L1', 'Sudah Bayar');
+        $sheet->mergeCells('L1:S1');
+        $sheet->setCellValue('K2', 'No.');
+        $sheet->setCellValue('L2', 'Tagihan');
+        $sheet->setCellValue('M2', 'No KK');
+        $sheet->setCellValue('N2', 'Nominal');
+        $sheet->setCellValue('O2', 'Jenis');
+        $sheet->setCellValue('P2', 'Tanggal Tagih');
+        $sheet->setCellValue('Q2', 'Tanggal Tempo');
+        $sheet->setCellValue('R2', 'Tanggal Bayar');
+
+        $sudah = Tagihan::where('status_bayar', 'sudah_bayar')->get();
+        $row2 = 3;
+        $no2 = 1;
+
+        foreach ($sudah as $tagihan) {
+            $sheet->setCellValue("K{$row2}", $no2);
+            $sheet->setCellValue("L{$row2}", $tagihan->nama);
+            $sheet->setCellValue("M{$row2}", $tagihan->no_kk);
+            $sheet->setCellValue("N{$row2}", $tagihan->nominal);
+            $sheet->setCellValue("O{$row2}", $tagihan->jenis);
+            $sheet->setCellValue("P{$row2}", $tagihan->tgl_tagih);
+            $sheet->setCellValue("Q{$row2}", $tagihan->tgl_tempo);
+            $sheet->setCellValue("R{$row2}", $tagihan->tgl_bayar);
+            $row2++;
+            $no2++;
+        }
+
+        $rowEnd = $row - 1;
+        $rowEnd2 = $row2 - 1;
+
+        $sheet->getStyle("B2:H{$rowEnd}")->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN, // bisa THICK, DASHED, dll.
+                    'color' => ['argb' => 'FF000000'], // hitam
+                ],
+            ],
+        ]);
+
+        $sheet->getStyle("K2:R{$rowEnd2}")->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN, // bisa THICK, DASHED, dll.
+                    'color' => ['argb' => 'FF000000'], // hitam
+                ],
+            ],
+        ]);
+
+        $rowStart = 3;
+
+        $sheet->getStyle("B2:H2")->applyFromArray([
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'ffcc00'], // kuning
+            ],
+        ]);
+
+        for ($r = $rowStart; $r <= $rowEnd; $r++) {
+            $isEven = $r % 2 == 0; // baris genap
+            $color = $isEven ? 'ffd633' : 'ffe066';
+
+            $sheet->getStyle("B{$r}:H{$r}")->applyFromArray([
+                'fill' => [
+                    'fillType' => Fill::FILL_SOLID,
+                    'startColor' => ['argb' => $color],
+                ],
+            ]);
+        }
+
+        $sheet->getStyle("K2:R2")->applyFromArray([
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => '009933'], // kuning
+            ],
+        ]);
+
+        for ($r = $rowStart; $r <= $rowEnd2; $r++) {
+            $isEven = $r % 2 == 0; // baris genap
+            $color = $isEven ? '00cc44' : '00ff55';
+
+            $sheet->getStyle("K{$r}:R{$r}")->applyFromArray([
+                'fill' => [
+                    'fillType' => Fill::FILL_SOLID,
+                    'startColor' => ['argb' => $color],
+                ],
+            ]);
         }
 
         $writer = new Xlsx($spreadsheet);

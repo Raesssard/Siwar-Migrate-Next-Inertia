@@ -56,6 +56,12 @@
                     </div>
                 </form>
 
+                <div class="mb-3">
+                    <a href="{{ route('rt.tagihan.export') }}" class="btn btn-success">
+                        <i class="fas fa-file-excel"></i> Export Iuran ke Excel
+                    </a>
+                </div>
+
                 <!-- Tabel Tagihan Manual -->
                 <div class="col-xl-12 col-lg-7 mb-4">
                     <div class="card shadow">
@@ -217,7 +223,8 @@
                         <div class="modal-dialog">
                             <div class="modal-content shadow-lg">
                                 <div class="modal-header bg-warning text-white">
-                                    <h5 class="modal-title" id="modalEditTagihanLabel{{ $item->id }}">Edit Data Tagihan
+                                    <h5 class="modal-title" id="modalEditTagihanLabel{{ $item->id }}">Edit Data
+                                        Tagihan
                                     </h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                                         aria-label="Tutup"></button>
