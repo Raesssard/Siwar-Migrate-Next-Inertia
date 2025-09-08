@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Rt;
 
 use App\Http\Controllers\Controller;
 use App\Models\Iuran;
-use App\Models\IuranGolongan;
 use App\Models\Kategori_golongan;
 use App\Models\Tagihan;
 use App\Models\Transaksi;
-use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Auth;

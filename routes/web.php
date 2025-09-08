@@ -106,6 +106,8 @@ Route::middleware(['auth', 'role:rt'])->group(function () {
     Route::get('/rt/export/iuran', [ExportController::class, 'exportIuran'])->name('rt.iuran.export');
     Route::get('/rt/export/tagihan', [ExportController::class, 'exportTagihan'])->name('rt.tagihan.export');
     Route::get('/rt/export/transaksi', [ExportController::class, 'exportTransaksi'])->name('rt.transaksi.export');
+    Route::get('/pengumuman/{id}/export-pdf', [Rt_pengumumanController::class, 'exportPDF'])
+        ->name('pengumuman.export.pdf');
 });
 
 /*
