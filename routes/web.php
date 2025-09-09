@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{Admin_dashboardController, Admin_rtController, Admin_rwController};
-use App\Http\Controllers\ExportController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Rt\{
     Rt_kartu_keluargaController,
@@ -11,6 +10,7 @@ use App\Http\Controllers\Rt\{
     Rt_pengumumanController,
     Rt_tagihanController,
     Rt_transaksiController,
+    ExportController,
     RtiuranController
 };
 use App\Http\Controllers\Rw\{
@@ -103,9 +103,11 @@ Route::prefix('rt')->as('rt.')->middleware(['auth', 'role:rt'])->group(function 
     Route::get('kartu_keluarga/{rt_kartu_keluarga}/upload-form', [Rt_kartu_keluargaController::class, 'uploadForm'])->name('kartu_keluarga.upload_form');
 
     // Export khusus RT
-    Route::get('export/iuran', [ExportController::class, 'exportIuran'])->name('iuran.export');
-    Route::get('export/tagihan', [ExportController::class, 'exportTagihan'])->name('tagihan.export');
-    Route::get('export/transaksi', [ExportController::class, 'exportTransaksi'])->name('transaksi.export');
+    Route::get('/rt/export/iuran', [ExportController::class, 'exportIuran'])->name('rt.iuran.export');
+    Route::get('/rt/export/tagihan', [ExportController::class, 'exportTagihan'])->name('rt.tagihan.export');
+    Route::get('/rt/export/transaksi', [ExportController::class, 'exportTransaksi'])->name('rt.transaksi.export');
+    Route::get('/pengumuman/{id}/export-pdf', [Rt_pengumumanController::class, 'exportPDF'])
+        ->name('pengumuman.export.pdf');
 });
 
 /*

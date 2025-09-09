@@ -60,6 +60,12 @@
                     </div>
                 @endif
 
+                <div class="mt-3">
+                    <a href="{{ route('rt.transaksi.export') }}" class="btn btn-success">
+                        <i class="fas fa-file-excel"></i> Export Iuran ke Excel
+                    </a>
+                </div>
+
                 {{-- Tabel Transaksi --}}
                 <div class="col-xl-12 col-lg-12 mt-3">
                     <div class="card shadow mb-4">
@@ -76,30 +82,36 @@
                                 <table class="table table-hover table-sm scroll-table text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            {{-- <th>RT</th> --}}
-                                            <th>Tanggal</th>
-                                            <th>Nama Transaksi</th>
-                                            {{-- Kolom Pemasukan Dihilangkan dari Tampilan Tabel --}}
-                                            <th>Pengeluaran</th>
-                                            {{-- Kolom Jumlah Dihilangkan dari Tampilan Tabel --}}
-                                            <th>Keterangan</th>
-                                            <th>Aksi</th>
+                                            <th class="text-center">No</th>
+                                            <th class="text-center">RT</th>
+                                            <th class="text-center">Tanggal</th>
+                                            <th class="text-center">Nama Transaksi</th>
+                                            <th class="text-center">Jenis</th>
+                                            <th class="text-center">Nominal</th>
+                                            <th class="text-center">Keterangan</th>
+                                            <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse ($paginatedTransaksi as $item)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                {{-- <td>{{ $item->rt }}</td> --}}
-                                                <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}
+                                                <td class="text-center">{{ $loop->iteration }}</td>
+                                                <td class="text-center">{{ $item->rt }}</td>
+                                                <td class="text-center">
+                                                    {{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}
                                                 </td>
-                                                <td>{{ $item->nama_transaksi }}</td>
-                                                {{-- Data Pemasukan Dihilangkan dari Tampilan Tabel --}}
-                                                <td>Rp{{ number_format($item->pengeluaran, 0, ',', '.') }}</td>
-                                                {{-- Data Jumlah Dihilangkan dari Tampilan Tabel --}}
-                                                <td>{{ $item->keterangan }}</td>
-                                                <td>
+                                                <td class="text-center">{{ $item->nama_transaksi }}</td>
+                                                <td class="text-center">
+                                                    @if ($item->jenis === 'pemasukan')
+                                                        <span class="badge bg-success">Pemasukkan</span>
+                                                    @else
+                                                        <span class="badge bg-danger">Pengeluaran</span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">Rp{{ number_format($item->nominal, 0, ',', '.') }}
+                                                </td>
+                                                <td class="text-center">{{ $item->keterangan }}</td>
+                                                <td class="text-center">
                                                     <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                                         data-bs-target="#modalEditTransaksi{{ $item->id }}">
                                                         <i class="fas fa-edit"></i>
@@ -117,7 +129,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="text-center">Tidak ada data transaksi.</td>
+                                                <td colspan="8" class="text-center">Tidak ada data transaksi.</td>
                                                 {{-- colspan disesuaikan --}}
                                             </tr>
                                         @endforelse
@@ -160,9 +172,9 @@
                             <label for="rt" class="form-label">Nomor RT</label>
                             <select name="rt" id="rt_add" class="form-select @error('rt') is-invalid @enderror"
                                 required>
-                                <option value="">Pilih RT</option>
+                                <option value="" selected disabled>Pilih RT</option>
                                 @foreach ($rukun_tetangga as $rt_value => $rt_text)
-                                    <option value="{{ $rt_value }}" {{ old('rt') == $rt_value ? 'selected' : '' }}>
+                                    <option value="{{ $rt_text }}">
                                         RT {{ $rt_text }}
                                     </option>
                                 @endforeach
@@ -174,7 +186,8 @@
 
                         <div class="mb-3">
                             <label for="tanggal" class="form-label">Tanggal Transaksi</label>
-                            <input type="date" name="tanggal" class="form-control @error('tanggal') is-invalid @enderror"
+                            <input type="date" name="tanggal"
+                                class="form-control @error('tanggal') is-invalid @enderror"
                                 value="{{ old('tanggal', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
                             @error('tanggal')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -192,17 +205,26 @@
                             @enderror
                         </div>
 
-                        {{-- Pemasukan Otomatis dari Tagihan Terbayar (SEPENUHNYA DIHAPUS DARI TAMPILAN) --}}
-                        {{-- Hanya menyisakan input hidden untuk mengirimkan nilai ke backend --}}
-                        <input type="hidden" name="pemasukan" value="{{ $totalPemasukanBelumTercatat }}">
+                        <div class="mb-3">
+                            <label for="jenis" class="form-label">Jenis Transaksi</label>
+                            <select name="jenis" id="jenis_add"
+                                class="form-select @error('jenis') is-invalid @enderror" required>
+                                <option value="" selected disabled>Pilih Jenis Transaksi</option>
+                                <option value="pemasukan">Pemasukkan</option>
+                                <option value="pengeluaran">Pengeluarana</option>
+                            </select>
+                            @error('jenis')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
 
                         <div class="mb-3">
-                            <label for="pengeluaran" class="form-label">Pengeluaran (Rp)</label>
-                            <input type="number" name="pengeluaran"
-                                class="form-control @error('pengeluaran') is-invalid @enderror"
-                                placeholder="Masukkan nominal pengeluaran (contoh: 25000)"
-                                value="{{ old('pengeluaran', 0) }}" min="0">
-                            @error('pengeluaran')
+                            <label for="nominal" class="form-label">Nominal (Rp)</label>
+                            <input type="number" name="nominal"
+                                class="form-control @error('nominal') is-invalid @enderror"
+                                placeholder="Masukkan nominal (contoh: 25000)" value="{{ old('nominal', 0) }}"
+                                min="0">
+                            @error('nominal')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -253,10 +275,10 @@
                                 <label for="rt" class="form-label">Nomor RT</label>
                                 <select name="rt" id="rt_edit_{{ $item->id }}"
                                     class="form-select @error('rt') is-invalid @enderror" required>
-                                    <option value="">Pilih RT</option>
+                                    <option value="" disabled>Pilih RT</option>
                                     @foreach ($rukun_tetangga as $rt_value => $rt_text)
-                                        <option value="{{ $rt_value }}"
-                                            {{ old('rt', $item->rt) == $rt_value ? 'selected' : '' }}>
+                                        <option value="{{ $rt_text }}"
+                                            {{ old('rt', $item->rt) == $rt_text ? 'selected' : '' }}>
                                             RT {{ $rt_text }}
                                         </option>
                                     @endforeach
@@ -288,25 +310,30 @@
                                 @enderror
                             </div>
 
-                            {{-- Pemasukan di modal EDIT juga disembunyikan --}}
-                            <div class="mb-3" style="display: none;">
-                                <label for="pemasukan" class="form-label">Pemasukan (Rp)</label>
-                                <input type="number" name="pemasukan"
-                                    class="form-control @error('pemasukan') is-invalid @enderror"
-                                    placeholder="Masukkan nominal pemasukan (contoh: 50000)"
-                                    value="{{ old('pemasukan', $item->pemasukan) }}" min="0">
-                                @error('pemasukan')
+                            <div class="mb-3">
+                                <label for="jenis" class="form-label">Jenis Transaksi</label>
+                                <select name="jenis" id="jenis_edit_{{ $item->id }}"
+                                    class="form-select @error('jenis') is-invalid @enderror" required>
+                                    <option value="" disabled>Pilih Jenis Transaksi</option>
+                                    <option value="pemasukan"
+                                        {{ old('jenis', $item->jenis) === 'pemasukan' ? 'selected' : '' }}>Pemasukkan
+                                    </option>
+                                    <option value="pengeluaran"
+                                        {{ old('jenis', $item->jenis) === 'pengeluaran' ? 'selected' : '' }}>Pengeluaran
+                                    </option>
+                                </select>
+                                @error('jenis')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
-                                <label for="pengeluaran" class="form-label">Pengeluaran (Rp)</label>
-                                <input type="number" name="pengeluaran"
-                                    class="form-control @error('pengeluaran') is-invalid @enderror"
-                                    placeholder="Masukkan nominal pengeluaran (contoh: 25000)"
-                                    value="{{ old('pengeluaran', $item->pengeluaran) }}" min="0">
-                                @error('pengeluaran')
+                                <label for="nominal" class="form-label">Nominal (Rp)</label>
+                                <input type="number" name="nominal"
+                                    class="form-control @error('nominal') is-invalid @enderror"
+                                    placeholder="Masukkan nominal (contoh: 50000)"
+                                    value="{{ old('nominal', $item->nominal) }}" min="0">
+                                @error('nominal')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

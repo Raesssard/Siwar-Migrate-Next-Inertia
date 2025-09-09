@@ -195,6 +195,13 @@
                                 </a>
                             </li>
 
+                            <li class="nav-item {{ Request::is('warga/transaksi*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('transaksi') }}">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>Lihat Transaksi</span>
+                                </a>
+                            </li>
+
                             <hr class="sidebar-divider d-none d-md-block">
 
                             <hr class="sidebar-divider d-none d-md-block">

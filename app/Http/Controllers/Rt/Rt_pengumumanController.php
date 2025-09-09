@@ -7,7 +7,10 @@ use App\Models\Pengumuman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Rukun_tetangga;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Support\Facades\Storage; // <-- Tambahkan baris ini!
+use Illuminate\Support\Facades\View;
 
 class Rt_pengumumanController extends Controller
 {
@@ -312,5 +315,30 @@ class Rt_pengumumanController extends Controller
 
         return redirect()->route('rt.pengumuman.index')
             ->with('success', 'Pengumuman berhasil dihapus.');
+    }
+
+    public function exportPDF($id)
+    {
+        $pengumuman = Pengumuman::findOrFail($id);
+
+        // Render blade ke HTML
+        $html = View::make('rt.pengumuman.komponen.export_pengumuman', compact('pengumuman'))->render();
+
+        // Konfigurasi dompdf
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        // Nama file sesuai judul pengumuman
+        $filename = 'pengumuman_' . $pengumuman->id . '.pdf';
+
+        return response($dompdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', "attachment; filename=\"{$filename}\"");
     }
 }

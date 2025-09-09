@@ -56,6 +56,12 @@
                     </div>
                 </form>
 
+                <div class="mb-3">
+                    <a href="{{ route('rt.tagihan.export') }}" class="btn btn-success">
+                        <i class="fas fa-file-excel"></i> Export Iuran ke Excel
+                    </a>
+                </div>
+
                 <!-- Tabel Tagihan Manual -->
                 <div class="col-xl-12 col-lg-7 mb-4">
                     <div class="card shadow">
@@ -175,13 +181,13 @@
                                                 <td>
                                                     <!-- Tombol Detail -->
                                                     <button class="btn btn-sm btn-info" data-bs-toggle="modal"
-                                                        data-bs-target="#modalDetailkk{{ $item->no_kk }}">
+                                                        data-bs-target="#modalDetailkkOtomatis{{ $item->id }}">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
 
                                                     <!-- Tombol Edit -->
                                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                        data-bs-target="#modalEditTagihan{{ $item->id }}">
+                                                        data-bs-target="#modalEditTagihanOtomatis{{ $item->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
 
@@ -217,7 +223,8 @@
                         <div class="modal-dialog">
                             <div class="modal-content shadow-lg">
                                 <div class="modal-header bg-warning text-white">
-                                    <h5 class="modal-title" id="modalEditTagihanLabel{{ $item->id }}">Edit Data Tagihan
+                                    <h5 class="modal-title" id="modalEditTagihanLabel{{ $item->id }}">Edit Data
+                                        Tagihan
                                     </h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                                         aria-label="Tutup"></button>
@@ -473,7 +480,7 @@
 
                 {{-- Modals untuk Tagihan Otomatis --}}
                 @foreach ($tagihanOtomatis as $item)
-                    <div class="modal fade" id="modalEditTagihan{{ $item->id }}" tabindex="-1"
+                    <div class="modal fade" id="modalEditTagihanOtomatis{{ $item->id }}" tabindex="-1"
                         aria-labelledby="modalEditTagihanLabel{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content shadow-lg">
@@ -583,12 +590,12 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="modalDetailkk{{ $item->no_kk }}" tabindex="-1"
-                        aria-labelledby="modalDetailkkLabel{{ $item->no_kk }}" aria-hidden="true">
+                    <div class="modal fade" id="modalDetailkkOtomatis{{ $item->id }}" tabindex="-1"
+                        aria-labelledby="modalDetailkkLabel{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-xl modal-dialog-scrollable">
                             <div class="modal-content shadow border-0">
                                 <div class="modal-header bg-success text-white">
-                                    <h5 class="modal-title" id="modalDetailkkLabel{{ $item->no_kk }}">
+                                    <h5 class="modal-title" id="modalDetailkkLabel{{ $item->id }}">
                                         Detail Tagihan
                                     </h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
@@ -599,7 +606,6 @@
                                 <div class="modal-body p-4">
                                     <!-- Informasi KK -->
                                     <div class="mb-4">
-                                        <h6 class="text-success mb-3 fw-bold">Informasi KK</h6>
                                         <div class="row g-4">
                                             <div class="col-md-6">
                                                 <p class="mb-1"><strong>No. KK:</strong> {{ $item->no_kk }}</p>
@@ -672,7 +678,7 @@
                                                 <tbody class="small">
 
                                                     @php
-                                                        $tagihanKK = $tagihanOtomatis->where('no_kk', $item->no_kk);
+                                                        $tagihanKK = $tagihanOtomatis->where('id', $item->id);
                                                     @endphp
 
 
