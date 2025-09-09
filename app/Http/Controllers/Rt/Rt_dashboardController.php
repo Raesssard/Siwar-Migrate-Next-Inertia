@@ -56,9 +56,10 @@ class Rt_dashboardController extends Controller
             ->whereIn('no_kk', $kk_nomor_list)
             ->count();
 
-        $total_pemasukan = Tagihan::where('status_bayar', 'sudah_bayar')->sum('nominal');
-        $total_pengeluaran = Transaksi::sum('pengeluaran');
-        $total_saldo_akhir = $total_pemasukan - $total_pengeluaran;
+        $total_pemasukan = Transaksi::where('jenis', 'pemasukan')->sum('nominal');
+        $pengeluaran = Transaksi::where('jenis', 'pengeluaran')->sum('nominal');
+        $total_pengeluaran = $pengeluaran * -1;
+        $total_saldo_akhir = $total_pemasukan + $total_pengeluaran;
         // --- Mengirim Data ke View ---
         return view('rt.dashboard.dashboard', compact(
             'title',
@@ -69,7 +70,8 @@ class Rt_dashboardController extends Controller
             'jumlah_warga_pendatang',
             'total_pemasukan',
             'total_pengeluaran',
-            'total_saldo_akhir'
+            'total_saldo_akhir',
+            'pengeluaran'
         ));
     }
 }

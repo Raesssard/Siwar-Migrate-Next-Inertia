@@ -14,16 +14,15 @@ class Transaksi extends Model
     protected $fillable = [
         'rt',
         'tanggal',
-        'pemasukan',
-        'pengeluaran',
+        'jenis',
+        'nominal',
         'nama_transaksi',
-        'jumlah',
         'keterangan',
     ];
 
     protected $casts = [
         'tanggal' => 'date',
-        'jumlah' => 'decimal:2',
+        'nominal' => 'decimal:2',
         // pemasukan dan pengeluaran tetap sebagai string
     ];
 }

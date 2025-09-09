@@ -7,23 +7,24 @@ use App\Models\Iuran;
 use App\Models\Kartu_keluarga;
 use App\Models\Tagihan;
 use App\Models\RukunTetangga;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-    class Rt_tagihanController extends Controller
-    {
-        /**
-         * Menampilkan daftar tagihan manual dengan filter dan total nominal.
-         */
+class Rt_tagihanController extends Controller
+{
+    /**
+     * Menampilkan daftar tagihan manual dengan filter dan total nominal.
+     */
     public function index(Request $request)
     {
         $title = 'Data Tagihan';
 
         /** @var User $user */
         $user = Auth::user();
-        $idRt = $user->id_rt; 
-        $idRw = $user->id_rw; 
+        $idRt = $user->id_rt;
+        $idRw = $user->id_rw;
 
         // Ambil daftar KK sesuai RT (buat filter dropdown)
         $kartuKeluargaForFilter = Kartu_keluarga::where('id_rt', $idRt)
@@ -48,7 +49,7 @@ use Illuminate\Support\Facades\Log;
             $search = $request->input('search');
             $baseQuery->where(function ($q) use ($search) {
                 $q->where('nama', 'like', '%' . $search . '%')
-                ->orWhere('nominal', 'like', '%' . $search . '%');
+                    ->orWhere('nominal', 'like', '%' . $search . '%');
             });
         }
 
@@ -57,17 +58,22 @@ use Illuminate\Support\Facades\Log;
             $baseQuery->where('no_kk', $request->input('no_kk_filter'));
         }
 
-        // Query terpisah
-        $tagihanManual = (clone $baseQuery)->where('jenis', 'manual')
+        $tagihanManual = (clone $baseQuery)
+            ->where('jenis', 'manual')
             ->orderBy('tgl_tagih', 'desc')
             ->paginate(10, ['*'], 'manual_page');
 
-        $tagihanOtomatis = (clone $baseQuery)->where('jenis', 'otomatis')
+        $tagihanOtomatis = (clone $baseQuery)
+            ->where('jenis', 'otomatis')
             ->orderBy('tgl_tagih', 'desc')
             ->paginate(10, ['*'], 'otomatis_page');
 
+
         return view('rt.iuran.tagihan', compact(
-            'title', 'tagihanManual', 'tagihanOtomatis', 'kartuKeluargaForFilter'
+            'title',
+            'tagihanManual',
+            'tagihanOtomatis',
+            'kartuKeluargaForFilter'
         ));
     }
 
@@ -114,7 +120,6 @@ use Illuminate\Support\Facades\Log;
             Tagihan::create($dataToStore);
 
             return redirect()->route('rt_iuran.index')->with('success', 'Tagihan manual berhasil ditambahkan.');
-
         } catch (\Exception $e) {
             Log::error('Error creating tagihan manual:', ['message' => $e->getMessage()]);
             return redirect()->back()->withInput()->with('error', 'Gagal menambahkan tagihan manual. Error: ' . $e->getMessage());
@@ -142,13 +147,23 @@ use Illuminate\Support\Facades\Log;
             $tagihan->update([
                 'status_bayar' => $validated['status_bayar'],
                 'tgl_bayar' => $validated['tgl_bayar'] ?? null,
-                'id_iuran' => $validated['id_iuran'] ?? null,       
+                'id_iuran' => $validated['id_iuran'] ?? null,
                 'kategori_pembayaran' => $validated['kategori_pembayaran'] ?? null,
                 'bukti_transfer' => $validated['bukti_transfer'] ?? null,
             ]);
 
-            return redirect()->route('rt_tagihan.index')->with('success', 'Tagihan manual berhasil diperbarui.');
+            if ($tagihan->status_bayar === 'sudah_bayar') {
+                Transaksi::create([
+                    'rt' => $tagihan->iuran->rt->rt,
+                    'tanggal' => $tagihan->tgl_bayar,
+                    'jenis' => 'pemasukan',
+                    'nominal' => $tagihan->nominal,
+                    'nama_transaksi' => $tagihan->nama,
+                    'keterangan' => 'Pembayaran ' . $tagihan->nama
+                ]);
+            }
 
+            return redirect()->route('rt_tagihan.index')->with('success', 'Tagihan manual berhasil diperbarui.');
         } catch (\Exception $e) {
             Log::error('Error updating tagihan manual:', ['message' => $e->getMessage()]);
             return redirect()->back()->withInput()->with('error', 'Gagal memperbarui tagihan manual. Error: ' . $e->getMessage());
@@ -170,7 +185,6 @@ use Illuminate\Support\Facades\Log;
             $tagihan->delete();
 
             return redirect()->route('rt_iuran.index')->with('success', 'Tagihan manual berhasil dihapus.');
-
         } catch (\Exception $e) {
             Log::error('Error deleting tagihan manual:', ['message' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Gagal menghapus tagihan manual. Error: ' . $e->getMessage());
