@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('jenis', ['otomatis', 'manual'])->default('manual');
 
             $table->char('no_kk', 16);
-            $table->foreign('no_kk')->references('no_kk')->on('kartu_keluarga')->onDelete('restrict');
+            $table->foreign('no_kk')->references('no_kk')->on('kartu_keluarga')->onDelete('cascade');
 
             // Kolom-kolom dari migrasi Anda
             $table->enum('status_bayar', ['sudah_bayar', 'belum_bayar'])->default('belum_bayar');

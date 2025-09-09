@@ -11,6 +11,8 @@ use App\Models\Kategori_golongan;
 use App\Models\Tagihan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\IuranExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class IuranController extends Controller
 {
@@ -250,5 +252,13 @@ if ($request->jenis === 'otomatis') {
         }
 
         return redirect()->route('iuran.index')->with('success', 'Tagihan bulanan berhasil dibuat.');
+    }
+
+    public function export($jenis = 'semua')
+    {
+        // samakan dengan constructor (pakai 'all' bukan 'semua')
+        $jenis = $jenis === 'semua' ? 'all' : $jenis;
+
+        return Excel::download(new IuranExport($jenis), "iuran-{$jenis}.xlsx");
     }
 }

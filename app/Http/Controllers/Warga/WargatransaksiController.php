@@ -11,28 +11,27 @@ use Illuminate\Support\Facades\Log;
 
 class WargatransaksiController extends Controller
 {
-    /**
-     * Menampilkan daftar transaksi keuangan RW yang terkait dengan RT warga yang sedang login.
-     */
     public function index(Request $request)
     {
         $title = 'Transaksi Keuangan RT Saya';
         /** @var User $user */
         $user = Auth::user();
 
-        if (!$user || !$user->hasRole('warga') || !$user->rukunTetangga) {
-            Log::warning("Akses tidak sah ke halaman transaksi warga atau data RT tidak ditemukan.", ['user_id' => $user->id ?? 'guest']);
-            return redirect('/')->with('error', 'Anda tidak memiliki akses ke halaman ini atau data RT Anda tidak lengkap.');
+        // Cek akses dan data warga serta kartu keluarga
+        if (!$user || !$user->hasRole('warga') || !$user->warga || !$user->warga->kartuKeluarga || !$user->warga->kartuKeluarga->rukunTetangga) {
+            Log::warning("Akses tidak sah ke halaman transaksi warga atau data RT/KK tidak ditemukan.", ['user_id' => $user->id ?? 'guest']);
+            return redirect('/')->with('error', 'Anda tidak memiliki akses ke halaman ini atau data RT/KK Anda tidak lengkap.');
         }
 
-        $idRt = $user->id_rt;
+        // Ambil id_rt dari kartu_keluarga yang terkait dengan user
+        $idRt = $user->warga->kartuKeluarga->rukunTetangga->id;
 
         if (!$idRt) {
-            Log::warning("Nomor RT tidak ditemukan untuk user login saat melihat transaksi.", ['user_id' => $user->id, 'id_rt' => $idRt]);
+            Log::warning("ID RT tidak ditemukan untuk user login saat melihat transaksi.", ['user_id' => $user->id, 'id_rt' => $idRt]);
             return redirect('/')->with('error', 'Data RT Anda tidak ditemukan. Silakan hubungi RT/RW Anda.');
         }
 
-        $query = Transaksi::where('rt', $idRt);
+        $query = Transaksi::where('rt', $idRt); // Filter transaksi berdasarkan id_rt dari KK
 
         if ($request->filled('search')) {
             $search = $request->input('search');

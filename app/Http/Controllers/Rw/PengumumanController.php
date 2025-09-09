@@ -8,6 +8,7 @@ use App\Models\Rukun_tetangga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PengumumanController extends Controller
 {
@@ -245,5 +246,20 @@ private function indoToEnglishDay(string $day): string
         $pengumuman = Pengumuman::findOrFail($id);
         $pengumuman->delete();
         return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dihapus.');
+    }
+
+    public function export($id)
+    {
+        $pengumuman = Pengumuman::findOrFail($id);
+
+        // Tentukan jenis (RT / RW)
+        $jenis = $pengumuman->id_rt ? 'RT' : 'RW';
+
+        $pdf = Pdf::loadView('export.pengumuman', [
+            'pengumuman' => $pengumuman,
+            'jenis' => $jenis
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->download("Pengumuman-{$jenis}-{$pengumuman->id}.pdf");
     }
 }

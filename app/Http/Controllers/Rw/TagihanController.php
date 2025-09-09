@@ -6,8 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Kartu_keluarga;
 use App\Models\Tagihan;
 use App\Models\Iuran;
+use App\Models\Transaksi;
+use App\Models\Rukun_tetangga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Exports\TagihanExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TagihanController extends Controller
 {
@@ -117,7 +121,8 @@ class TagihanController extends Controller
         ]);
 
         try {
-            // Data dasar yang pasti diupdate
+            $statusLama = $tagihan->status_bayar;
+
             $dataToUpdate = [
                 'status_bayar' => $validated['status_bayar'],
                 'tgl_bayar' => $validated['tgl_bayar'] ?? ($validated['status_bayar'] === 'sudah_bayar' ? now() : null),
@@ -125,17 +130,38 @@ class TagihanController extends Controller
                 'bukti_transfer' => $validated['bukti_transfer'] ?? $tagihan->bukti_transfer,
             ];
 
-            // Nominal bisa diupdate
             if (!empty($validated['nominal'])) {
                 $dataToUpdate['nominal'] = $validated['nominal'];
             }
 
-            // id_iuran hanya diupdate kalau memang dikirim
             if (!empty($validated['id_iuran'])) {
                 $dataToUpdate['id_iuran'] = $validated['id_iuran'];
             }
 
             $tagihan->update($dataToUpdate);
+
+            // === buat transaksi jika status berubah dari belum_bayar -> sudah_bayar ===
+            if ($statusLama === 'belum_bayar' && $validated['status_bayar'] === 'sudah_bayar') {
+                $kk = Kartu_keluarga::where('no_kk', $tagihan->no_kk)->first();
+
+                if ($kk) {
+                    // cari nomor RT dari relasi id_rt
+                    $rt = Rukun_tetangga::where('id', $kk->id_rt)->value('rt');
+
+                    if ($rt) {
+                        Transaksi::create([
+                            'rt' => $rt,
+                            'tanggal' => $dataToUpdate['tgl_bayar'] ?? now(),
+                            'jenis' => 'pemasukan',
+                            'nominal' => $dataToUpdate['nominal'] ?? $tagihan->nominal,
+                            'nama_transaksi' => 'Iuran ' . $tagihan->nama,
+                            'keterangan' => 'Pembayaran iuran oleh KK ' . $kk->no_kk,
+                        ]);
+                    } else {
+                        Log::warning("RT tidak ditemukan untuk KK {$kk->no_kk} (id_rt: {$kk->id_rt})");
+                    }
+                }
+            }
 
             return redirect()->route('tagihan.index')->with('success', 'Tagihan berhasil diperbarui.');
         } catch (\Exception $e) {
@@ -165,5 +191,20 @@ class TagihanController extends Controller
             Log::error('Error deleting tagihan manual:', ['message' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Gagal menghapus tagihan manual. Error: ' . $e->getMessage());
         }
+    }
+    
+    public function exportManual()
+    {
+        return Excel::download(new TagihanExport('manual'), 'Tagihan-Manual.xlsx');
+    }
+
+    public function exportOtomatis()
+    {
+        return Excel::download(new TagihanExport('otomatis'), 'Tagihan-Otomatis.xlsx');
+    }
+
+    public function exportSemua()
+    {
+        return Excel::download(new TagihanExport('all'), 'Tagihan-Semua.xlsx');
     }
 }

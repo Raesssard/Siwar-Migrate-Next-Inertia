@@ -57,4 +57,12 @@ class Kartu_keluarga extends Model
     {
         return $this->belongsTo(Kategori_golongan::class, 'kategori_iuran', 'id');
     }
+
+    // App\Models\Kartu_keluarga.php
+    public function kepalaKeluarga()
+    {
+        return $this->hasOne(Warga::class, 'no_kk', 'no_kk')
+                    ->where('status_hubungan_dalam_keluarga', 'kepala keluarga');
+    }
+
 }

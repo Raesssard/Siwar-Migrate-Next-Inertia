@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('rt');
             $table->date('tanggal');
-            $table->string('pemasukan')->nullable();   // nullable supaya bisa kosong
-            $table->string('pengeluaran')->nullable(); // nullable supaya bisa kosong
-            $table->string('nama_transaksi'); 
-            $table->decimal('jumlah', 15, 2);
+            $table->enum('jenis', ['pemasukan', 'pengeluaran']); // jenis transaksi
+            $table->decimal('nominal', 15, 2);                   // nilai nominal
+            $table->string('nama_transaksi');
             $table->text('keterangan')->nullable();
             $table->timestamps();
         });
