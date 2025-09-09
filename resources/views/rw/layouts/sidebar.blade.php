@@ -142,7 +142,7 @@
     <li class="nav-item {{ Request::is('rw/transaksi*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('transaksi.index') }}">
             <i class="fas fa-money-bill-wave"></i>
-            <span>Pengeluaran</span>
+            <span>Transaksi</span>
         </a>
     </li>
         <hr class="sidebar-divider d-none d-md-block">

@@ -50,9 +50,34 @@
                         @endforeach
                     </select>
                     <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                    <a href="{{ route('iuran.index') }}" class="btn btn-secondary btn-sm">Reset</a>
-                </div>
+                    <a href="{{ route('iuran.index') }}" class="btn btn-secondary btn-sm">Reset</a>                    
+                </div>                
             </form>
+<div class="dropdown mb-3">
+    <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownExport"
+        data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-file-excel"></i> Export Iuran
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownExport">
+        <li>
+            <a class="dropdown-item" href="{{ route('iuran.export', 'manual') }}">
+                <i class="fas fa-file-excel text-success"></i> Export Manual
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{{ route('iuran.export', 'otomatis') }}">
+                <i class="fas fa-file-excel text-primary"></i> Export Otomatis
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{{ route('iuran.export', 'semua') }}">
+                <i class="fas fa-file-excel text-info"></i> Export Semua
+            </a>
+        </li>
+    </ul>
+</div>
+
+
 
             <!-- Tabel Iuran Manual -->
             <div class="col-xl-12 col-lg-7">

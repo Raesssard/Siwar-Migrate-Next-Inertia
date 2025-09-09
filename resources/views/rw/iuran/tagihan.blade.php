@@ -44,6 +44,30 @@
                     <button type="submit" class="btn btn-sm btn-primary">Filter</button>
                     <a href="{{ route('tagihan.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                 </div>
+                <div class="dropdown mb-3">
+    <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownExportTagihan"
+        data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-file-excel"></i> Export Tagihan
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownExportTagihan">
+        <li>
+            <a class="dropdown-item" href="{{ route('tagihan.export.manual') }}">
+                <i class="fas fa-file-excel text-success"></i> Export Manual
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{{ route('tagihan.export.otomatis') }}">
+                <i class="fas fa-file-excel text-primary"></i> Export Otomatis
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{{ route('tagihan.export.semua') }}">
+                <i class="fas fa-file-excel text-info"></i> Export Semua
+            </a>
+        </li>
+    </ul>
+</div>
+
             </form>
 
             <!-- Tabel Tagihan Manual -->

@@ -14,17 +14,17 @@
 
             {{-- Session messages --}}
             @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             @endif
 
             @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             @endif
 
             {{-- Form Filter dan Pencarian --}}
@@ -36,9 +36,9 @@
                     <select name="bulan" class="form-select form-select-sm">
                         <option value="">Semua Bulan</option>
                         @foreach (range(1,12) as $bln)
-                        <option value="{{ $bln }}" {{ request('bulan') == $bln ? 'selected' : '' }}>
-                            {{ DateTime::createFromFormat('!m', $bln)->format('F') }}
-                        </option>
+                            <option value="{{ $bln }}" {{ request('bulan') == $bln ? 'selected' : '' }}>
+                                {{ DateTime::createFromFormat('!m', $bln)->format('F') }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -46,9 +46,9 @@
                     <select name="tahun" class="form-select form-select-sm">
                         <option value="">Semua Tahun</option>
                         @foreach ($daftar_tahun as $tahun)
-                        <option value="{{ $tahun }}" {{ request('tahun') == $tahun ? 'selected' : '' }}>
-                            {{ $tahun }}
-                        </option>
+                            <option value="{{ $tahun }}" {{ request('tahun') == $tahun ? 'selected' : '' }}>
+                                {{ $tahun }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -59,6 +59,30 @@
                     <button type="submit" class="btn btn-sm btn-primary">Filter</button>
                     <a href="{{ route('transaksi.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                 </div>
+                <div class="dropdown mb-2 ms-auto">
+    <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownExportTransaksi"
+        data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-file-excel"></i> Export Transaksi
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownExportTransaksi">
+        <li>
+            <a class="dropdown-item" href="{{ route('transaksi.export', 'pemasukan') }}">
+                <i class="fas fa-file-excel text-success"></i> Export Pemasukan
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{{ route('transaksi.export', 'pengeluaran') }}">
+                <i class="fas fa-file-excel text-danger"></i> Export Pengeluaran
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{{ route('transaksi.export', 'all') }}">
+                <i class="fas fa-file-excel text-primary"></i> Export Semua
+            </a>
+        </li>
+    </ul>
+</div>
+
             </form>
 
             {{-- Tabel Transaksi --}}
@@ -69,7 +93,9 @@
                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahTransaksi">
                             <i class="fas fa-plus"></i> Tambah
                         </button>
+                        
                     </div>
+                    
 
                     <div class="card-body">
                         <div class="table-responsive table-container">
@@ -80,9 +106,8 @@
                                         <th>RT</th>
                                         <th>Tanggal</th>
                                         <th>Nama Transaksi</th>
-                                        {{-- Kolom Pemasukan Dihilangkan dari Tampilan Tabel --}}
-                                        <th>Pengeluaran</th>
-                                        {{-- Kolom Jumlah Dihilangkan dari Tampilan Tabel --}}
+                                        <th>Jenis</th>
+                                        <th>Nominal</th>
                                         <th>Keterangan</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -94,9 +119,12 @@
                                         <td>{{ $item->rt }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
                                         <td>{{ $item->nama_transaksi }}</td>
-                                        {{-- Data Pemasukan Dihilangkan dari Tampilan Tabel --}}
-                                        <td>Rp{{ number_format($item->pengeluaran, 0, ',', '.') }}</td>
-                                        {{-- Data Jumlah Dihilangkan dari Tampilan Tabel --}}
+                                        <td>
+                                            <span class="badge {{ $item->jenis == 'pemasukan' ? 'bg-success' : 'bg-danger' }}">
+                                                {{ ucfirst($item->jenis) }}
+                                            </span>
+                                        </td>
+                                        <td>Rp{{ number_format($item->nominal, 0, ',', '.') }}</td>
                                         <td>{{ $item->keterangan }}</td>
                                         <td>
                                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditTransaksi{{ $item->id }}">
@@ -113,10 +141,11 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="7" class="text-center">Tidak ada data transaksi.</td> {{-- colspan disesuaikan --}}
+                                        <td colspan="8" class="text-center">Tidak ada data transaksi.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
+
                             </table>
                         </div>
 
@@ -135,191 +164,131 @@
     </div>
 </div>
 
-{{-- Modal Tambah Transaksi --}}
-<div class="modal fade" id="modalTambahTransaksi" tabindex="-1" aria-labelledby="modalTambahTransaksiLabel" aria-hidden="true">
+{{-- Modal Edit (semua transaksi) --}}
+@foreach ($paginatedTransaksi as $item)
+<div class="modal fade" id="modalEditTransaksi{{ $item->id }}" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="modalTambahTransaksiLabel">Tambah Data Transaksi</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        <form action="{{ route('transaksi.update', $item->id) }}" method="POST" class="modal-content">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="modal_type" value="edit">
+            <input type="hidden" name="edit_item_id" value="{{ $item->id }}">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Transaksi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('transaksi.store') }}" method="POST" class="p-3">
-                    @csrf
-
-                    <div class="mb-3">
-                        <label for="rt" class="form-label">Nomor RT</label>
-                        <select name="rt" id="rt_add" class="form-select @error('rt') is-invalid @enderror" required>
-                            <option value="">Pilih RT</option>
-                            @foreach ($rukun_tetangga as $rt_value => $rt_text)
-                                <option value="{{ $rt_value }}" {{ old('rt') == $rt_value ? 'selected' : '' }}>
-                                    RT {{ $rt_text }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('rt')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="tanggal" class="form-label">Tanggal Transaksi</label>
-                        <input type="date" name="tanggal" class="form-control @error('tanggal') is-invalid @enderror"
-                            value="{{ old('tanggal', \Carbon\Carbon::now()->format('Y-m-d')) }}" required>
-                        @error('tanggal')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="nama_transaksi" class="form-label">Nama Transaksi</label>
-                        <input type="text" name="nama_transaksi" class="form-control @error('nama_transaksi') is-invalid @enderror"
-                            placeholder="Contoh: Penerimaan Iuran Warga" value="{{ old('nama_transaksi') }}" required>
-                        @error('nama_transaksi')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    {{-- Pemasukan Otomatis dari Tagihan Terbayar (SEPENUHNYA DIHAPUS DARI TAMPILAN) --}}
-                    {{-- Hanya menyisakan input hidden untuk mengirimkan nilai ke backend --}}
-                    <input type="hidden" name="pemasukan" value="{{ $totalPemasukanBelumTercatat }}">
-
-                    <div class="mb-3">
-                        <label for="pengeluaran" class="form-label">Pengeluaran (Rp)</label>
-                        <input type="number" name="pengeluaran" class="form-control @error('pengeluaran') is-invalid @enderror"
-                            placeholder="Masukkan nominal pengeluaran (contoh: 25000)" value="{{ old('pengeluaran', 0) }}" min="0">
-                        @error('pengeluaran')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="keterangan" class="form-label">Keterangan (Opsional)</label>
-                        <textarea name="keterangan" class="form-control" rows="3" placeholder="Tambahkan keterangan transaksi">{{ old('keterangan') }}</textarea>
-                    </div>
-
-                    <hr>
-
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-primary">Simpan Transaksi</button>
-                    </div>
-                </form>
-
-                @if ($errors->any() && old('modal_type') == 'add')
-                    <div class="alert alert-danger mt-3">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                <div class="mb-2">
+                    <label>RT</label>
+                    <select name="rt" class="form-select form-select-sm" required>
+                        <option value="">-- Pilih RT --</option>
+                        @foreach ($rukun_tetangga as $rt)
+                            <option value="{{ $rt }}" {{ $item->rt == $rt ? 'selected' : '' }}>
+                                RT {{ $rt }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label>Tanggal</label>
+                    <input type="date" name="tanggal" class="form-control form-control-sm"
+                        value="{{ $item->tanggal->format('Y-m-d') }}" required>
+                </div>
+                <div class="mb-2">
+                    <label>Nama Transaksi</label>
+                    <input type="text" name="nama_transaksi" class="form-control form-control-sm"
+                        value="{{ $item->nama_transaksi }}" required>
+                </div>
+                <div class="mb-2">
+                    <label>Jenis</label>
+                    <select name="jenis" class="form-select form-select-sm" required>
+                        <option value="pemasukan" {{ $item->jenis == 'pemasukan' ? 'selected' : '' }}>Pemasukan</option>
+                        <option value="pengeluaran" {{ $item->jenis == 'pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label>Nominal</label>
+                    <input type="number" name="nominal" class="form-control form-control-sm"
+                        value="{{ $item->nominal }}" required>
+                </div>
+                <div class="mb-2">
+                    <label>Keterangan</label>
+                    <textarea name="keterangan" class="form-control form-control-sm">{{ $item->keterangan }}</textarea>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-
-{{-- Modal Edit Transaksi (Pemasukan sudah disembunyikan sebelumnya) --}}
-@foreach ($transaksi as $item)
-<div class="modal fade" id="modalEditTransaksi{{ $item->id }}" tabindex="-1"
-    aria-labelledby="modalEditTransaksiLabel{{ $item->id }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content shadow-lg">
-            <div class="modal-header bg-warning text-white">
-                <h5 class="modal-title" id="modalEditTransaksiLabel{{ $item->id }}">Edit Data Transaksi</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Tutup"></button>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
             </div>
-            <div class="modal-body">
-                <form action="{{ route('transaksi.update', $item->id) }}" method="POST" class="p-3">
-                    @csrf
-                    @method('PUT')
-
-                    <div class="mb-3">
-                        <label for="rt" class="form-label">Nomor RT</label>
-                        <select name="rt" id="rt_edit_{{ $item->id }}" class="form-select @error('rt') is-invalid @enderror" required>
-                            <option value="">Pilih RT</option>
-                            @foreach ($rukun_tetangga as $rt_value => $rt_text)
-                                <option value="{{ $rt_value }}" {{ old('rt', $item->rt) == $rt_value ? 'selected' : '' }}>
-                                    RT {{ $rt_text }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('rt')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="tanggal" class="form-label">Tanggal Transaksi</label>
-                        <input type="date" name="tanggal" class="form-control @error('tanggal') is-invalid @enderror"
-                            value="{{ old('tanggal', \Carbon\Carbon::parse($item->tanggal)->format('Y-m-d')) }}" required>
-                        @error('tanggal')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="nama_transaksi" class="form-label">Nama Transaksi</label>
-                        <input type="text" name="nama_transaksi" class="form-control @error('nama_transaksi') is-invalid @enderror"
-                            placeholder="Contoh: Pembayaran Iuran Kebersihan" value="{{ old('nama_transaksi', $item->nama_transaksi) }}" required>
-                        @error('nama_transaksi')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    {{-- Pemasukan di modal EDIT juga disembunyikan --}}
-                    <div class="mb-3" style="display: none;">
-                        <label for="pemasukan" class="form-label">Pemasukan (Rp)</label>
-                        <input type="number" name="pemasukan" class="form-control @error('pemasukan') is-invalid @enderror"
-                            placeholder="Masukkan nominal pemasukan (contoh: 50000)" value="{{ old('pemasukan', $item->pemasukan) }}" min="0">
-                        @error('pemasukan')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="pengeluaran" class="form-label">Pengeluaran (Rp)</label>
-                        <input type="number" name="pengeluaran" class="form-control @error('pengeluaran') is-invalid @enderror"
-                            placeholder="Masukkan nominal pengeluaran (contoh: 25000)" value="{{ old('pengeluaran', $item->pengeluaran) }}" min="0">
-                        @error('pengeluaran')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="keterangan" class="form-label">Keterangan (Opsional)</label>
-                        <textarea name="keterangan" class="form-control" rows="3" placeholder="Tambahkan keterangan transaksi">{{ old('keterangan', $item->keterangan) }}</textarea>
-                    </div>
-
-                    <hr>
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-warning">Update Transaksi</button>
-                    </div>
-                </form>
-
-                @if ($errors->any() && old('modal_type') == 'edit' && old('edit_item_id') == $item->id)
-                    <div class="alert alert-danger mt-3">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 @endforeach
+{{-- End Modal Edit --}}
+
+{{-- Modal Tambah --}}
+<div class="modal fade" id="modalTambahTransaksi" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="{{ route('transaksi.store') }}" method="POST" class="modal-content">
+            @csrf
+            <input type="hidden" name="modal_type" value="add">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Transaksi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+<div class="mb-2">
+    <label>RT</label>
+    <select name="rt" class="form-select form-select-sm" required>
+        <option value="">-- Pilih RT --</option>
+        @foreach ($rukun_tetangga as $rt)
+            <option value="{{ $rt }}" {{ old('rt') == $rt ? 'selected' : '' }}>
+                RT {{ $rt }}
+            </option>
+        @endforeach
+    </select>
+</div>
+                <div class="mb-2">
+                    <label>Tanggal</label>
+                    <input type="date" name="tanggal" class="form-control form-control-sm" value="{{ old('tanggal') }}" required>
+                </div>
+                <div class="mb-2">
+                    <label>Nama Transaksi</label>
+                    <input type="text" name="nama_transaksi" class="form-control form-control-sm" value="{{ old('nama_transaksi') }}" required>
+                </div>
+                <div class="mb-2">
+                    <label>Jenis</label>
+                    <select name="jenis" class="form-select form-select-sm" required>
+                        <option value="pemasukan" {{ old('jenis') == 'pemasukan' ? 'selected' : '' }}>Pemasukan</option>
+                        <option value="pengeluaran" {{ old('jenis') == 'pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label>Nominal</label>
+                    <input type="number" name="nominal" class="form-control form-control-sm" value="{{ old('nominal') }}" required>
+                </div>
+                <div class="mb-2">
+                    <label>Keterangan</label>
+                    <textarea name="keterangan" class="form-control form-control-sm">{{ old('keterangan') }}</textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{-- End Modal Tambah --}}
 
 @endsection
 
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Tangani pesan error validasi agar modal tetap terbuka
+        // Buka modal otomatis kalau ada error validasi
         @if ($errors->any())
             @if (old('modal_type') == 'add')
                 var addModal = new bootstrap.Modal(document.getElementById('modalTambahTransaksi'));

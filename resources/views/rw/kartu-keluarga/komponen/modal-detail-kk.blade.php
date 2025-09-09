@@ -278,7 +278,7 @@
                             <p><strong>Kabupaten/Kota</strong> : {{ $kk->kabupaten ?? '-' }}</p>
                             <p><strong>Kode Pos</strong> : {{ $kk->kode_pos ?? '-' }}</p>
                             <p><strong>Provinsi</strong> : {{ $kk->provinsi ?? '-' }}</p>
-                            <p><strong>Kategori Iuran</strong> : {{ $kk->kategori_iuran ?? '-' }}</p>
+                            <p><strong>Kategori Iuran</strong> : <td>{{ $kk->kategoriGolongan->jenis ?? '-' }}</td></p>
                         </div>
                     </div>
 

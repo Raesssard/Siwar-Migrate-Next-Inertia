@@ -132,29 +132,11 @@
 
                                                 <td class="text-center align-item-center">
                                                     {{-- Tombol Aksi: Hapus, Edit, Detail --}}
-                                                    <form action="{{ route('pengumuman.destroy', $data->id) }}"
-                                                        method="POST" class="d-inline"
-                                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-sm"><i
-                                                                class="fas fa-trash-alt"></i> <!-- Ikon hapus --></button>
-                                                    </form>
-
-                                                    <button type="button" class="btn btn-warning btn-sm"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#modalEditPengumuman{{ $data->id }}">
-                                                        <i class="fas fa-edit"></i> <!-- Ikon edit -->
-                                                    </button>
-
-                                                    <button type="button" class="btn btn-success btn-sm"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#modalDetailPengumuman{{ $data->id }}">
-                                                        <i class="fas fa-info"></i>
-                                                    </button>
+                                                    {{-- Untuk RT --}}
+                                                    <a href="{{ route('rw.pengumuman-rt.export', $data->id) }}" class="btn btn-info btn-sm">
+                                                        <i class="fas fa-file-pdf"></i> 
+                                                    </a>
                                                 </td>
-
-
                                             </tr>
 
                                             <tr>

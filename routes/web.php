@@ -70,6 +70,18 @@ Route::middleware(['auth', 'role:rw'])->group(function () {
 
     Route::get('rw/laporan_pengeluaran_bulanan/{bulan}/{tahun}', [LaporanController::class, 'pengeluaran_bulanan'])
         ->name('pengeluaran_bulanan');
+    Route::get('rw/pengumuman/{id}/export', [PengumumanController::class, 'export'])
+    ->name('rw.pengumuman.export');
+    Route::get('rw/pengumuman-rt/{id}/export', [PengumumanRtController::class, 'export'])
+    ->name('rw.pengumuman-rt.export');
+
+    Route::get('/iuran/export/{jenis?}', [IuranController::class, 'export'])->name('iuran.export');
+
+    Route::get('/tagihan/export/manual', [TagihanController::class, 'exportManual'])->name('tagihan.export.manual');
+    Route::get('/tagihan/export/otomatis', [TagihanController::class, 'exportOtomatis'])->name('tagihan.export.otomatis');
+    Route::get('/tagihan/export/semua', [TagihanController::class, 'exportSemua'])->name('tagihan.export.semua');
+
+    Route::get('/transaksi/export/{jenis}', [TransaksiController::class, 'export'])->name('transaksi.export');
 
     // Upload / delete foto KK
     Route::put('rw/kartu_keluarga/{kartu_keluarga}/upload-foto', [Kartu_keluargaController::class, 'uploadFoto'])
@@ -93,7 +105,6 @@ Route::middleware(['auth', 'role:rt'])->group(function () {
     Route::resource('rt/rt_iuran', RtiuranController::class);
     Route::resource('rt/rt_tagihan', Rt_tagihanController::class);
     Route::resource('rt/rt_transaksi', Rt_transaksiController::class);
-
     // Upload / delete foto KK RT
     Route::put('rt/rt_kartu_keluarga/{rt_kartu_keluarga}/upload-foto', [Rt_kartu_keluargaController::class, 'uploadFoto'])
         ->name('rt_kartu_keluarga.upload_foto');

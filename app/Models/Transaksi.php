@@ -9,12 +9,12 @@ class Transaksi extends Model
 {
     use HasFactory;
 
-    protected $table = 'transaksi'; // Ubah dari 'pengeluaran'
+    protected $table = 'pengeluaran';
 
     protected $fillable = [
         'rt',
         'tanggal',
-        'jenis',
+        'jenis',        // enum: pemasukan/pengeluaran
         'nominal',
         'nama_transaksi',
         'keterangan',
@@ -23,6 +23,5 @@ class Transaksi extends Model
     protected $casts = [
         'tanggal' => 'date',
         'nominal' => 'decimal:2',
-        // pemasukan dan pengeluaran tetap sebagai string
     ];
 }
