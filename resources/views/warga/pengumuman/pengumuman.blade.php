@@ -34,7 +34,7 @@
             <!-- Content Row -->
             <div class="row">
 
-                <form action="{{ route('pengumuman-main') }}" method="GET" class="row g-2 align-items-start px-3 pb-2">
+                <form action="{{ route('warga.pengumuman') }}" method="GET" class="row g-2 align-items-start px-3 pb-2">
                     <div class="col-md-5 col-12 mb-2">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -73,7 +73,7 @@
                         </select>
 
                         <button type="submit" class="btn btn-sm btn-primary flex-fill">Filter</button>
-                        <a href="{{ route('pengumuman-main') }}" class="btn btn-secondary btn-sm flex-fill">Reset</a>
+                        <a href="{{ route('warga.pengumuman') }}" class="btn btn-secondary btn-sm flex-fill">Reset</a>
                     </div>
                 </form>
 

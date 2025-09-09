@@ -82,7 +82,7 @@ class Rt_transaksiController extends Controller
 
         Transaksi::create($validated);
 
-        return redirect()->route('rt_transaksi.index')->with('success', 'Transaksi berhasil ditambahkan!');
+        return redirect()->route('rt.transaksi.index')->with('success', 'Transaksi berhasil ditambahkan!');
     }
 
     public function update(Request $request, Transaksi $rt_transaksi)
@@ -101,13 +101,13 @@ class Rt_transaksiController extends Controller
 
         $rt_transaksi->update($validated);
 
-        return redirect()->route('rt_transaksi.index')->with('success', 'Transaksi berhasil diperbarui!');
+        return redirect()->route('rt.transaksi.index')->with('success', 'Transaksi berhasil diperbarui!');
     }
 
     public function destroy(Transaksi $rt_transaksi)
     {
         $rt_transaksi->delete();
 
-        return redirect()->route('rt_transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
+        return redirect()->route('rt.transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
     }
 }

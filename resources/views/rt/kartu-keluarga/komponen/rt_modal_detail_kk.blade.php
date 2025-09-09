@@ -357,7 +357,7 @@
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                     @csrf
                                                     <input type="hidden" name="redirect_to"
-                                                        value="{{ route('rt_kartu_keluarga.index') }}">
+                                                        value="{{ route('rt.kartu_keluarga.index') }}">
                                                     @method('DELETE')
                                                     <button type="submit"
                                                         class="btn btn-sm btn-danger d-flex align-items-center"
@@ -430,7 +430,7 @@
                     <div class="kk-document-section">
                         <div class="kk-document-upload">
                             <h6 class="fw-bold mb-3">Unggah/Perbarui Dokumen Kartu Keluarga</h6>
-                            <form action="{{ route('rt_kartu_keluarga.upload_foto', $kk->no_kk) }}" method="POST"
+                            <form action="{{ route('rt.kartu_keluarga.upload_foto', $kk->no_kk) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')

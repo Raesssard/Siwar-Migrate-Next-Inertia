@@ -26,8 +26,8 @@ class LoginController extends Controller
             $user = Auth::user();
 
             // kalau user hanya punya 1 role → langsung redirect
-            if (count($user->roles) === 1) {
-                return $this->redirectByRole($user->roles[0], $user);
+            if ($user->roles->count() === 1) {
+                return $this->redirectByRole($user->roles->first()->name, $user);
             }
 
             // kalau punya banyak role → tampilkan halaman pilih role
@@ -60,13 +60,13 @@ class LoginController extends Controller
                     'nik' => 'Hanya Kepala Keluarga yang bisa login.',
                 ]);
             }
-            return redirect()->route('dashboard-main');
+            return redirect()->route('warga.dashboard');
         }
 
         return match ($role) {
-            'admin' => redirect()->route('dashboard-admin'),
-            'rw'    => redirect()->route('dashboard-rw'),
-            'rt'    => redirect()->route('dashboard-rt'),
+            'admin' => redirect()->route('admin.dashboard'),
+            'rw'    => redirect()->route('rw.dashboard'),
+            'rt'    => redirect()->route('rt.dashboard'),
             default => redirect('/login'),
         };
     }
@@ -81,14 +81,14 @@ class LoginController extends Controller
     // Simpan role yang dipilih
     public function setRole(Request $request)
     {
+        /** @var User $user */
         $user = Auth::user();
         $role = $request->input('role');
 
-        if (!in_array($role, $user->roles)) {
+        if (!$user->hasRole($role)) {
             return redirect()->route('choose-role')->with('error', 'Role tidak valid.');
         }
 
-        // bisa juga disimpan ke session kalau mau
         session(['active_role' => $role]);
 
         return $this->redirectByRole($role, $user);

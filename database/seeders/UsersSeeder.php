@@ -10,11 +10,18 @@ use App\Models\Warga;
 use App\Models\Kategori_golongan;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UsersSeeder extends Seeder
 {
     public function run(): void
     {
+        // Buat roles dulu (jika belum ada)
+        $roles = ['admin', 'rw', 'rt', 'warga'];
+        foreach ($roles as $role) {
+            Role::firstOrCreate(['name' => $role]);
+        }
+
         // ambil id kategori kampung
         $kampung = Kategori_golongan::where('jenis', 'kampung')->first();
 
@@ -43,7 +50,7 @@ class UsersSeeder extends Seeder
             'provinsi' => 'Provinsi Sejahtera',
             'kode_pos' => '12345',
             'tgl_terbit' => now(),
-            'kategori_iuran' => $kampung->id, // pakai ID kategori
+            'kategori_iuran' => $kampung->id,
             'instansi_penerbit' => 'Dinas Dukcapil',
             'kabupaten_kota_penerbit' => 'Kota Bandung',
             'nama_kepala_dukcapil' => 'Budi Santoso S.Kom',
@@ -62,13 +69,12 @@ class UsersSeeder extends Seeder
             'id_rw' => $rw->id,
         ]);
 
-        // Update KK
         $kk_rt->update(['id_rt' => $rt->id]);
 
         // Warga Kepala Keluarga (yang juga RT)
         $warga_rt = Warga::create([
             'no_kk' => $kk_rt->no_kk,
-            'nik' => '0000000000000002', // sama dengan NIK RT
+            'nik' => '0000000000000002',
             'nama' => 'Andi Kurniawan',
             'jenis_kelamin' => 'laki-laki',
             'tempat_lahir' => 'Jakarta',
@@ -94,7 +100,7 @@ class UsersSeeder extends Seeder
             'no_kk' => '2222222222222222',
             'no_registrasi' => '3404.0000002',
             'alamat' => 'Jalan Mawar',
-            'id_rt' => '1',
+            'id_rt' => $rt->id,
             'id_rw' => $rw->id,
             'kelurahan' => 'Kelurahan Mawar',
             'kecamatan' => 'Kecamatan Indah',
@@ -102,7 +108,7 @@ class UsersSeeder extends Seeder
             'provinsi' => 'Provinsi Sejahtera',
             'kode_pos' => '12345',
             'tgl_terbit' => now(),
-            'kategori_iuran' => $kampung->id, // sebelumnya 'kampung', sekarang pakai id
+            'kategori_iuran' => $kampung->id,
             'instansi_penerbit' => 'Dinas Dukcapil',
             'kabupaten_kota_penerbit' => 'Kota Bandung',
             'nama_kepala_dukcapil' => 'Budi Santoso S.Kom',
@@ -130,40 +136,40 @@ class UsersSeeder extends Seeder
 
         /*
         ==============================
-        Users
+        Users + Role Assignment
         ==============================
         */
-        User::create([
+        $admin = User::create([
             'nik' => '0000000000000001',
             'nama' => 'Admin',
             'password' => Hash::make('password'),
-            'roles' => ['admin'],
         ]);
+        $admin->assignRole('admin');
 
-        User::create([
+        $pakRw = User::create([
             'nik' => '1234567890123452',
             'nama' => 'Pak RW',
             'password' => Hash::make('password'),
-            'roles' => ['rw'],
             'id_rw' => $rw->id,
         ]);
+        $pakRw->assignRole('rw');
 
-        User::create([
+        $pakRt = User::create([
             'nik' => $rt->nik,
             'nama' => $rt->nama,
             'password' => Hash::make('password'),
-            'roles' => ['warga', 'rt'], // multi-role
             'id_rt' => $rt->id,
             'id_rw' => $rw->id,
         ]);
+        $pakRt->assignRole(['rt', 'warga']); // multi role
 
-        User::create([
+        $joko = User::create([
             'nik' => $warga_biasa->nik,
             'nama' => $warga_biasa->nama,
             'password' => Hash::make('password'),
-            'roles' => ['warga'],
             'id_rt' => $rt->id,
             'id_rw' => $rw->id,
         ]);
+        $joko->assignRole('warga');
     }
 }

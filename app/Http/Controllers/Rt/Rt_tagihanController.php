@@ -113,7 +113,7 @@ use Illuminate\Support\Facades\Log;
 
             Tagihan::create($dataToStore);
 
-            return redirect()->route('rt_iuran.index')->with('success', 'Tagihan manual berhasil ditambahkan.');
+            return redirect()->route('rt.iuran.index')->with('success', 'Tagihan manual berhasil ditambahkan.');
 
         } catch (\Exception $e) {
             Log::error('Error creating tagihan manual:', ['message' => $e->getMessage()]);
@@ -147,7 +147,7 @@ use Illuminate\Support\Facades\Log;
                 'bukti_transfer' => $validated['bukti_transfer'] ?? null,
             ]);
 
-            return redirect()->route('rt_tagihan.index')->with('success', 'Tagihan manual berhasil diperbarui.');
+            return redirect()->route('rt.tagihan.index')->with('success', 'Tagihan manual berhasil diperbarui.');
 
         } catch (\Exception $e) {
             Log::error('Error updating tagihan manual:', ['message' => $e->getMessage()]);
@@ -169,7 +169,7 @@ use Illuminate\Support\Facades\Log;
 
             $tagihan->delete();
 
-            return redirect()->route('rt_iuran.index')->with('success', 'Tagihan manual berhasil dihapus.');
+            return redirect()->route('rt.iuran.index')->with('success', 'Tagihan manual berhasil dihapus.');
 
         } catch (\Exception $e) {
             Log::error('Error deleting tagihan manual:', ['message' => $e->getMessage()]);

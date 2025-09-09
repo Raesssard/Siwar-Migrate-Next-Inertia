@@ -14,7 +14,7 @@
 
 
                 {{-- Form Filter dan Pencarian --}}
-                <form action="{{ route('rt_transaksi.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rt.transaksi.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-4">
                         <input type="text" name="search" value="{{ request('search') }}"
                             class="form-control form-control-sm" placeholder="Cari Transaksi...">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="col-md-2 d-flex gap-2">
                         <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                        <a href="{{ route('rt_transaksi.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                        <a href="{{ route('rt.transaksi.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                     </div>
                 </form>
 
@@ -104,7 +104,7 @@
                                                         data-bs-target="#modalEditTransaksi{{ $item->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-                                                    <form action="{{ route('rt_transaksi.destroy', $item->id) }}"
+                                                    <form action="{{ route('rt.transaksi.destroy', $item->id) }}"
                                                         method="POST" class="d-inline"
                                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                         @csrf
@@ -153,7 +153,7 @@
                         aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('rt_transaksi.store') }}" method="POST" class="p-3">
+                    <form action="{{ route('rt.transaksi.store') }}" method="POST" class="p-3">
                         @csrf
 
                         <div class="mb-3">
@@ -245,7 +245,7 @@
                             aria-label="Tutup"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('rt_transaksi.update', $item->id) }}" method="POST" class="p-3">
+                        <form action="{{ route('rt.transaksi.update', $item->id) }}" method="POST" class="p-3">
                             @csrf
                             @method('PUT')
 

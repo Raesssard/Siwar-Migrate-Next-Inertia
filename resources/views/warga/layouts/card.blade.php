@@ -105,7 +105,7 @@
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-warning shadow h-100 py-2 card-clickable">
-            <a href="{{ route('pengumuman-main') }}" class="text-decoration-none">
+            <a href="{{ route('warga.pengumuman') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -125,7 +125,7 @@
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-danger shadow h-100 py-2 card-clickable">
-            <a href="{{ route('tagihan') }}" class="text-decoration-none">
+            <a href="{{ route('warga.tagihan') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -147,7 +147,7 @@
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-danger shadow h-100 py-2 card-clickable">
-            <a href="{{ route('tagihan') }}" class="text-decoration-none">
+            <a href="{{ route('warga.tagihan') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -170,7 +170,7 @@
     <!-- Card Total Pengeluaran -->
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-primary shadow h-100 py-2 card-clickable">
-            <a href="{{ route('transaksi') }}" class="text-decoration-none">
+            <a href="{{ route('warga.transaksi') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -192,7 +192,7 @@
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-success shadow h-100 py-2 card-clickable"> {{-- Anda bisa pilih warna border lain, misal border-left-info --}}
-            <a href="{{ route('transaksi') }}" class="text-decoration-none"> {{-- Link ke halaman transaksi --}}
+            <a href="{{ route('warga.transaksi') }}" class="text-decoration-none"> {{-- Link ke halaman transaksi --}}
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">

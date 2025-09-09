@@ -16,9 +16,9 @@
                     aria-label="Tutup"></button>
             </div>
 
-            <form action="{{ route('warga.store') }}" method="POST">
+            <form action="{{ route('rw.warga.store') }}" method="POST">
                 @csrf
-                <input type="hidden" name="redirect_to" value="{{ route('kartu_keluarga.index') }}">
+                <input type="hidden" name="redirect_to" value="{{ route('rw.kartu_keluarga.index') }}">
                 <input type="hidden" name="form_type" value="tambah">
                 <input type="hidden" name="no_kk" id="modal_no_kk" value="{{ $oldIfTambah('no_kk') }}">
 

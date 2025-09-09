@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\Admin_dashboardController;
-use App\Http\Controllers\Admin\Admin_rtController;
-use App\Http\Controllers\Admin\Admin_rwController;
+use App\Http\Controllers\Admin\{Admin_dashboardController, Admin_rtController, Admin_rwController};
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Rt\{
@@ -43,11 +41,11 @@ use App\Http\Controllers\UserController;
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [Admin_dashboardController::class, 'index'])->name('dashboard-admin');
-    Route::resource('admin/data_rt', Admin_rtController::class);
-    Route::resource('admin/data_rw', Admin_rwController::class);
+Route::prefix('admin')->as('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/dashboard', [Admin_dashboardController::class, 'index'])->name('dashboard');
+    Route::resource('rt', Admin_rtController::class);
+    Route::resource('rw', Admin_rwController::class);
+    
 });
 
 /*
@@ -55,41 +53,34 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 | RW Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:rw'])->group(function () {
-    Route::get('/rw', [DashboardController::class, 'index'])->name('dashboard-rw');
-    Route::resource('rw/warga', WargaController::class);
-    Route::resource('rw/kartu_keluarga', Kartu_keluargaController::class);
-    Route::resource('rw/rukun_tetangga', Rukun_tetanggaController::class);
-    Route::resource('rw/pengumuman', PengumumanController::class);
-    Route::resource('rw/pengumuman-rt', PengumumanRtController::class);
-    Route::resource('rw/tagihan', TagihanController::class);
-    Route::resource('rw/iuran', IuranController::class);
-    Route::resource('rw/kategori_golongan', Kategori_golonganController::class);
-    Route::resource('rw/pengeluaran', PengeluaranController::class);
-    Route::resource('rw/transaksi', TransaksiController::class);
+Route::prefix('rw')->as('rw.')->middleware(['auth', 'role:rw'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('warga', WargaController::class);
+    Route::resource('kartu_keluarga', Kartu_keluargaController::class);
+    Route::resource('rukun_tetangga', Rukun_tetanggaController::class);
+    Route::resource('pengumuman', PengumumanController::class);
+    Route::resource('pengumuman-rt', PengumumanRtController::class);
+    Route::resource('tagihan', TagihanController::class);
+    Route::resource('iuran', IuranController::class);
+    Route::resource('kategori_golongan', Kategori_golonganController::class);
+    Route::resource('pengeluaran', PengeluaranController::class);
+    Route::resource('transaksi', TransaksiController::class);
 
-    Route::get('rw/laporan_pengeluaran_bulanan/{bulan}/{tahun}', [LaporanController::class, 'pengeluaran_bulanan'])
-        ->name('pengeluaran_bulanan');
-    Route::get('rw/pengumuman/{id}/export', [PengumumanController::class, 'export'])
-    ->name('rw.pengumuman.export');
-    Route::get('rw/pengumuman-rt/{id}/export', [PengumumanRtController::class, 'export'])
-    ->name('rw.pengumuman-rt.export');
+    // Export & laporan
+    Route::get('laporan_pengeluaran_bulanan/{bulan}/{tahun}', [LaporanController::class, 'pengeluaran_bulanan'])->name('laporan.pengeluaran_bulanan');
+    Route::get('pengumuman/{id}/export', [PengumumanController::class, 'export'])->name('pengumuman.export');
+    Route::get('pengumuman-rt/{id}/export', [PengumumanRtController::class, 'export'])->name('pengumuman_rt.export');
 
-    Route::get('/iuran/export/{jenis?}', [IuranController::class, 'export'])->name('iuran.export');
-
-    Route::get('/tagihan/export/manual', [TagihanController::class, 'exportManual'])->name('tagihan.export.manual');
-    Route::get('/tagihan/export/otomatis', [TagihanController::class, 'exportOtomatis'])->name('tagihan.export.otomatis');
-    Route::get('/tagihan/export/semua', [TagihanController::class, 'exportSemua'])->name('tagihan.export.semua');
-
-    Route::get('/transaksi/export/{jenis}', [TransaksiController::class, 'export'])->name('transaksi.export');
+    Route::get('iuran/export/{jenis?}', [IuranController::class, 'export'])->name('iuran.export');
+    Route::get('tagihan/export/manual', [TagihanController::class, 'exportManual'])->name('tagihan.export.manual');
+    Route::get('tagihan/export/otomatis', [TagihanController::class, 'exportOtomatis'])->name('tagihan.export.otomatis');
+    Route::get('tagihan/export/semua', [TagihanController::class, 'exportSemua'])->name('tagihan.export.semua');
+    Route::get('transaksi/export/{jenis}', [TransaksiController::class, 'export'])->name('transaksi.export');
 
     // Upload / delete foto KK
-    Route::put('rw/kartu_keluarga/{kartu_keluarga}/upload-foto', [Kartu_keluargaController::class, 'uploadFoto'])
-        ->name('kartu_keluarga.upload_foto');
-    Route::delete('rw/kartu_keluarga/{kartu_keluarga}/delete-foto', [Kartu_keluargaController::class, 'deleteFoto'])
-        ->name('kartu_keluarga.delete_foto');
-    Route::get('rw/kartu_keluarga/{kartu_keluarga}/upload-form', [Kartu_keluargaController::class, 'uploadForm'])
-        ->name('kartu_keluarga.upload_form');
+    Route::put('kartu_keluarga/{kartu_keluarga}/upload-foto', [Kartu_keluargaController::class, 'uploadFoto'])->name('kartu_keluarga.upload_foto');
+    Route::delete('kartu_keluarga/{kartu_keluarga}/delete-foto', [Kartu_keluargaController::class, 'deleteFoto'])->name('kartu_keluarga.delete_foto');
+    Route::get('kartu_keluarga/{kartu_keluarga}/upload-form', [Kartu_keluargaController::class, 'uploadForm'])->name('kartu_keluarga.upload_form');
 });
 
 /*
@@ -97,26 +88,24 @@ Route::middleware(['auth', 'role:rw'])->group(function () {
 | RT Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:rt'])->group(function () {
-    Route::get('/rt', [Rt_dashboardController::class, 'index'])->name('dashboard-rt');
-    Route::resource('rt/rt_kartu_keluarga', Rt_kartu_keluargaController::class);
-    Route::resource('rt/rt_warga', Rt_wargaController::class);
-    Route::resource('rt/rt_pengumuman', Rt_pengumumanController::class);
-    Route::resource('rt/rt_iuran', RtiuranController::class);
-    Route::resource('rt/rt_tagihan', Rt_tagihanController::class);
-    Route::resource('rt/rt_transaksi', Rt_transaksiController::class);
+Route::prefix('rt')->as('rt.')->middleware(['auth', 'role:rt'])->group(function () {
+    Route::get('/', [Rt_dashboardController::class, 'index'])->name('dashboard');
+    Route::resource('kartu_keluarga', Rt_kartu_keluargaController::class);
+    Route::resource('warga', Rt_wargaController::class);
+    Route::resource('pengumuman', Rt_pengumumanController::class);
+    Route::resource('iuran', RtiuranController::class);
+    Route::resource('tagihan', Rt_tagihanController::class);
+    Route::resource('transaksi', Rt_transaksiController::class);
+
     // Upload / delete foto KK RT
-    Route::put('rt/rt_kartu_keluarga/{rt_kartu_keluarga}/upload-foto', [Rt_kartu_keluargaController::class, 'uploadFoto'])
-        ->name('rt_kartu_keluarga.upload_foto');
-    Route::delete('rt/rt_kartu_keluarga/{rt_kartu_keluarga}/delete-foto', [Rt_kartu_keluargaController::class, 'deleteFoto'])
-        ->name('rt_kartu_keluarga.delete_foto');
-    Route::get('rt/rt_kartu_keluarga/{rt_kartu_keluarga}/upload-form', [Rt_kartu_keluargaController::class, 'uploadForm'])
-        ->name('rt_kartu_keluarga.upload_form');
+    Route::put('kartu_keluarga/{rt_kartu_keluarga}/upload-foto', [Rt_kartu_keluargaController::class, 'uploadFoto'])->name('kartu_keluarga.upload_foto');
+    Route::delete('kartu_keluarga/{rt_kartu_keluarga}/delete-foto', [Rt_kartu_keluargaController::class, 'deleteFoto'])->name('kartu_keluarga.delete_foto');
+    Route::get('kartu_keluarga/{rt_kartu_keluarga}/upload-form', [Rt_kartu_keluargaController::class, 'uploadForm'])->name('kartu_keluarga.upload_form');
 
     // Export khusus RT
-    Route::get('/rt/export/iuran', [ExportController::class, 'exportIuran'])->name('rt.iuran.export');
-    Route::get('/rt/export/tagihan', [ExportController::class, 'exportTagihan'])->name('rt.tagihan.export');
-    Route::get('/rt/export/transaksi', [ExportController::class, 'exportTransaksi'])->name('rt.transaksi.export');
+    Route::get('export/iuran', [ExportController::class, 'exportIuran'])->name('iuran.export');
+    Route::get('export/tagihan', [ExportController::class, 'exportTagihan'])->name('tagihan.export');
+    Route::get('export/transaksi', [ExportController::class, 'exportTransaksi'])->name('transaksi.export');
 });
 
 /*
@@ -124,12 +113,12 @@ Route::middleware(['auth', 'role:rt'])->group(function () {
 | Warga Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:warga'])->group(function () {
-    Route::get('/', [DashboardWargaController::class, 'index'])->name('dashboard-main');
-    Route::get('/warga/warga_pengumuman', [PengumumanWargaController::class, 'index'])->name('pengumuman-main');
-    Route::get('/warga/lihat_kk', [LihatKKController::class, 'index'])->name('lihat_kk');
-    Route::get('/warga/tagihan', [WargatagihanController::class, 'index'])->name('tagihan');
-    Route::get('/warga/transaksi', [WargatransaksiController::class, 'index'])->name('transaksi');
+Route::prefix('warga')->as('warga.')->middleware(['auth', 'role:warga'])->group(function () {
+    Route::get('/', [DashboardWargaController::class, 'index'])->name('dashboard');
+    Route::get('pengumuman', [PengumumanWargaController::class, 'index'])->name('pengumuman');
+    Route::get('kk', [LihatKKController::class, 'index'])->name('kk');
+    Route::get('tagihan', [WargatagihanController::class, 'index'])->name('tagihan');
+    Route::get('transaksi', [WargatransaksiController::class, 'index'])->name('transaksi');
 });
 
 /*
@@ -137,10 +126,9 @@ Route::middleware(['auth', 'role:warga'])->group(function () {
 | Shared Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:rw,rt,warga,admin'])->group(function () {
+Route::middleware(['auth', 'role:rw|rt|warga|admin'])->group(function () {
     Route::post('/update-password', [UserController::class, 'updatePassword'])->name('update.password');
 });
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/api/warga/{nik}', [Admin_rtController::class, 'getWargaByNik'])->name('warga.by_nik');
 });
@@ -153,7 +141,24 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
 Route::middleware(['auth'])->group(function () {
-    Route::get('/choose-role', [LoginController::class, 'chooseRole'])->name('choose-role'); // tampilan pilih role
-    Route::post('/choose-role', [LoginController::class, 'setRole'])->name('choose.role');   // submit role terpilih
+    Route::get('/choose-role', [LoginController::class, 'chooseRole'])->name('choose-role');
+    Route::post('/choose-role', [LoginController::class, 'setRole'])->name('choose.role');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/choose-role', [LoginController::class, 'chooseRole'])->name('choose-role');
+    Route::post('/choose-role', [LoginController::class, 'setRole'])->name('choose.role');
+});
+
+

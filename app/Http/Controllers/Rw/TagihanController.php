@@ -94,7 +94,7 @@ class TagihanController extends Controller
 
             Tagihan::create($dataToStore);
 
-            return redirect()->route('iuran.index')->with('success', 'Tagihan manual berhasil ditambahkan.');
+            return redirect()->route('rw.iuran.index')->with('success', 'Tagihan manual berhasil ditambahkan.');
 
         } catch (\Exception $e) {
             Log::error('Error creating tagihan manual:', ['message' => $e->getMessage()]);
@@ -163,7 +163,7 @@ class TagihanController extends Controller
                 }
             }
 
-            return redirect()->route('tagihan.index')->with('success', 'Tagihan berhasil diperbarui.');
+            return redirect()->route('rw.tagihan.index')->with('success', 'Tagihan berhasil diperbarui.');
         } catch (\Exception $e) {
             Log::error('Error updating tagihan:', ['message' => $e->getMessage()]);
             return redirect()->back()->withInput()->with('error', 'Gagal memperbarui tagihan. Error: ' . $e->getMessage());
@@ -185,7 +185,7 @@ class TagihanController extends Controller
 
             $tagihan->delete();
 
-            return redirect()->route('iuran.index')->with('success', 'Tagihan manual berhasil dihapus.');
+            return redirect()->route('rw.tagihan.index')->with('success', 'Tagihan manual berhasil dihapus.');
 
         } catch (\Exception $e) {
             Log::error('Error deleting tagihan manual:', ['message' => $e->getMessage()]);

@@ -79,32 +79,34 @@ public function store(Request $request)
     ]);
 
     // ✅ Buat atau update user untuk RT
+    // ✅ Buat atau update user untuk RT
     $user = User::where('nik', $request->nik)->first();
 
     if ($user) {
-        $currentRoles = $user->roles ?? ['warga'];
-        if (!in_array('rt', $currentRoles)) {
-            $currentRoles[] = 'rt';
-        }
-
         $user->update([
             'id_rt' => $rt->id,
             'id_rw' => 1,
-            'roles' => array_unique($currentRoles),
             'password' => Hash::make('password'), // reset password default
         ]);
+
+        // Tambah role 'rt' kalau belum ada
+        if (!$user->hasRole('rt')) {
+            $user->assignRole('rt');
+        }
     } else {
-        User::create([
+        $user = User::create([
             'nik' => $request->nik,
             'nama' => $request->nama,
             'password' => bcrypt('password'),
             'id_rt' => $rt->id,
             'id_rw' => 1,
-            'roles' => ['rt'],
         ]);
+
+        // Set role RT
+        $user->assignRole('rt');
     }
 
-    return redirect()->route('data_rt.index')->with('success', 'Rukun Tetangga berhasil ditambahkan.');
+    return redirect()->route('admin.rt.index')->with('success', 'Rukun Tetangga berhasil ditambahkan.');
 }
 
 
@@ -115,7 +117,7 @@ public function store(Request $request)
     {
         //
         $rukun_tetangga = Rukun_tetangga::findOrFail($id);
-        return view('data_rt.show', compact('rukun_tetangga'));
+        return view('admin.rt.show', compact('rukun_tetangga'));
     }
 
     /**
@@ -125,7 +127,7 @@ public function store(Request $request)
     {
         //
         $rukun_tetangga = Rukun_tetangga::findOrFail($id);
-        return view('data_rt.edit', compact('rukun_tetangga'));
+        return view('admin.rt.edit', compact('rukun_tetangga'));
     }
 
     /**
@@ -183,28 +185,27 @@ public function update(Request $request, string $id)
     $user = User::where('nik', $request->nik)->first();
 
     if ($user) {
-        $currentRoles = $user->roles ?? ['warga'];
-        if (!in_array('rt', $currentRoles)) {
-            $currentRoles[] = 'rt';
-        }
-
         $user->update([
             'id_rt' => $rukun_tetangga->id,
             'id_rw' => 1,
-            'roles' => array_unique($currentRoles),
         ]);
+
+        if (!$user->hasRole('rt')) {
+            $user->assignRole('rt');
+        }
     } else {
-        User::create([
+        $user = User::create([
             'nik' => $request->nik,
             'nama' => $request->nama,
             'password' => bcrypt('password'),
             'id_rt' => $rukun_tetangga->id,
             'id_rw' => 1,
-            'roles' => ['rt'],
         ]);
+
+        $user->assignRole('rt');
     }
 
-    return redirect()->route('data_rt.index')->with('success', 'Rukun Tetangga berhasil diperbarui.');
+    return redirect()->route('admin.rt.index')->with('success', 'Rukun Tetangga berhasil diperbarui.');
 }
     
 

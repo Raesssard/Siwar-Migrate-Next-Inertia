@@ -88,38 +88,38 @@
 
     {{-- Item Navigasi Lainnya --}}
     <li class="nav-item {{ Request::is('rt/rt_warga*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rt_warga.index') }}">
+        <a class="nav-link" href="{{ route('rt.warga.index') }}">
             <i class="fas fa-id-card"></i>
             <span>Manajemen Warga</span>
         </a>
     </li>
 
     <li class="nav-item {{ Request::is('rt/rt_kartu_keluarga*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rt_kartu_keluarga.index') }}">
+        <a class="nav-link" href="{{ route('rt.kartu_keluarga.index') }}">
             <i class="fas fa-users "></i>
             <span>Kartu Keluarga</span>
         </a>
     </li>
 
     <li class="nav-item {{ Request::is('rt/rt_pengumuman*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rt_pengumuman.index') }}">
+        <a class="nav-link" href="{{ route('rt.pengumuman.index') }}">
             <i class="fas fa-comments"></i>
             <span>Pengumuman</span>
         </a>
     <li class="nav-item {{ Request::is('rt/rt_iuran*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rt_iuran.index') }}">
+        <a class="nav-link" href="{{ route('rt.iuran.index') }}">
             <i class="fas fa-file-invoice-dollar"></i>
             <span>iuran</span>
         </a>
     </li>
     <li class="nav-item {{ Request::is('rt/rt_tagihan*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rt_tagihan.index') }}">
+        <a class="nav-link" href="{{ route('rt.tagihan.index') }}">
             <i class="fas fa-hand-holding-usd"></i>
             <span>Tagihan</span>
         </a>
     </li>
     <li class="nav-item {{ Request::is('rt/rt_transaksi*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rt_transaksi.index') }}">
+        <a class="nav-link" href="{{ route('rt.transaksi.index') }}">
             <i class="fas fa-money-bill-wave"></i>
             <span>Transaksi</span>
         </a>

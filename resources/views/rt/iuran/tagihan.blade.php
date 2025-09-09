@@ -30,7 +30,7 @@
                 @endif
 
                 {{-- Form Filter dan Pencarian --}}
-                <form action="{{ route('rt_tagihan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rt.tagihan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -52,7 +52,7 @@
                             @endforeach
                         </select>
                         <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                        <a href="{{ route('rt_tagihan.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                        <a href="{{ route('rt.tagihan.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                     </div>
                 </form>
 
@@ -186,7 +186,7 @@
                                                     </button>
 
                                                     <!-- Tombol Hapus -->
-                                                    <form action="{{ route('rt_tagihan.destroy', $item->id) }}"
+                                                    <form action="{{ route('rt.tagihan.destroy', $item->id) }}"
                                                         method="POST" class="d-inline"
                                                         onsubmit="return confirm('Yakin ingin menghapus tagihan otomatis ini?');">
                                                         @csrf
@@ -224,7 +224,7 @@
                                 </div>
                                 <div class="modal-body">
                                     {{-- Form Edit Tagihan --}}
-                                    <form action="{{ route('rt_tagihan.update', $item->id) }}" method="POST"
+                                    <form action="{{ route('rt.tagihan.update', $item->id) }}" method="POST"
                                         class="p-4">
                                         @csrf
                                         @method('PUT')
@@ -485,7 +485,7 @@
                                 </div>
                                 <div class="modal-body">
                                     {{-- Form Edit Tagihan --}}
-                                    <form action="{{ route('rt_tagihan.update', $item->id) }}" method="POST"
+                                    <form action="{{ route('rt.tagihan.update', $item->id) }}" method="POST"
                                         class="p-4">
                                         @csrf
                                         @method('PUT')
@@ -744,7 +744,7 @@
                             </div>
                             <div class="modal-body">
                                 {{-- Form Tambah Tagihan --}}
-                                <form action="{{ route('rt_iuran.store') }}" method="POST" class="p-4">
+                                <form action="{{ route('rt.iuran.store') }}" method="POST" class="p-4">
                                     @csrf
 
                                     <div class="mb-3">

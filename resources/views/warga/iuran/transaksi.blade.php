@@ -30,7 +30,7 @@
                 @endif
 
                 {{-- Form Pencarian --}}
-                <form action="{{ route('transaksi.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('warga.transaksi') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 d-flex gap-2">
-                        <a href="{{ route('transaksi.index') }}" class="btn btn-secondary btn-sm">Reset Pencarian</a>
+                        <a href="{{ route('warga.transaksi') }}" class="btn btn-secondary btn-sm">Reset Pencarian</a>
                     </div>
                 </form>
 

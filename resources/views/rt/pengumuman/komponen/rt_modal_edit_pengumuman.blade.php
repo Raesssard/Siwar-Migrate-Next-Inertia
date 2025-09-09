@@ -12,7 +12,7 @@
                     data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             {{-- Tambahkan enctype="multipart/form-data" pada form --}}
-            <form action="{{ route('rt_pengumuman.update', $data->id) }}"
+            <form action="{{ route('rt.pengumuman.update', $data->id) }}"
                 method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')

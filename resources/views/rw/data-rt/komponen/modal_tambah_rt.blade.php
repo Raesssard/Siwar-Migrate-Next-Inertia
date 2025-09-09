@@ -9,7 +9,7 @@
                     aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('rukun_tetangga.store') }}" method="POST" class="p-4">
+                <form action="{{ route('rw.rukun_tetangga.store') }}" method="POST" class="p-4">
                     @csrf
 
                     {{-- Input tersembunyi untuk mengidentifikasi formulir ini secara spesifik --}}

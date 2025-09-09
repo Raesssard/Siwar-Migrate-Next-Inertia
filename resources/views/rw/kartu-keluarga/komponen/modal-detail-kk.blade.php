@@ -354,11 +354,11 @@
                                         <td class="text-center">
                                             <div
                                                 class="d-flex justify-content-center align-items-center gap-1 flex-nowrap">
-                                                <form action="{{ route('warga.destroy', $data->nik) }}" method="POST"
+                                                <form action="{{ route('rw.warga.destroy', $data->nik) }}" method="POST"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                     @csrf
                                                     <input type="hidden" name="redirect_to"
-                                                        value="{{ route('kartu_keluarga.index') }}">
+                                                        value="{{ route('rw.kartu_keluarga.index') }}">
                                                     @method('DELETE')
                                                     <button type="submit"
                                                         class="btn btn-sm btn-danger d-flex align-items-center"
@@ -431,7 +431,7 @@
                     <div class="kk-document-section">
                         <div class="kk-document-upload">
                             <h6 class="fw-bold mb-3">Unggah/Perbarui Dokumen Kartu Keluarga</h6>
-                            <form action="{{ route('kartu_keluarga.upload_foto', $kk->no_kk) }}" method="POST"
+                            <form action="{{ route('rw.kartu_keluarga.upload_foto', $kk->no_kk) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
@@ -450,7 +450,7 @@
                                 @enderror
                             </form>
                             @if ($kk->foto_kk)
-                                <form action="{{ route('kartu_keluarga.delete_foto', $kk->no_kk) }}" method="POST"
+                                <form action="{{ route('rw.kartu_keluarga.delete_foto', $kk->no_kk) }}" method="POST"
                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?')">
                                     @csrf
                                     @method('DELETE')

@@ -226,7 +226,7 @@ class Rukun_tetanggaController extends Controller
                 ]);
             }
 
-            return redirect()->route('rukun_tetangga.index')
+            return redirect()->route('rw.rukun_tetangga.index')
                 ->with('success', 'Data RT dan akun pengguna berhasil ditambahkan.');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -251,7 +251,7 @@ class Rukun_tetanggaController extends Controller
     {
         //
         $rukun_tetangga = Rukun_tetangga::findOrFail($id);
-        return view('rukun_tetangga.show', compact('rukun_tetangga'));
+        return view('rw.rukun_tetangga.show', compact('rukun_tetangga'));
     }
 
     /**
@@ -261,7 +261,7 @@ class Rukun_tetanggaController extends Controller
     {
         //
         $rukun_tetangga = Rukun_tetangga::findOrFail($id);
-        return view('rukun_tetangga.edit', compact('rukun_tetangga'));
+        return view('rw.rukun_tetangga.edit', compact('rukun_tetangga'));
     }
 
     /**
@@ -403,7 +403,7 @@ class Rukun_tetanggaController extends Controller
 
             // --- 5. Pengalihan Halaman dan Pesan Sukses ---
             // Redirect pengguna kembali ke halaman indeks Rukun Tetangga dengan pesan sukses.
-            return redirect()->route('rukun_tetangga.index')->with('success', 'Data Rukun Tetangga berhasil diperbarui. 👍');
+            return redirect()->route('rw.rukun_tetangga.index')->with('success', 'Data Rukun Tetangga berhasil diperbarui. 👍');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Menangkap error validasi dan mengembalikan ke halaman sebelumnya dengan pesan error.
