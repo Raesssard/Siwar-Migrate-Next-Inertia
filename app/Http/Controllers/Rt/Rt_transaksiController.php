@@ -65,20 +65,16 @@ class Rt_transaksiController extends Controller
         ));
     }
 
-
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'rt' => 'required|exists:rukun_tetangga,id',
+            'rt' => 'required|string',
             'tanggal' => 'required|date',
             'nama_transaksi' => 'required|string|max:255',
-            'pengeluaran' => 'nullable|numeric|min:0',
-            'pemasukan' => 'nullable|numeric|min:0',
-            'jumlah' => 'nullable|numeric',
+            'jenis' => 'required|in:pemasukan,pengeluaran',
+            'nominal' => 'required|numeric|min:0',
             'keterangan' => 'nullable|string',
         ]);
-
-        $validated['jumlah'] = ($validated['pemasukan'] ?? 0) - ($validated['pengeluaran'] ?? 0);
 
         Transaksi::create($validated);
 
@@ -88,16 +84,13 @@ class Rt_transaksiController extends Controller
     public function update(Request $request, Transaksi $rt_transaksi)
     {
         $validated = $request->validate([
-            'rt' => 'required|exists:rukun_tetangga,id',
+            'rt' => 'required|string',
             'tanggal' => 'required|date',
             'nama_transaksi' => 'required|string|max:255',
-            'pengeluaran' => 'nullable|numeric|min:0',
-            'pemasukan' => 'nullable|numeric|min:0',
-            'jumlah' => 'nullable|numeric',
+            'jenis' => 'required|in:pemasukan,pengeluaran',
+            'nominal' => 'required|numeric|min:0',
             'keterangan' => 'nullable|string',
         ]);
-
-        $validated['jumlah'] = ($validated['pemasukan'] ?? 0) - ($validated['pengeluaran'] ?? 0);
 
         $rt_transaksi->update($validated);
 

@@ -75,10 +75,10 @@ class RtIuranController extends Controller
         $iuran = Iuran::create($data);
 
         // 🔹 Ambil KK sesuai scope
-        $kkList = $iuran->level === 'rt' 
-          ? Kartu_keluarga::where('id_rt', $iuran->id_rt)->get()
-          : Kartu_keluarga::where('id_rw', $iuran->id_rw)->get();
-        
+        $kkList = $iuran->level === 'rt'
+            ? Kartu_keluarga::where('id_rt', $iuran->id_rt)->get()
+            : Kartu_keluarga::where('id_rw', $iuran->id_rw)->get();
+
 
         // Manual
         if ($request->jenis === 'manual') {
@@ -153,6 +153,10 @@ class RtIuranController extends Controller
             'tgl_tagih' => 'required|date',
             'tgl_tempo' => 'required|date',
             'jenis' => 'required|in:manual,otomatis',
+        ]);
+
+        Tagihan::where('id_iuran', $id)->update([
+            'jenis' => $request->jenis,
         ]);
 
         $iuran->update([

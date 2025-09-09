@@ -56,6 +56,12 @@
                     </div>
                 </form>
 
+                <div class="mb-3">
+                    <a href="{{ route('rt.tagihan.export') }}" class="btn btn-success">
+                        <i class="fas fa-file-excel"></i> Export Iuran ke Excel
+                    </a>
+                </div>
+
                 <!-- Tabel Tagihan Manual -->
                 <div class="col-xl-12 col-lg-7 mb-4">
                     <div class="card shadow">
@@ -175,13 +181,13 @@
                                                 <td>
                                                     <!-- Tombol Detail -->
                                                     <button class="btn btn-sm btn-info" data-bs-toggle="modal"
-                                                        data-bs-target="#modalDetailkk{{ $item->no_kk }}">
+                                                        data-bs-target="#modalDetailkkOtomatis{{ $item->id }}">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
 
                                                     <!-- Tombol Edit -->
                                                     <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                        data-bs-target="#modalEditTagihan{{ $item->id }}">
+                                                        data-bs-target="#modalEditTagihanOtomatis{{ $item->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
 
@@ -217,7 +223,8 @@
                         <div class="modal-dialog">
                             <div class="modal-content shadow-lg">
                                 <div class="modal-header bg-warning text-white">
-                                    <h5 class="modal-title" id="modalEditTagihanLabel{{ $item->id }}">Edit Data Tagihan
+                                    <h5 class="modal-title" id="modalEditTagihanLabel{{ $item->id }}">Edit Data
+                                        Tagihan
                                     </h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                                         aria-label="Tutup"></button>
@@ -473,7 +480,7 @@
 
                 {{-- Modals untuk Tagihan Otomatis --}}
                 @foreach ($tagihanOtomatis as $item)
-                    <div class="modal fade" id="modalEditTagihan{{ $item->id }}" tabindex="-1"
+                    <div class="modal fade" id="modalEditTagihanOtomatis{{ $item->id }}" tabindex="-1"
                         aria-labelledby="modalEditTagihanLabel{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content shadow-lg">
@@ -583,12 +590,12 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="modalDetailkk{{ $item->no_kk }}" tabindex="-1"
-                        aria-labelledby="modalDetailkkLabel{{ $item->no_kk }}" aria-hidden="true">
+                    <div class="modal fade" id="modalDetailkkOtomatis{{ $item->id }}" tabindex="-1"
+                        aria-labelledby="modalDetailkkLabel{{ $item->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-xl modal-dialog-scrollable">
                             <div class="modal-content shadow border-0">
                                 <div class="modal-header bg-success text-white">
-                                    <h5 class="modal-title" id="modalDetailkkLabel{{ $item->no_kk }}">
+                                    <h5 class="modal-title" id="modalDetailkkLabel{{ $item->id }}">
                                         Detail Tagihan
                                     </h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
@@ -599,7 +606,6 @@
                                 <div class="modal-body p-4">
                                     <!-- Informasi KK -->
                                     <div class="mb-4">
-                                        <h6 class="text-success mb-3 fw-bold">Informasi KK</h6>
                                         <div class="row g-4">
                                             <div class="col-md-6">
                                                 <p class="mb-1"><strong>No. KK:</strong> {{ $item->no_kk }}</p>
@@ -672,7 +678,7 @@
                                                 <tbody class="small">
 
                                                     @php
-                                                        $tagihanKK = $tagihanOtomatis->where('no_kk', $item->no_kk);
+                                                        $tagihanKK = $tagihanOtomatis->where('id', $item->id);
                                                     @endphp
 
 
@@ -732,157 +738,6 @@
                     </div>
                 @endforeach
 
-                {{-- Modal Tambah Tagihan --}}
-                <div class="modal fade" id="modalTambahTagihan" tabindex="-1" aria-labelledby="modalTambahTagihanLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content shadow-lg">
-                            <div class="modal-header bg-primary text-white">
-                                <h5 class="modal-title" id="modalTambahTagihanLabel">Tambah Data Tagihan</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                    aria-label="Tutup"></button>
-                            </div>
-                            <div class="modal-body">
-                                {{-- Form Tambah Tagihan --}}
-                                <form action="{{ route('rt_iuran.store') }}" method="POST" class="p-4">
-                                    @csrf
-
-                                    <div class="mb-3">
-                                        <label for="nama" class="form-label">Nama Iuran</label>
-                                        <input type="text" name="nama" placeholder="Nama Iuran"
-                                            class="form-control @error('nama') is-invalid @enderror"
-                                            value="{{ old('nama') }}">
-                                        @error('nama')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="tgl_tagih" class="form-label">Tanggal Tagih</label>
-                                        <input type="date" name="tgl_tagih"
-                                            class="form-control @error('tgl_tagih') is-invalid @enderror"
-                                            value="{{ old('tgl_tagih') }}" required>
-                                        @error('tgl_tagih')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="tgl_tempo" class="form-label">Tanggal Tempo</label>
-                                        <input type="date" name="tgl_tempo" id="tgl_tempo"
-                                            class="form-control @error('tgl_tempo') is-invalid @enderror"
-                                            value="{{ old('tgl_tempo') }}" required>
-                                        @error('tgl_tempo')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="jenis" class="form-label">Jenis Tagihan</label>
-                                        <input type="text" class="form-control" value="Manual" disabled>
-                                        <input type="hidden" name="jenis" value="manual">
-                                    </div>
-
-                                    {{-- Tambahkan field no_kk di modal tambah --}}
-                                    <div class="mb-3">
-                                        <label for="no_kk" class="form-label">Nomor Kartu Keluarga</label>
-                                        <input type="text" name="no_kk"
-                                            class="form-control @error('no_kk') is-invalid @enderror"
-                                            value="{{ old('no_kk') }}" placeholder="Nomor Kartu Keluarga" required>
-                                        @error('no_kk')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    {{-- Tambahkan field status_bayar di modal tambah --}}
-                                    <div class="mb-3">
-                                        <label for="status_bayar" class="form-label">Status Pembayaran</label>
-                                        <select name="status_bayar"
-                                            class="form-select @error('status_bayar') is-invalid @enderror">
-                                            <option value="belum_bayar"
-                                                {{ old('status_bayar') == 'belum_bayar' ? 'selected' : '' }}>Belum Bayar
-                                            </option>
-                                            <option value="sudah_bayar"
-                                                {{ old('status_bayar') == 'sudah_bayar' ? 'selected' : '' }}>Sudah Bayar
-                                            </option>
-                                        </select>
-                                        @error('status_bayar')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    {{-- Tambahkan field tgl_bayar di modal tambah --}}
-                                    <div class="mb-3">
-                                        <label for="tgl_bayar" class="form-label">Tanggal Bayar (Opsional)</label>
-                                        <input type="datetime-local" name="tgl_bayar"
-                                            class="form-control @error('tgl_bayar') is-invalid @enderror"
-                                            value="{{ old('tgl_bayar') }}">
-                                        @error('tgl_bayar')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-
-                                    {{-- Tambahkan field kategori_pembayaran di modal tambah --}}
-                                    <div class="mb-3">
-                                        <label for="kategori_pembayaran" class="form-label">Kategori Pembayaran
-                                            (Opsional)</label>
-                                        <select name="kategori_pembayaran"
-                                            class="form-select @error('kategori_pembayaran') is-invalid @enderror">
-                                            <option value="">Pilih Kategori</option>
-                                            <option value="transfer"
-                                                {{ old('kategori_pembayaran') == 'transfer' ? 'selected' : '' }}>Transfer
-                                            </option>
-                                            <option value="tunai"
-                                                {{ old('kategori_pembayaran') == 'tunai' ? 'selected' : '' }}>
-                                                Tunai</option>
-                                        </select>
-                                        @error('kategori_pembayaran')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    {{-- Tambahkan field bukti_transfer di modal tambah --}}
-                                    <div class="mb-3">
-                                        <label for="bukti_transfer" class="form-label">Bukti Transfer (URL/Path,
-                                            Opsional)</label>
-                                        <input type="text" name="bukti_transfer"
-                                            class="form-control @error('bukti_transfer') is-invalid @enderror"
-                                            value="{{ old('bukti_transfer') }}"
-                                            placeholder="URL atau Path Bukti Transfer">
-                                        @error('bukti_transfer')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    {{-- Hanya tampilkan field nominal manual --}}
-                                    <div class="mb-3" id="manual-field">
-                                        <label class="form-label">Nominal</label>
-                                        <input type="number" name="nominal_manual" class="form-control"
-                                            placeholder="Masukkan nominal manual" value="{{ old('nominal_manual') }}"
-                                            required>
-                                    </div>
-
-                                    <hr>
-
-                                    <div class="d-grid">
-                                        <button type="submit" class="btn btn-primary">Simpan Data</button>
-                                    </div>
-                                </form>
-                                {{-- Kondisi untuk menampilkan error validasi form tambah --}}
-                                @if ($errors->any() && !request()->has('search') && !request()->has('no_kk_filter'))
-                                    <div class="alert alert-danger mt-3">
-                                        <ul class="mb-0">
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

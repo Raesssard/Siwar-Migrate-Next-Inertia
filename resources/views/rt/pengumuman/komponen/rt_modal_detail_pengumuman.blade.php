@@ -63,9 +63,12 @@
                 @endif
                 {{-- Akhir bagian dokumen --}}
 
+
             </div>
-            <div class="modal-footer bg-light border-0 justify-content-end py-2">
-                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Tutup</button>
+            <div class="modal-footer bg-light border-0 py-2">
+                <a href="{{ route('pengumuman.export.pdf', $data->id) }}" class="btn btn-danger justify-content-start">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </a>
             </div>
         </div>
     </div>

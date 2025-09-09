@@ -190,8 +190,15 @@
                             </li>
                             <li class="nav-item {{ Request::is('warga/tagihan*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('tagihan') }}">
-                                    <i class="fas fa-id-card"></i>
+                                    <i class="fas fa-hand-holding-usd"></i>
                                     <span>Lihat Tagihan</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item {{ Request::is('warga/transaksi*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('transaksi') }}">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>Lihat Transaksi</span>
                                 </a>
                             </li>
 

@@ -121,7 +121,7 @@
                                                     <button type="button" class="btn btn-success btn-sm"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#modalDetailPengumuman{{ $data->id }}">
-                                                        Baca
+                                                        <i class="fas fa-book-open"></i>
                                                     </button>
                                                 </td>
                                             </tr>

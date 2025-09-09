@@ -154,7 +154,7 @@
 
                             <li class="nav-item {{ Request::is('rt/rt_warga*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt_warga.index') }}">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-id-card"></i>
                                     <span>Manajemen Warga</span>
                                 </a>
                             </li>
@@ -168,8 +168,28 @@
 
                             <li class="nav-item {{ Request::is('rt/rt_pengumuman*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt_pengumuman.index') }}">
-                                    <i class="fas fa-bullhorn"></i>
+                                    <i class="fas fa-comments"></i>
                                     <span>Pengumuman</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('rt/rt_iuran*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rt_iuran.index') }}">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                    <span>Iuran</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item {{ Request::is('rt/rt_tagihan*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rt_tagihan.index') }}">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                    <span>Tagihan</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item {{ Request::is('rt/rt_transaksi*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rt_transaksi.index') }}">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>Transaksi</span>
                                 </a>
                             </li>
 
