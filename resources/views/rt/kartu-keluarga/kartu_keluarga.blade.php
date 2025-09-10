@@ -94,7 +94,7 @@
                                                 <td>{{ $kk->kategoriGolongan->jenis }}</td>
                                                 <td class="text-center align-middle">
                                                     <div class="d-flex justify-content-center gap-1 flex-wrap">
-                                                        {{-- <form action="{{ route('rt_kartu_keluarga.destroy', $kk->no_kk) }}"
+                                                        {{-- <form action="{{ route('rt.rt_kartu_keluarga.destroy', $kk->no_kk) }}"
                                                             method="POST"
                                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                             @csrf
