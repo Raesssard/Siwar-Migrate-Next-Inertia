@@ -99,20 +99,17 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">NO</th>
-                                            {{-- <th scope="col">ID</th> --}}
                                             <th scope="col">JUDUL</th>
                                             <th scope="col">kategori</th>
                                             <th scope="col">RINGKASAN ISI</th>
                                             <th scope="col">TANGGAL</th>
                                             <th scope="col" class="text-center">AKSI</th>
-
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($pengumuman as $data)
+                                        @forelse ($pengumuman as $data)
                                             <tr>
                                                 <th scope="row">{{ $loop->iteration }}</th>
-                                                {{-- <th scope="row">{{ $data->id }}</th> --}}
                                                 <td>{{ $data->judul }}</td>
                                                 <td>{{ $data->kategori }}</td>
 
@@ -137,7 +134,8 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="btn btn-danger btn-sm"><i
-                                                                    class="fas fa-trash-alt"></i> <!-- Ikon hapus --></button>
+                                                                    class="fas fa-trash-alt"></i>
+                                                                <!-- Ikon hapus --></button>
                                                         </form>
 
                                                         <button type="button" class="btn btn-warning btn-sm"
@@ -175,7 +173,11 @@
 
                                             <!-- Modal Detail Pengumuman -->
                                             @include('rt.pengumuman.komponen.rt_modal_detail_pengumuman')
-                                        @endforeach
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" class="text-center"> -- Tidak ada data -- </td>
+                                            </tr>
+                                        @endforelse
 
                                     </tbody>
                                 </table>

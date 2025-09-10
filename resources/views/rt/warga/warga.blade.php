@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-md-4 col-sm-6 d-flex gap-2">
                         <select name="jenis_kelamin" class="form-select form-select-sm" id="">
-                            <option value="">Jenis Kelamin</option>
+                            <option value="" selected disabled>Jenis Kelamin</option>
                             <option value="Laki-laki" {{ request('jenis_kelamin') == 'Laki-laki' ? 'selected' : '' }}>
                                 Laki-laki</option>
                             <option value="Perempuan" {{ request('jenis_kelamin') == 'Perempuan' ? 'selected' : '' }}>
@@ -56,7 +56,7 @@
                             </div>
                         </div>
 
-                          <!-- Card Body -->
+                        <!-- Card Body -->
                         <div class="card-body">
                             <div class="table-responsive table-container">
                                 <table class="table table-hover table-sm scroll-table text-nowrap">
@@ -86,7 +86,7 @@
                                     </thead>
 
                                     <tbody>
-                                        @foreach ($warga as $item)
+                                        @forelse ($warga as $item)
                                             <tr>
                                                 <th scope="row">{{ $loop->iteration }}</th>
                                                 <td>{{ $item->kartuKeluarga->no_kk ?? '-' }}</td> {{-- Pastikan relasi kartuKeluarga dimuat --}}
@@ -123,19 +123,14 @@
                                                 <td>{{ $item->kartuKeluarga->rukunTetangga->rt ?? '-' }}</td>
                                                 {{-- Pastikan relasi kartuKeluarga dan rukunTetangga dimuat --}}
                                             </tr>
-
-
-
-                                        @endforeach
-
+                                        @empty
+                                            <tr>
+                                                <td colspan="20" class="text-center"> -- Tidak ada data -- </td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
-
-
-
                             </div>
-
-
                         </div>
 
                         <!-- Info dan Tombol Pagination Sejajar -->
@@ -151,19 +146,11 @@
                                 {{ $warga->links('pagination::bootstrap-5') }}
                             </div>
                         </div>
-
-
-
-
                     </div>
                 </div>
             </div>
-
-
-
         </div>
         <!-- /.container-fluid -->
-
     </div>
     <!-- End of Main Content -->
 

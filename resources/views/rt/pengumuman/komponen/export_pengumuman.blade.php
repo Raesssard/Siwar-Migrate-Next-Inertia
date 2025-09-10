@@ -59,7 +59,15 @@
 <body>
     <div class="header">
         <div class="judul">{{ $pengumuman->judul }}</div>
-        <div class="tanggal">Diterbitkan: {{ \Carbon\Carbon::parse($pengumuman->created_at)->translatedFormat('d F Y') }}
+        <div class="tanggal">Diterbitkan:
+            {{ \Carbon\Carbon::parse($pengumuman->tanggal)->translatedFormat('d F Y') }}
+        </div>
+        <div class="tanggal">Oleh:
+            {{
+                $pengumuman->id_rw && $pengumuman->id_rt
+                    ? 'RW ' . $pengumuman->rw->nomor_rw . '/RT ' . $pengumuman->rukunTetangga->rt
+                    : 'RW ' . $pengumuman->rw->nomor_rw
+            }}
         </div>
     </div>
 

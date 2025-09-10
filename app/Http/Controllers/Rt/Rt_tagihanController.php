@@ -152,7 +152,7 @@ class Rt_tagihanController extends Controller
                 'bukti_transfer' => $validated['bukti_transfer'] ?? null,
             ]);
 
-            if ($tagihan->status_bayar === 'sudah_bayar') {
+            if ($validated['status_bayar'] === 'sudah_bayar') {
                 Transaksi::create([
                     'rt' => $tagihan->iuran->rt->rt,
                     'tanggal' => $tagihan->tgl_bayar,
