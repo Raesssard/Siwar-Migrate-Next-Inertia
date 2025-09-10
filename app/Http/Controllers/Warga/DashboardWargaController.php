@@ -61,7 +61,6 @@ class DashboardWargaController extends Controller
                     ->from('warga')
                     ->where('nik', $nik);
             })->count();
-        $jumlah_transaksi = Transaksi::count();
         $total_tagihan = Tagihan::where('status_bayar', 'belum_bayar')
             ->whereIn('no_kk', function ($kk) use ($nik) {
                 $kk->select('no_kk')
@@ -69,7 +68,12 @@ class DashboardWargaController extends Controller
                     ->where('nik', $nik);
             })
             ->sum('nominal');
-        $total_transaksi = Transaksi::where('jenis', 'pemasukan')->sum('nominal');
+
+        $transaksi = Transaksi::where('rt', Auth::user()->warga->kartuKeluarga->rukunTetangga->rt);
+        $pemasukan = (clone $transaksi)->where('jenis', 'pemasukan')->sum('nominal');
+        $pengeluaran = (clone $transaksi)->where('jenis', 'pengeluaran')->sum('nominal');
+        $jumlah_transaksi = (clone $transaksi)->count();
+        $total_transaksi = $pemasukan - $pengeluaran;
 
         return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman', 'total_tagihan', 'total_transaksi', 'jumlah_tagihan', 'jumlah_transaksi'));
     }

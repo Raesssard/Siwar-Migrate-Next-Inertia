@@ -335,7 +335,7 @@ class Rt_pengumumanController extends Controller
         $dompdf->render();
 
         // Nama file sesuai judul pengumuman
-        $filename = 'pengumuman_' . $pengumuman->id . '.pdf';
+        $filename = 'Pengumuman ' . $pengumuman->judul . '.pdf';
 
         return response($dompdf->output(), 200)
             ->header('Content-Type', 'application/pdf')

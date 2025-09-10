@@ -59,33 +59,22 @@
                                             <th scope="col">No</th>
                                             <th scope="col">TANGGAL</th>
                                             <th scope="col">NAMA TRANSAKSI</th>
-                                        
-                                            <th scope="col">PENGELUARAN</th>
-                                            
-                                        
+                                            <th scope="col">NOMINAL</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse ($transaksi as $item)
                                             <tr>
                                                 <th scope="row">{{ $loop->iteration }}</th>
-                                                <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y H:i') }}</td>
-                                                <td>{{ $item->nama_transaksi }}</td>
-                                                
-                                                <td>Rp{{ number_format($item->pengeluaran, 0, ',', '.') }}</td>
-                                                
-                                                <td>
-                                                    {{-- Tombol Detail --}}
-                                                    {{-- <button type="button" class="btn btn-info btn-sm"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#modalDetailTransaksi{{ $item->id }}">
-                                                        <i class="fas fa-info-circle"></i> Detail
-                                                    </button> --}}
+                                                <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}
                                                 </td>
+                                                <td>{{ $item->nama_transaksi }}</td>
+                                                <td>Rp{{ number_format($item->nominal, 0, ',', '.') }}</td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="text-center">Tidak ada data transaksi untuk RT Anda.</td> {{-- colspan disesuaikan --}}
+                                                <td colspan="7" class="text-center">Tidak ada data transaksi untuk RT
+                                                    Anda.</td> {{-- colspan disesuaikan --}}
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -110,52 +99,4 @@
         </div>
     </div>
 
-    {{-- Modal Detail Transaksi --}}
-    @foreach ($transaksi as $item)
-    <div class="modal fade" id="modalDetailTransaksi{{ $item->id }}" tabindex="-1"
-        aria-labelledby="modalDetailTransaksiLabel{{ $item->id }}" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content shadow border-0">
-                <!-- Header -->
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title" id="modalDetailTransaksiLabel{{ $item->id }}">
-                        Detail Transaksi: {{ $item->nama_transaksi }}
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Tutup"></button>
-                </div>
-
-                <!-- Body -->
-                <div class="modal-body p-4">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <p class="mb-1"><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y H:i') }}</p>
-                            <p class="mb-1"><strong>Nama Transaksi:</strong> {{ $item->nama_transaksi }}</p>
-                            
-                            <p class="mb-1"><strong>Pengeluaran:</strong> Rp{{ number_format($item->pengeluaran, 0, ',', '.') }}</p>
-                        </div>
-                        <div class="col-md-6">
-                        
-                            <p class="mb-1"><strong>Keterangan:</strong> {{ $item->keterangan ?? '-' }}</p>
-                            <p class="mb-1"><strong>RT:</strong> {{ $item->rt ?? '-' }}</p> {{-- Menampilkan nomor RT --}}
-                            <p class="mb-1"><strong>RW:</strong> {{ $item->rw ?? '-' }}</p> {{-- Menampilkan nomor RW --}}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer -->
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">
-                        <i class="bi bi-check2-circle"></i> Tutup
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endforeach
-
 @endsection
-
-@push('scripts')
-    {{-- Tidak ada script khusus --}}
-@endpush
