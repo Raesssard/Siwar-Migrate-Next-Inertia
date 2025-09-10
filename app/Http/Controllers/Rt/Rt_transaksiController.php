@@ -19,7 +19,7 @@ class Rt_transaksiController extends Controller
 
         /** @var User $user */
         $user = Auth::user();
-        $idRt = $user->id_rt;
+        $idRt = $user->rukunTetangga->rt;
 
         // filter hanya transaksi untuk RT user login
         $query = Transaksi::where('rt', $idRt);
@@ -62,6 +62,7 @@ class Rt_transaksiController extends Controller
             'totalPemasukanBelumTercatat',
             'pengeluaran',
             'jumlah',
+            'user',
         ));
     }
 

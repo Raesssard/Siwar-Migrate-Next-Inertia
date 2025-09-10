@@ -174,7 +174,8 @@
                                 required>
                                 <option value="" selected disabled>Pilih RT</option>
                                 @foreach ($rukun_tetangga as $rt_value => $rt_text)
-                                    <option value="{{ $rt_text }}">
+                                    <option value="{{ $rt_text }}"
+                                        {{ $user->rukunTetangga->rt === $rt_text ? 'selected' : '' }}>
                                         RT {{ $rt_text }}
                                     </option>
                                 @endforeach
@@ -211,7 +212,7 @@
                                 class="form-select @error('jenis') is-invalid @enderror" required>
                                 <option value="" selected disabled>Pilih Jenis Transaksi</option>
                                 <option value="pemasukan">Pemasukkan</option>
-                                <option value="pengeluaran">Pengeluarana</option>
+                                <option value="pengeluaran">Pengeluaran</option>
                             </select>
                             @error('jenis')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -278,7 +279,7 @@
                                     <option value="" disabled>Pilih RT</option>
                                     @foreach ($rukun_tetangga as $rt_value => $rt_text)
                                         <option value="{{ $rt_text }}"
-                                            {{ old('rt', $item->rt) == $rt_text ? 'selected' : '' }}>
+                                            {{ $user->rukunTetangga->rt === $rt_text ? 'selected' : '' }}>
                                             RT {{ $rt_text }}
                                         </option>
                                     @endforeach
