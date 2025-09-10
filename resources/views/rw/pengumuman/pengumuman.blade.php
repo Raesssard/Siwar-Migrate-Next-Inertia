@@ -159,12 +159,6 @@
                                                         data-bs-target="#modalDetailPengumuman{{ $data->id }}">
                                                         <i class="fas fa-info"></i>
                                                     </button>
-
-                                                    {{-- Tombol Export PDF --}}
-{{-- Untuk RW --}}
-<a href="{{ route('rw.pengumuman.export', $data->id) }}" class="btn btn-info btn-sm">
-    <i class="fas fa-file-pdf"></i> 
-</a>
                                                 </td>
                                             </tr>
 

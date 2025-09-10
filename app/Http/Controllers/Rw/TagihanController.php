@@ -145,7 +145,6 @@ class TagihanController extends Controller
                 $kk = Kartu_keluarga::where('no_kk', $tagihan->no_kk)->first();
 
                 if ($kk) {
-                    // cari nomor RT dari relasi id_rt
                     $rt = Rukun_tetangga::where('id', $kk->id_rt)->value('rt');
 
                     if ($rt) {
@@ -163,6 +162,16 @@ class TagihanController extends Controller
                 }
             }
 
+            // === hapus transaksi jika status berubah dari sudah_bayar -> belum_bayar ===
+            if ($statusLama === 'sudah_bayar' && $validated['status_bayar'] === 'belum_bayar') {
+                $kk = Kartu_keluarga::where('no_kk', $tagihan->no_kk)->first();
+
+                if ($kk) {
+                    Transaksi::where('nama_transaksi', 'Iuran ' . $tagihan->nama)
+                        ->where('keterangan', 'Pembayaran iuran oleh KK ' . $kk->no_kk)
+                        ->delete();
+                }
+            }
             return redirect()->route('rw.tagihan.index')->with('success', 'Tagihan berhasil diperbarui.');
         } catch (\Exception $e) {
             Log::error('Error updating tagihan:', ['message' => $e->getMessage()]);

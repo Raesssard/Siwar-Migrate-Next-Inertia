@@ -211,12 +211,32 @@ public function update(Request $request, string $id)
 
     public function destroy(string $id)
     {
-        //
-         try {
-        Rukun_tetangga::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'RT berhasil dihapus.');
-    } catch (\Illuminate\Database\QueryException $e) {
-        return redirect()->back()->with('error', 'Tidak bisa menghapus RT karena masih digunakan.');
-    }
+        try {
+            $rt = Rukun_tetangga::findOrFail($id);
+
+            // Cari user terkait RT
+            $user = User::where('id_rt', $rt->id)->first();
+
+            if ($user) {
+                // Jika user punya lebih dari 1 role, hapus role 'rt' saja
+                if ($user->roles()->count() > 1) {
+                    $user->removeRole('rt');
+                    $user->id_rt = null; // reset id_rt
+                    $user->save();
+                } else {
+                    // Jika hanya punya 1 role (yaitu 'rt'), hapus user
+                    $user->delete();
+                }
+            }
+
+            // Hapus data RT dari tabel rukun_tetangga
+            $rt->delete();
+
+            return redirect()->back()->with('success', 'RT berhasil dihapus.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->with('error', 'Tidak bisa menghapus RT karena masih digunakan.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

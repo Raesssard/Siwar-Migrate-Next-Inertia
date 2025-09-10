@@ -122,10 +122,6 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                                 </form>
-                                                <button type="button" class="btn btn-warning btn-sm"
-                                                    data-bs-toggle="modal" data-bs-target="#modalEditIuran{{ $item->id }}">
-                                                    Edit
-                                                </button>
                                             </td>
                                         </tr>
                                     @empty

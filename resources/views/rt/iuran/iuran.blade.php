@@ -50,12 +50,12 @@
                             @endforeach
                         </select>
                         <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                        <a href="{{ route('rt.iuran.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                        <a href="{{ route('iuran.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                     </div>
                 </form>
 
                 <div class="mb-3">
-                    <a href="{{ route('rt.iuran.export') }}" class="btn btn-success">
+                    <a href="{{ route('iuran.export') }}" class="btn btn-success">
                         <i class="fas fa-file-excel"></i> Export Iuran ke Excel
                     </a>
                 </div>

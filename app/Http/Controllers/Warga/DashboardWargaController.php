@@ -69,7 +69,7 @@ class DashboardWargaController extends Controller
                     ->where('nik', $nik);
             })
             ->sum('nominal');
-        $total_transaksi = Transaksi::sum('pengeluaran');
+        $total_transaksi = Transaksi::where('jenis', 'pemasukan')->sum('nominal');
 
         return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman', 'total_tagihan', 'total_transaksi', 'jumlah_tagihan', 'jumlah_transaksi'));
     }

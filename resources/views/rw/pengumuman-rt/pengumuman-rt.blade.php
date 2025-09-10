@@ -133,9 +133,11 @@
                                                 <td class="text-center align-item-center">
                                                     {{-- Tombol Aksi: Hapus, Edit, Detail --}}
                                                     {{-- Untuk RT --}}
-                                                    <a href="{{ route('rw.pengumuman-rt.export', $data->id) }}" class="btn btn-info btn-sm">
-                                                        <i class="fas fa-file-pdf"></i> 
-                                                    </a>
+                                                    <button type="button" class="btn btn-success btn-sm"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalDetailPengumuman{{ $data->id }}">
+                                                        <i class="fas fa-info"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
 
