@@ -17,7 +17,7 @@
             <!-- Content Row -->
 
             <div class="row ">
-                <form action="{{ route('rt_kartu_keluarga.index') }}" method="GET"
+                <form action="{{ route('rt.kartu_keluarga.index') }}" method="GET"
                     class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <a href="{{ route('rt_kartu_keluarga.index') }}" class="btn btn-sm btn-secondary">Reset</a>
+                        <a href="{{ route('rt.kartu_keluarga.index') }}" class="btn btn-sm btn-secondary">Reset</a>
                     </div>
                 </form>
 

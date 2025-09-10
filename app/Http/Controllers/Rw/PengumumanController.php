@@ -145,7 +145,7 @@ private function indoToEnglishDay(string $day): string
     ]);
 
     // ... redirect atau response lainnya
-    return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan!');
+    return redirect()->route('rw.pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan!');
 }
 
     /**
@@ -155,7 +155,7 @@ private function indoToEnglishDay(string $day): string
     {
         //
         $pengumuman = Pengumuman::findOrFail($id);
-        return view('pengumuman.show', compact('pengumuman'));
+        return view('rw.pengumuman.show', compact('pengumuman'));
     }
 
     /**
@@ -164,8 +164,8 @@ private function indoToEnglishDay(string $day): string
     public function edit(string $id)
     {
         //
-        $pengumuman = Pengumuman::findOrFail($id); 
-        return view('pengumuman.edit', compact('pengumuman'));
+        $pengumuman = Pengumuman::findOrFail($id);
+        return view('rw.pengumuman.edit', compact('pengumuman'));
     }
 
     /**
@@ -234,7 +234,7 @@ private function indoToEnglishDay(string $day): string
         // 3. Perbarui Entri Pengumuman di Database
         $pengumuman->update($dataToUpdate);
 
-        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil diperbarui.');
+        return redirect()->route('rw.pengumuman.index')->with('success', 'Pengumuman berhasil diperbarui.');
     }
 
     /**
@@ -245,7 +245,7 @@ private function indoToEnglishDay(string $day): string
         //
         $pengumuman = Pengumuman::findOrFail($id);
         $pengumuman->delete();
-        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dihapus.');
+        return redirect()->route('rw.pengumuman.index')->with('success', 'Pengumuman berhasil dihapus.');
     }
 
     public function export($id)

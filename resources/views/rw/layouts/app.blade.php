@@ -200,7 +200,7 @@
                             <hr class="sidebar-divider my-0">
 
                             <li class="nav-item{{ Request::is('rw') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('dashboard-rw') }}">
+                                <a class="nav-link" href="{{ route('rw.dashboard') }}">
                                     <i class="fas fa-fw fa-tachometer-alt"></i>
                                     <span>Dashboard</span>
                                 </a>
@@ -209,42 +209,42 @@
                             {{-- ... semua item lainnya tetap seperti sebelumnya ... --}}
 
                             <li class="nav-item {{ Request::is('rw/rukun_tetangga*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('rukun_tetangga.index') }}">
+                                <a class="nav-link" href="{{ route('rw.rukun_tetangga.index') }}">
                                     <i class="fas fa-house-user"></i>
                                     <span>Rukun Tetangga</span>
                                 </a>
                             </li>
 
                             <li class="nav-item {{ Request::is('rw/warga*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('warga.index') }}">
+                                <a class="nav-link" href="{{ route('rw.warga.index') }}">
                                     <i class="fas fa-users"></i>
                                     <span>Manajemen Warga</span>
                                 </a>
                             </li>
 
                             <li class="nav-item {{ Request::is('rw/kartu_keluarga*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('kartu_keluarga.index') }}">
+                                <a class="nav-link" href="{{ route('rw.kartu_keluarga.index') }}">
                                     <i class="fas fa-users "></i>
                                     <span>Kartu Keluarga</span>
                                 </a>
                             </li>
                             <li
                                 class="nav-item {{ Request::is('rw/pengumuman') || (Request::is('rw/pengumuman/*') && !Request::is('rw/pengumuman-rt*')) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('pengumuman.index') }}">
+                                <a class="nav-link" href="{{ route('rw.pengumuman.index') }}">
                                     <i class="fas fa-bullhorn"></i>
                                     <span>Pengumuman RW</span>
                                 </a>
                             </li>
 
                             <li class="nav-item {{ Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('pengumuman-rt.index') }}">
+                                <a class="nav-link" href="{{ route('rw.pengumuman-rt.index') }}">
                                     <i class="fas fa-bullhorn"></i>
                                     <span>Pengumuman RT</span>
                                 </a>
                             </li>
 
                             <li class="nav-item {{ Request::is('rw/tagihan*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('tagihan.index') }}">
+                                <a class="nav-link" href="{{ route('rw.tagihan.index') }}">
                                     <i class="fas fa-file-invoice-dollar"></i>
                                     <span>Manajemen Keuangan</span>
                                 </a>

@@ -54,6 +54,9 @@
                 </div>
             </div>
             <div class="modal-footer bg-light border-0 justify-content-end py-2">
+                <button><a href="{{ route('rw.pengumuman_rt.export', $data->id) }}" class="btn btn-info btn-sm">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </a></button>
                 <button type="button" class="btn btn-outline-success"
                         data-bs-dismiss="modal">Tutup</button>
             </div>

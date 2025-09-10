@@ -32,7 +32,7 @@
 
             <div class="row">
 
-                <form action="{{ route('pengumuman-rt.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rw.pengumuman-rt.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -67,7 +67,7 @@
                             @endforeach
                         </select>
                         <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                        <a href="{{ route('pengumuman-rt.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                        <a href="{{ route('rw.pengumuman-rt.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                     </div>
                 </form>
 
@@ -133,9 +133,11 @@
                                                 <td class="text-center align-item-center">
                                                     {{-- Tombol Aksi: Hapus, Edit, Detail --}}
                                                     {{-- Untuk RT --}}
-                                                    <a href="{{ route('rw.pengumuman-rt.export', $data->id) }}" class="btn btn-info btn-sm">
-                                                        <i class="fas fa-file-pdf"></i> 
-                                                    </a>
+                                                    <button type="button" class="btn btn-success btn-sm"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalDetailPengumuman{{ $data->id }}">
+                                                        <i class="fas fa-info"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
 

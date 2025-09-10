@@ -146,48 +146,48 @@
                             <hr class="sidebar-divider my-0">
 
                             <li class="nav-item {{ Request::is('rt') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('dashboard-rt') }}">
+                                <a class="nav-link" href="{{ route('rt.dashboard') }}">
                                     <i class="fas fa-fw fa-tachometer-alt"></i>
                                     <span>Dashboard</span>
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('rt/rt_warga*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('rt_warga.index') }}">
-                                    <i class="fas fa-id-card"></i>
+                            <li class="nav-item {{ Request::is('rt/rt.warga*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rt.warga.index') }}">
+                                    <i class="fas fa-users"></i>
                                     <span>Manajemen Warga</span>
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('rt/rt_kartu_keluarga*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('rt_kartu_keluarga.index') }}">
+                            <li class="nav-item {{ Request::is('rt/rt.kartu_keluarga*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rt.kartu_keluarga.index') }}">
                                     <i class="fas fa-users "></i>
                                     <span>Kartu Keluarga</span>
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('rt/rt_pengumuman*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('rt_pengumuman.index') }}">
-                                    <i class="fas fa-comments"></i>
+                            <li class="nav-item {{ Request::is('rt/rt.pengumuman*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rt.pengumuman.index') }}">
+                                    <i class="fas fa-bullhorn"></i>
                                     <span>Pengumuman</span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('rt/rt_iuran*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('rt_iuran.index') }}">
+                            <li class="nav-item {{ Request::is('rt/rt.iuran*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rt.iuran.index') }}">
                                     <i class="fas fa-file-invoice-dollar"></i>
                                     <span>Iuran</span>
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('rt/rt_tagihan*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('rt_tagihan.index') }}">
+                            <li class="nav-item {{ Request::is('rt/rt.tagihan*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rt.tagihan.index') }}">
                                     <i class="fas fa-hand-holding-usd"></i>
                                     <span>Tagihan</span>
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('rt/rt_transaksi*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('rt_transaksi.index') }}">
+                            <li class="nav-item {{ Request::is('rt/rt.transaksi*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rt.transaksi.index') }}">
                                     <i class="fas fa-money-bill-wave"></i>
                                     <span>Transaksi</span>
                                 </a>

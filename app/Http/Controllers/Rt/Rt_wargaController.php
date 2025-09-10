@@ -280,7 +280,7 @@ class Rt_wargaController extends Controller
         IuranGolongan::where('id_iuran', $iuran->id)->delete();
         $iuran->delete();
 
-        return redirect()->route('rt_iuran.index')->with('success', 'Iuran berhasil dihapus.');
+        return redirect()->route('rt.iuran.index')->with('success', 'Iuran berhasil dihapus.');
     }
 
     public function generateMonthlyTagihan()
@@ -324,6 +324,6 @@ class Rt_wargaController extends Controller
             }
         }
 
-        return redirect()->route('rt_iuran.index')->with('success', 'Tagihan bulanan berhasil dibuat.');
+        return redirect()->route('rt.iuran.index')->with('success', 'Tagihan bulanan berhasil dibuat.');
     }
 }

@@ -102,40 +102,6 @@ function isActive($pattern, $output = 'active') {
     <!-- Nav lainnya -->
     {{-- ... semua item lainnya tetap seperti sebelumnya ... --}}
 
-    <li class="nav-item {{ Request::is('warga*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('warga.index') }}">
-            <i class="fas fa-users"></i>
-            <span>Manajemen Warga</span>
-        </a>
-    </li>
-
-    <li class="nav-item {{ Request::is('rukun_tetangga*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rukun_tetangga.index') }}">
-            <i class="fas fa-house-user"></i>
-            <span>Rukun Tetangga</span>
-        </a>
-    </li>
-
-    <li class="nav-item {{ Request::is('pengumuman*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('pengumuman.index') }}">
-            <i class="fas fa-bullhorn"></i>
-            <span>Pengumuman</span>
-        </a>
-    </li>
-
-    <li class="nav-item {{ Request::is('tagihan*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('tagihan.index') }}">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <span>Manajemen Keuangan</span>
-        </a>
-    </li>
-
-    <li class="nav-item {{ Request::is('kategori_golongan*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('kategori_golongan.index') }}">
-            <i class="fas fa-layer-group"></i>
-            <span>Kategori Golongan</span>
-        </a>
-    </li>
 
     <hr class="sidebar-divider d-none d-md-block">
 

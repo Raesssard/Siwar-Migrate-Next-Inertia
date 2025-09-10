@@ -18,7 +18,7 @@
             <!-- Content Row -->
 
             <div class="row">
-                <form action="{{ route('warga.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rw.warga.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -50,7 +50,7 @@
                                 Perempuan</option>
                         </select>
                         <button class="btn btn-sm btn-primary">Filter</button>
-                        <a href="{{ route('warga.index') }}" class="btn btn-sm btn-secondary">Reset</a>
+                        <a href="{{ route('rw.warga.index') }}" class="btn btn-sm btn-secondary">Reset</a>
                     </div>
                 </form>
 
@@ -138,13 +138,13 @@
                                                 {{-- Pastikan relasi kartuKeluarga dan rukunTetangga dimuat --}}
                                                 <td class="text-center align-middle d-flex">
                                                     <div class="d-flex justify-content-center gap-1">
-                                                        <form action="{{ route('warga.destroy', $item->nik) }}"
+                                                        <form action="{{ route('rw.warga.destroy', $item->nik) }}"
                                                             method="POST"
                                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                             @csrf
                                                             @method('DELETE')
                                                             <input type="hidden" name="redirect_to"
-                                                                value="{{ route('warga.index') }}"> {{-- Kembali ke halaman index warga --}}
+                                                                value="{{ route('rw.warga.index') }}"> {{-- Kembali ke halaman index warga --}}
                                                             <button type="submit" class="btn btn-danger btn-sm"
                                                                 title="Hapus Warga">
                                                                 <i class="fas fa-trash-alt"></i>

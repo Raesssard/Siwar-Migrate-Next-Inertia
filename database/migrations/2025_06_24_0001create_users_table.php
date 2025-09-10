@@ -16,12 +16,23 @@ return new class extends Migration
             $table->char('nik', 16)->unique();
             $table->string('nama');
             $table->string('nomor_rw')->nullable();
+
+            // Relasi ke RT
             $table->unsignedBigInteger('id_rt')->nullable();
-            $table->foreign('id_rt')->references('id')->on('rukun_tetangga')->onDelete('cascade');
+            $table->foreign('id_rt')
+                ->references('id')
+                ->on('rukun_tetangga')
+                ->onDelete('cascade');
+
+            // Relasi ke RW
             $table->unsignedBigInteger('id_rw')->nullable();
-            $table->foreign('id_rw')->references('id')->on('rw')->onDelete('cascade');
+            $table->foreign('id_rw')
+                ->references('id')
+                ->on('rw')
+                ->onDelete('cascade');
+
             $table->string('password');
-            $table->json('roles')->nullable();   // ✅ multi-role
+            $table->rememberToken(); // supaya login via Auth jalan
             $table->timestamps();
         });
 

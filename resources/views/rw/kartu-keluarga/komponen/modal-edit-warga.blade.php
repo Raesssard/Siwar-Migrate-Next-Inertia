@@ -10,11 +10,11 @@
                     data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
 
-            <form action="{{ route('warga.update', $item->nik) }}" method="POST">
+            <form action="{{ route('rw.warga.update', $item->nik) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="redirect_to"
-                    value="{{ route('kartu_keluarga.index') }}">
+                    value="{{ route('rw.kartu_keluarga.index') }}">
 
                 <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                     <div class="row g-3">

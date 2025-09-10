@@ -173,7 +173,6 @@ return [
      * If you need to modify delimiters, override the class and specify its name here.
      */
     // 'permission.wildcard_permission' => Spatie\Permission\WildcardPermission::class,
-
     /* Cache-specific settings */
 
     'cache' => [

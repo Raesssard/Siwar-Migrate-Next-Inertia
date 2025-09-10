@@ -119,7 +119,8 @@ class Rt_tagihanController extends Controller
 
             Tagihan::create($dataToStore);
 
-            return redirect()->route('rt_iuran.index')->with('success', 'Tagihan manual berhasil ditambahkan.');
+            return redirect()->route('rt.iuran.index')->with('success', 'Tagihan manual berhasil ditambahkan.');
+
         } catch (\Exception $e) {
             Log::error('Error creating tagihan manual:', ['message' => $e->getMessage()]);
             return redirect()->back()->withInput()->with('error', 'Gagal menambahkan tagihan manual. Error: ' . $e->getMessage());
@@ -152,16 +153,7 @@ class Rt_tagihanController extends Controller
                 'bukti_transfer' => $validated['bukti_transfer'] ?? null,
             ]);
 
-            if ($tagihan->status_bayar === 'sudah_bayar') {
-                Transaksi::create([
-                    'rt' => $tagihan->iuran->rt->rt,
-                    'tanggal' => $tagihan->tgl_bayar,
-                    'jenis' => 'pemasukan',
-                    'nominal' => $tagihan->nominal,
-                    'nama_transaksi' => $tagihan->nama,
-                    'keterangan' => 'Pembayaran ' . $tagihan->nama
-                ]);
-            }
+            return redirect()->route('rt.tagihan.index')->with('success', 'Tagihan manual berhasil diperbarui.');
 
             return redirect()->route('rt_tagihan.index')->with('success', 'Tagihan manual berhasil diperbarui.');
         } catch (\Exception $e) {
@@ -184,7 +176,8 @@ class Rt_tagihanController extends Controller
 
             $tagihan->delete();
 
-            return redirect()->route('rt_iuran.index')->with('success', 'Tagihan manual berhasil dihapus.');
+            return redirect()->route('rt.iuran.index')->with('success', 'Tagihan manual berhasil dihapus.');
+
         } catch (\Exception $e) {
             Log::error('Error deleting tagihan manual:', ['message' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Gagal menghapus tagihan manual. Error: ' . $e->getMessage());

@@ -9,7 +9,7 @@
             </div>
 
             {{-- Tambahkan enctype="multipart/form-data" pada form --}}
-            <form action="{{ route('rt_pengumuman.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('rt.pengumuman.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body px-4" style="max-height: 70vh; overflow-y: auto;">
                     <div class="mb-3">

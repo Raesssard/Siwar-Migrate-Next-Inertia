@@ -25,7 +25,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion d-none d-md-block" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('admin.dashboard') }}">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
@@ -37,7 +37,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item {{ Request::is('/admin/dashboard*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('dashboard-admin') }}">
+        <a class="nav-link" href="{{ route('admin.dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
@@ -47,14 +47,14 @@
 
 
     <li class="nav-item {{ isActive('admin/data_rt*') }}">
-        <a class="nav-link" href="{{ route('data_rt.index') }}">
+        <a class="nav-link" href="{{ route('admin.rt.index') }}">
             <i class="fas fa-house-user"></i>
             <span>Data RT</span>
         </a>
     </li>
 
     <li class="nav-item {{ isActive('admin/data_rw*') }}">
-        <a class="nav-link" href="{{ route('data_rw.index') }}">
+        <a class="nav-link" href="{{ route('admin.rw.index') }}">
             <i class="fas fa-house-user"></i>
             <span>Data RW</span>
         </a>

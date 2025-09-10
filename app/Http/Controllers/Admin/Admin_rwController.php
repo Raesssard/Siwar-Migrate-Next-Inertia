@@ -41,7 +41,7 @@ class Admin_rwController extends Controller
             'nik' => 'required|unique:rw,nik',
             'nomor_rw' => 'required|string',
             'nama_ketua_rw' => 'required|string|max:255',
-            'mulai_menjabat'=> ' required',
+            'mulai_menjabat'=> 'required',
             'akhir_jabatan' => 'required',
         ], [
             'nik.required' => 'NIK harus diisi.',
@@ -52,25 +52,22 @@ class Admin_rwController extends Controller
             'akhir_jabatan.required' => 'Akhir Menjabat harus diisi.',
         ]);
 
-        Rw::create([
-            'nik' => $request->nik,
-            'nomor_rw' => $request->nomor_rw,
-            'nama_ketua_rw' => $request->nama_ketua_rw,
-            'mulai_menjabat' => $request->mulai_menjabat,
-            'akhir_jabatan' => $request->akhir_jabatan,
-        ]);
+        $rw = Rw::create($request->only([
+            'nik','nomor_rw','nama_ketua_rw','mulai_menjabat','akhir_jabatan'
+        ]));
 
         $id_rw = Rw::where('nik', $request->nik)->value('id');
 
-        User::create([
+        $user = User::create([
             'nik' => $request->nik,
             'nama' => $request->nama_ketua_rw,
             'password' => bcrypt('password'),
-            'roles' => ['rw'],
             'id_rw' => $id_rw,
         ]);
 
-        return redirect()->route('data_rw.index')->with('success', 'Rukun Warga berhasil ditambahkan.');
+        $user->assignRole('rw');
+
+        return redirect()->route('admin.rw.index')->with('success', 'Rukun Warga berhasil ditambahkan.');
     }
 
     /**
@@ -119,14 +116,11 @@ class Admin_rwController extends Controller
         ]
         );
         $rw = Rw::findOrFail($id);
-        $rw->update([
-            'nik' => $request->nik,
-            'nomor_rw' => $request->nomor_rw,
-            'nama_ketua_rw' => $request->nama_ketua_rw,
-            'mulai_menjabat' => $request->mulai_menjabat,
-            'akhir_jabatan' => $request->akhir_jabatan,
-        ]);
-        return redirect()->route('data_rw.index')->with('success', 'Rukun Warga berhasil diperbarui.');
+        $rw->update($request->only([
+            'nik','nomor_rw','nama_ketua_rw','mulai_menjabat','akhir_jabatan'
+        ]));
+        
+        return redirect()->route('admin.rw.index')->with('success', 'Rukun Warga berhasil diperbarui.');
     }
 
     /**

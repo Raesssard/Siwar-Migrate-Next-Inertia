@@ -24,7 +24,7 @@
             @endif
 
             {{-- Form Filter --}}
-            <form action="{{ route('tagihan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+            <form action="{{ route('rw.tagihan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                 <div class="col-md-5">
                     <div class="input-group input-group-sm">
                         <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -42,7 +42,7 @@
                         @endforeach
                     </select>
                     <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                    <a href="{{ route('tagihan.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                    <a href="{{ route('rw.tagihan.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                 </div>
                 <div class="dropdown mb-3">
     <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownExportTagihan"
@@ -51,17 +51,17 @@
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownExportTagihan">
         <li>
-            <a class="dropdown-item" href="{{ route('tagihan.export.manual') }}">
+            <a class="dropdown-item" href="{{ route('rw.tagihan.export.manual') }}">
                 <i class="fas fa-file-excel text-success"></i> Export Manual
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="{{ route('tagihan.export.otomatis') }}">
+            <a class="dropdown-item" href="{{ route('rw.tagihan.export.otomatis') }}">
                 <i class="fas fa-file-excel text-primary"></i> Export Otomatis
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="{{ route('tagihan.export.semua') }}">
+            <a class="dropdown-item" href="{{ route('rw.tagihan.export.semua') }}">
                 <i class="fas fa-file-excel text-info"></i> Export Semua
             </a>
         </li>
@@ -129,7 +129,7 @@
                                                         <h5 class="modal-title">Edit Tagihan Manual</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
-                                                    <form action="{{ route('tagihan.update', $item->id) }}" method="POST">
+                                                    <form action="{{ route('rw.tagihan.update', $item->id) }}" method="POST">
                                                         @csrf
                                                         @method('PUT')
                                                         <input type="hidden" name="id_iuran" value="{{ $item->id_iuran }}">
@@ -268,7 +268,7 @@
                                                         <h5 class="modal-title">Edit Tagihan Otomatis</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
-                                                    <form action="{{ route('tagihan.update', $item->id) }}" method="POST">
+                                                    <form action="{{ route('rw.tagihan.update', $item->id) }}" method="POST">
                                                         @csrf
                                                         @method('PUT')
                                                         <input type="hidden" name="id_iuran" value="{{ $item->id_iuran }}">

@@ -10,13 +10,13 @@
     <h3 class="mb-4">Pilih Role untuk Login</h3>
     <div class="d-flex gap-4">
         {{-- Card otomatis tampil sesuai role --}}
-        @foreach (Auth::user()->roles as $role)
+        @foreach (Auth::user()->getRoleNames() as $role)
             <div class="card text-center p-4" style="width: 200px;">
                 <h5 class="card-title">Sebagai {{ ucfirst($role) }}</h5>
-                    <form method="POST" action="{{ route('choose.role') }}">
-                        @csrf
-                        <input type="hidden" name="role" value="{{ $role }}">
-                        <button type="submit" class="btn btn-primary mt-3">Masuk</button>
+                <form method="POST" action="{{ route('choose.role') }}">
+                    @csrf
+                    <input type="hidden" name="role" value="{{ $role }}">
+                    <button type="submit" class="btn btn-primary mt-3">Masuk</button>
                 </form>
             </div>
         @endforeach

@@ -105,7 +105,7 @@
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-success shadow h-100 py-2 card-clickable">
-            <a href="data_rw" class="text-decoration-none">
+            <a href="{{ route('admin.rw.index') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -125,7 +125,7 @@
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-info shadow h-100 py-2 card-clickable">
-            <a href="data_rt" class="text-decoration-none">
+            <a href="{{ route('admin.rt.index') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -142,4 +142,5 @@
             </a>
         </div>
     </div>
+
 </div>

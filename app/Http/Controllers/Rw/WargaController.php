@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class WargaController extends Controller
 {
@@ -61,7 +62,7 @@ class WargaController extends Controller
 
         $total_warga = Warga::whereHas('kartuKeluarga.rukunTetangga', function ($query) use ($id_rw) {
             $query->where('id_rw', $id_rw);
-        })->count(); // Hitung total warga yang relevan dengan id_rw user
+        })->count();
 
         // Variabel-variabel ini mungkin tidak perlu di-pass ke view jika hanya digunakan untuk dropdown filter atau tujuan lain yang sudah dicakup.
         // Namun, jika view memang membutuhkannya, biarkan saja. Saya akan biarkan untuk menjaga kompatibilitas.
@@ -164,7 +165,7 @@ class WargaController extends Controller
         }
 
         // Buat warga baru
-        Warga::create([
+        $warga = Warga::create([
             'nik' => $request->nik,
             'no_kk' => $request->no_kk,
             'nama' => $request->nama,
@@ -196,14 +197,16 @@ class WargaController extends Controller
 
         // Buat user hanya jika status kepala keluarga
         if ($request->status_hubungan_dalam_keluarga === 'kepala keluarga') {
-            User::create([
+            $user = User::create([
                 'nik' => $request->nik,
                 'nama' => $request->nama,
-                'password' => bcrypt('password'),
+                'password' => Hash::make('password'),
                 'id_rt' => $kk->id_rt,
                 'id_rw' => $kk->id_rw,
-                'roles' => ['warga'],
             ]);
+
+            // Tambahkan role warga pakai Spatie
+            $user->assignRole('warga');
         }
 
         return redirect()->to($request->redirect_to)->with('success', 'Data Warga Berhasil Ditambahkan');
@@ -215,7 +218,7 @@ class WargaController extends Controller
     public function show(string $id)
     {
         $warga = Warga::findOrFail($id);
-        return view('warga.show', compact('warga'));
+        return view('rw.warga.show', compact('warga'));
     }
 
     /**
@@ -224,7 +227,7 @@ class WargaController extends Controller
     public function edit(string $id)
     {
         $warga = Warga::findOrFail($id);
-        return view('warga.edit', compact('warga'));
+        return view('rw.warga.edit', compact('warga'));
     }
 
     /**
@@ -319,7 +322,7 @@ class WargaController extends Controller
 
         if ($request->status_hubungan_dalam_keluarga === 'kepala keluarga') {
             $existingKepala = Warga::where('no_kk', $request->no_kk)
-                ->where('nik', '!=', $request->nik) // Periksa terhadap NIK BARU
+                ->where('nik', '!=', $request->nik) // NIK selain yang diupdate
                 ->where('status_hubungan_dalam_keluarga', 'kepala keluarga')
                 ->exists();
 
@@ -330,24 +333,30 @@ class WargaController extends Controller
                     ->with('open_edit_modal', $nik);
             }
 
-            // Jika NIK berubah, hapus dulu catatan pengguna lama
+            // Jika NIK berubah, hapus user lama
             if ($oldNik !== $request->nik) {
                 User::where('nik', $oldNik)->delete();
             }
 
-            User::updateOrCreate(
-                ['nik' => $request->nik], // Gunakan NIK yang berpotensi baru
+            // Buat atau update user untuk kepala keluarga
+            $user = User::updateOrCreate(
+                ['nik' => $request->nik],
                 [
-                    'nama' => $request->nama,
+                    'name' => $request->nama,
                     'password' => bcrypt('password'),
                     'id_rt' => $kk->id_rt,
                     'id_rw' => $kk->id_rw,
-                    'roles' => ['warga'],
                 ]
             );
+
+            // Pastikan role warga terpasang
+            if (!$user->hasRole('warga')) {
+                $user->assignRole('warga');
+            }
+
         } else {
-            // Jika status bukan lagi 'kepala keluarga', hapus catatan pengguna
-            User::where('nik', $oldNik)->delete(); // Gunakan NIK lama untuk memastikan pengguna yang benar dihapus
+            // Kalau bukan kepala keluarga, hapus user yang terkait
+            User::where('nik', $oldNik)->delete();
         }
 
         // Perbarui catatan Warga dengan data baru
@@ -390,8 +399,22 @@ class WargaController extends Controller
     public function destroy(Request $request, string $nik)
     {
         $warga = Warga::findOrFail($nik);
+
+        // Cari user berdasarkan NIK
+        $user = User::where('nik', $nik)->first();
+
+        if ($user) {
+            if ($user->roles->count() > 1) {
+                // Hapus hanya role 'warga'
+                $user->removeRole('warga');
+            } else {
+                // Kalau hanya punya role 'warga', hapus user
+                $user->delete();
+            }
+        }
+
+        // Hapus data warga
         $warga->delete();
-        User::where('nik', $nik)->delete();
 
         return redirect()->to($request->redirect_to)->with('success', 'Warga berhasil dihapus.');
     }

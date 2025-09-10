@@ -139,7 +139,7 @@ if ($request->jenis === 'otomatis') {
 }
 
 
-        return redirect()->route('iuran.index')->with('success', 'Iuran berhasil dibuat beserta tagihannya.');
+        return redirect()->route('rw.iuran.index')->with('success', 'Iuran berhasil dibuat beserta tagihannya.');
     }
 
     public function edit(string $id)
@@ -196,7 +196,7 @@ if ($request->jenis === 'otomatis') {
             }
         }
 
-        return redirect()->route('iuran.index')->with('success', 'Iuran berhasil diperbarui.');
+        return redirect()->route('rw.iuran.index')->with('success', 'Iuran berhasil diperbarui.');
     }
 
     public function destroy(string $id)
@@ -209,7 +209,7 @@ if ($request->jenis === 'otomatis') {
         }
 
         $iuran->delete();
-        return redirect()->route('iuran.index')->with('success', 'Iuran berhasil dihapus.');
+        return redirect()->route('rw.iuran.index')->with('success', 'Iuran berhasil dihapus.');
     }
 
     public function generateMonthlyTagihan()
@@ -251,7 +251,7 @@ if ($request->jenis === 'otomatis') {
             }
         }
 
-        return redirect()->route('iuran.index')->with('success', 'Tagihan bulanan berhasil dibuat.');
+        return redirect()->route('rw.iuran.index')->with('success', 'Tagihan bulanan berhasil dibuat.');
     }
 
     public function export($jenis = 'semua')
