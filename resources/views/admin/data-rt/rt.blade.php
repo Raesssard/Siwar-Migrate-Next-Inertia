@@ -61,7 +61,7 @@
                                             <td>{{ $rt->mulai_menjabat }}</td>
                                             <td>{{ $rt->akhir_jabatan }}</td>
                                             <td>
-                                                <form action="{{ route('data_rt.destroy', $rt->id) }}" method="POST"
+                                                <form action="{{ route('admin.rt.destroy', $rt->id) }}" method="POST"
                                                     class="d-inline"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus RT ini?')">
                                                     @csrf
@@ -91,7 +91,7 @@
                 <button type="button" class="btn-close btn-close-white"
                     data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
-            <form action="{{ route('data_rt.update', $rt->id) }}" method="POST">
+            <form action="{{ route('admin.rt.update', $rt->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id" value="{{ $rt->id }}">
@@ -197,7 +197,7 @@
                                         aria-label="Tutup"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="{{ route('data_rt.store') }}" method="POST" class="p-4">
+                                    <form action="{{ route('admin.rt.store') }}" method="POST" class="p-4">
                                         @csrf
 
                                         <div class="mb-3">

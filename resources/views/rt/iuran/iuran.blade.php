@@ -29,7 +29,7 @@
                 @endif
 
                 {{-- Filter --}}
-                <form action="{{ route('rt_iuran.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rt.iuran.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -50,12 +50,12 @@
                             @endforeach
                         </select>
                         <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                        <a href="{{ route('rt_iuran.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                        <a href="{{ route('iuran.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                     </div>
                 </form>
 
                 <div class="mb-3">
-                    <a href="{{ route('rt.iuran.export') }}" class="btn btn-success">
+                    <a href="{{ route('iuran.export') }}" class="btn btn-success">
                         <i class="fas fa-file-excel"></i> Export Iuran ke Excel
                     </a>
                 </div>
@@ -98,7 +98,7 @@
                                                         data-bs-target="#modalEditIuran{{ $item->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-                                                    <form action="{{ route('rt_iuran.destroy', $item->id) }}"
+                                                    <form action="{{ route('rt.iuran.destroy', $item->id) }}"
                                                         method="POST" class="d-inline">
                                                         @csrf @method('DELETE')
                                                         <button class="btn btn-danger btn-sm"
@@ -163,7 +163,7 @@
                                                         data-bs-target="#modalEditIuran{{ $item->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-                                                    <form action="{{ route('rt_iuran.destroy', $item->id) }}"
+                                                    <form action="{{ route('rt.iuran.destroy', $item->id) }}"
                                                         method="POST" class="d-inline">
                                                         @csrf @method('DELETE')
                                                         <button class="btn btn-danger btn-sm"
@@ -198,7 +198,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('rt_iuran.store') }}" method="POST" class="p-3">
+                        <form action="{{ route('rt.iuran.store') }}" method="POST" class="p-3">
                             @csrf
                             <div class="mb-3">
                                 <label for="nama" class="form-label">Nama Iuran</label>
@@ -257,7 +257,7 @@
                                 aria-label="Tutup"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ route('rt_iuran.update', $item->id) }}" method="POST" class="p-3">
+                            <form action="{{ route('rt.iuran.update', $item->id) }}" method="POST" class="p-3">
                                 @csrf
                                 @method('PUT')
                                 <div class="mb-3">

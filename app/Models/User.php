@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail; // Dihapus karena tidak digunakan
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo; // Pastikan ini ada jika menggunakan type-hinting BelongsTo
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     protected $table = 'users';
 
@@ -21,39 +21,18 @@ class User extends Authenticatable
         'nama',
         'nomor_rw',
         'id_rw',
-        'roles', // ganti dari role ke roles
         'id_rt',
     ];
 
-    protected $casts = [
-        'roles' => 'array',
-    ];
+    // ⛔ Hapus cast JSON roles (sudah pakai Spatie, jadi tidak dipakai)
+    // protected $casts = ['roles' => 'array'];
 
+    // Default id_rw (opsional)
     protected $attributes = [
-    'id_rw' => 1, // ✅ default kalau tidak diisi
+        'id_rw' => 1,
     ];
 
-    public function hasRole(string $role): bool
-    {
-        // kalau kolom roles disimpan array (JSON)
-        if (is_array($this->roles)) {
-            return in_array($role, $this->roles);
-        }
-
-        // fallback kalau roles cuma string
-        return $this->role === $role;
-    }
-
-    public function hasAnyRole(array $roles): bool
-    {
-        if (is_array($this->roles)) {
-            return count(array_intersect($roles, $this->roles)) > 0;
-        }
-
-        return in_array($this->role, $roles);
-    }
-
-    // User.php
+    // Relasi
     public function warga()
     {
         return $this->hasOne(Warga::class, 'nik', 'nik');

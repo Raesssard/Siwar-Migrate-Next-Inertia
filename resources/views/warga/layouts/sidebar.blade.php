@@ -82,7 +82,7 @@
 
 
     <li class="nav-item {{ Route::is('dashboard-main') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('dashboard-main') }}">
+        <a class="nav-link" href="{{ route('warga.dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
         </a>
@@ -90,26 +90,26 @@
 
 
     <li class="nav-item {{ Request::is('warga/warga_pengumuman*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('pengumuman-main') }}">
+        <a class="nav-link" href="{{ route('warga.pengumuman') }}">
             <i class="fas fa-bullhorn"></i>
             <span>Pengumuman</span>
         </a>
     </li>
 
     <li class="nav-item {{ Request::is('warga/lihat_kk*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('lihat_kk') }}">
+        <a class="nav-link" href="{{ route('warga.kk') }}">
             <i class="fas fa-id-card"></i>
             <span>Lihat KK</span>
         </a>
     </li>
     <li class="nav-item {{ Request::is('warga/tagihan*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('tagihan') }}">
+        <a class="nav-link" href="{{ route('warga.tagihan') }}">
             <i class="fas fa-hand-holding-usd"></i>
             <span>Lihat Tagihan</span>
         </a>
     </li>
         <li class="nav-item {{ Request::is('warga/transaksi*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('transaksi') }}">
+        <a class="nav-link" href="{{ route('warga.transaksi') }}">
             <i class="fas fa-money-bill-wave"></i>
             <span>Lihat Transaksi</span>
         </a>

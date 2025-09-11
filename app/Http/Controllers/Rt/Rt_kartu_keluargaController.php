@@ -164,7 +164,7 @@ class Rt_kartu_keluargaController extends Controller
                 'foto_kk_path' => null, // Pastikan ini null saat pertama kali dibuat
             ]);
 
-            return redirect()->route('rt_kartu_keluarga.index')
+            return redirect()->route('rt.kartu_keluarga.index')
                 ->with('success', 'Data Kartu Keluarga berhasil disimpan. Sekarang, silakan unggah foto Kartu Keluarga.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()
@@ -183,7 +183,7 @@ class Rt_kartu_keluargaController extends Controller
         $kartu_keluarga = Kartu_keluarga::findOrFail($id);
         $this->authorizeRt($kartu_keluarga);
 
-        return view('rt_kartu_keluarga.show', compact('kartu_keluarga'));
+        return view('rt.kartu_keluarga.show', compact('kartu_keluarga'));
     }
 
     /**
@@ -197,7 +197,7 @@ class Rt_kartu_keluargaController extends Controller
         $kategori_iuran = Kategori_golongan::pluck('jenis', 'id');
         $title = 'Edit Kartu Keluarga';
 
-        return view('rt_kartu_keluarga.edit', compact('kartu_keluarga', 'kategori_golongan', 'title'));
+        return view('rt.kartu_keluarga.edit', compact('kartu_keluarga', 'kategori_golongan', 'title'));
     }
 
     /**
@@ -259,7 +259,7 @@ class Rt_kartu_keluargaController extends Controller
                 // 'foto_kk_path' tidak diubah di sini
             ]);
 
-            return redirect()->route('rt_kartu_keluarga.index')
+            return redirect()->route('rt.kartu_keluarga.index')
                 ->with('success', 'Data kartu keluarga berhasil diperbarui.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()

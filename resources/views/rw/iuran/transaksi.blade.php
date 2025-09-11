@@ -28,7 +28,7 @@
             @endif
 
             {{-- Form Filter dan Pencarian --}}
-            <form action="{{ route('transaksi.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+            <form action="{{ route('rw.transaksi.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                 <div class="col-md-4">
                     <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="Cari Transaksi...">
                 </div>
@@ -57,7 +57,7 @@
                 </div>
                 <div class="col-md-2 d-flex gap-2">
                     <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                    <a href="{{ route('transaksi.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                    <a href="{{ route('rw.transaksi.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                 </div>
                 <div class="dropdown mb-2 ms-auto">
     <button class="btn btn-success btn-sm dropdown-toggle" type="button" id="dropdownExportTransaksi"
@@ -66,17 +66,17 @@
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownExportTransaksi">
         <li>
-            <a class="dropdown-item" href="{{ route('transaksi.export', 'pemasukan') }}">
+            <a class="dropdown-item" href="{{ route('rw.transaksi.export', 'pemasukan') }}">
                 <i class="fas fa-file-excel text-success"></i> Export Pemasukan
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="{{ route('transaksi.export', 'pengeluaran') }}">
+            <a class="dropdown-item" href="{{ route('rw.transaksi.export', 'pengeluaran') }}">
                 <i class="fas fa-file-excel text-danger"></i> Export Pengeluaran
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="{{ route('transaksi.export', 'all') }}">
+            <a class="dropdown-item" href="{{ route('rw.transaksi.export', 'all') }}">
                 <i class="fas fa-file-excel text-primary"></i> Export Semua
             </a>
         </li>
@@ -130,7 +130,7 @@
                                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditTransaksi{{ $item->id }}">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <form action="{{ route('transaksi.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                            <form action="{{ route('rw.transaksi.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">
@@ -168,7 +168,7 @@
 @foreach ($paginatedTransaksi as $item)
 <div class="modal fade" id="modalEditTransaksi{{ $item->id }}" tabindex="-1">
     <div class="modal-dialog">
-        <form action="{{ route('transaksi.update', $item->id) }}" method="POST" class="modal-content">
+        <form action="{{ route('rw.transaksi.update', $item->id) }}" method="POST" class="modal-content">
             @csrf
             @method('PUT')
             <input type="hidden" name="modal_type" value="edit">
@@ -230,7 +230,7 @@
 {{-- Modal Tambah --}}
 <div class="modal fade" id="modalTambahTransaksi" tabindex="-1">
     <div class="modal-dialog">
-        <form action="{{ route('transaksi.store') }}" method="POST" class="modal-content">
+        <form action="{{ route('rw.transaksi.store') }}" method="POST" class="modal-content">
             @csrf
             <input type="hidden" name="modal_type" value="add">
 

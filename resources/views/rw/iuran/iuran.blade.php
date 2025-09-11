@@ -29,7 +29,7 @@
             @endif
 
             {{-- Filter --}}
-            <form action="{{ route('iuran.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+            <form action="{{ route('rw.iuran.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                 <div class="col-md-5 col-sm-12">
                     <div class="input-group input-group-sm">
                         <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -50,7 +50,7 @@
                         @endforeach
                     </select>
                     <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                    <a href="{{ route('iuran.index') }}" class="btn btn-secondary btn-sm">Reset</a>                    
+                    <a href="{{ route('rw.iuran.index') }}" class="btn btn-secondary btn-sm">Reset</a>                    
                 </div>                
             </form>
 <div class="dropdown mb-3">
@@ -60,17 +60,17 @@
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownExport">
         <li>
-            <a class="dropdown-item" href="{{ route('iuran.export', 'manual') }}">
+            <a class="dropdown-item" href="{{ route('rw.iuran.export', 'manual') }}">
                 <i class="fas fa-file-excel text-success"></i> Export Manual
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="{{ route('iuran.export', 'otomatis') }}">
+            <a class="dropdown-item" href="{{ route('rw.iuran.export', 'otomatis') }}">
                 <i class="fas fa-file-excel text-primary"></i> Export Otomatis
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="{{ route('iuran.export', 'semua') }}">
+            <a class="dropdown-item" href="{{ route('rw.iuran.export', 'semua') }}">
                 <i class="fas fa-file-excel text-info"></i> Export Semua
             </a>
         </li>
@@ -116,16 +116,12 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <form action="{{ route('iuran.destroy', $item->id) }}" method="POST" class="d-inline"
+                                                <form action="{{ route('rw.iuran.destroy', $item->id) }}" method="POST" class="d-inline"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                                 </form>
-                                                <button type="button" class="btn btn-warning btn-sm"
-                                                    data-bs-toggle="modal" data-bs-target="#modalEditIuran{{ $item->id }}">
-                                                    Edit
-                                                </button>
                                             </td>
                                         </tr>
                                     @empty
@@ -189,7 +185,7 @@
                                             <td>{{ \Carbon\Carbon::parse($item->tgl_tempo)->translatedFormat('d F Y') }}</td>
                                             <td><span class="badge bg-primary">{{ ucfirst($item->jenis) }}</span></td>
                                             <td>
-                                                <form action="{{ route('iuran.destroy',$item->id) }}" method="POST" class="d-inline">
+                                                <form action="{{ route('rw.iuran.destroy',$item->id) }}" method="POST" class="d-inline">
                                                     @csrf @method('DELETE')
                                                     <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus data ini?')">Hapus</button>
                                                 </form>
@@ -221,7 +217,7 @@
                     <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('iuran.store') }}" method="POST">
+                    <form action="{{ route('rw.iuran.store') }}" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label>Nama Iuran</label>

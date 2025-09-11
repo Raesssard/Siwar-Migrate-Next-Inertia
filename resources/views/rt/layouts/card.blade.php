@@ -104,7 +104,7 @@
 <div class="row">
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-primary shadow h-100 py-2 card-clickable">
-            <a href="{{ route('rt_warga.index') }}" class="text-decoration-none">
+            <a href="{{ route('rt.warga.index') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -129,7 +129,7 @@
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-primary shadow h-100 py-2 card-clickable">
-            <a href="{{ route('rt_warga.index') }}" class="text-decoration-none">
+            <a href="{{ route('rt.warga.index') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -148,7 +148,7 @@
     </div>
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-primary shadow h-100 py-2 card-clickable">
-            <a href="{{ route('rt_warga.index') }}" class="text-decoration-none">
+            <a href="{{ route('rt.warga.index') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -169,7 +169,7 @@
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-info shadow h-100 py-2 card-clickable">
-            <a href="{{ route('rt_kartu_keluarga.index') }}" class="text-decoration-none">
+            <a href="{{ route('rt.kartu_keluarga.index') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -189,7 +189,7 @@
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-warning shadow h-100 py-2 card-clickable">
-            <a href="{{ route('rt_pengumuman.index') }}" class="text-decoration-none">
+            <a href="{{ route('rt.pengumuman.index') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -211,7 +211,7 @@
         <!-- Card Total Pemasukan -->
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-success shadow h-100 py-2 card-clickable">
-            <a href="{{ route('rt_transaksi.index') }}" class="text-decoration-none">
+            <a href="{{ route('rt.transaksi.index') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -234,7 +234,7 @@
     <!-- Card Total Pengeluaran -->
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-danger shadow h-100 py-2 card-clickable">
-            <a href="{{ route('rt_transaksi.index') }}" class="text-decoration-none">
+            <a href="{{ route('rt.transaksi.index') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
@@ -259,7 +259,7 @@
     {{-- ==================================================================== --}}
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-{{ $total_saldo_akhir < 0 ? 'danger' : 'success' }} shadow h-100 py-2 card-clickable"> {{-- Anda bisa pilih warna border lain, misal border-left-info --}}
-            <a href="{{ route('rt_transaksi.index') }}" class="text-decoration-none"> {{-- Link ke halaman transaksi --}}
+            <a href="{{ route('rt.transaksi.index') }}" class="text-decoration-none"> {{-- Link ke halaman transaksi --}}
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">

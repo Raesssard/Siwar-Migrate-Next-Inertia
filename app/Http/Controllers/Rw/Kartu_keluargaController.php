@@ -147,7 +147,7 @@ class Kartu_keluargaController extends Controller
                 'foto_kk' => null,
             ]);
 
-            return redirect()->route('kartu_keluarga.index')
+            return redirect()->route('rw.kartu_keluarga.index')
                 ->with('success', 'Data Kartu Keluarga berhasil disimpan. Sekarang, silakan unggah foto Kartu Keluarga.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()
@@ -249,7 +249,7 @@ public function edit(string $id)
             'no_registrasi' => $request->no_registrasi,
         ]);
 
-        return redirect()->route('kartu_keluarga.index')
+        return redirect()->route('rw.kartu_keluarga.index')
             ->with('success', 'Data kartu keluarga berhasil diperbarui.');
     } catch (\Illuminate\Validation\ValidationException $e) {
         return redirect()->back()

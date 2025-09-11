@@ -79,32 +79,34 @@ public function store(Request $request)
     ]);
 
     // ✅ Buat atau update user untuk RT
+    // ✅ Buat atau update user untuk RT
     $user = User::where('nik', $request->nik)->first();
 
     if ($user) {
-        $currentRoles = $user->roles ?? ['warga'];
-        if (!in_array('rt', $currentRoles)) {
-            $currentRoles[] = 'rt';
-        }
-
         $user->update([
             'id_rt' => $rt->id,
             'id_rw' => 1,
-            'roles' => array_unique($currentRoles),
             'password' => Hash::make('password'), // reset password default
         ]);
+
+        // Tambah role 'rt' kalau belum ada
+        if (!$user->hasRole('rt')) {
+            $user->assignRole('rt');
+        }
     } else {
-        User::create([
+        $user = User::create([
             'nik' => $request->nik,
             'nama' => $request->nama,
             'password' => bcrypt('password'),
             'id_rt' => $rt->id,
             'id_rw' => 1,
-            'roles' => ['rt'],
         ]);
+
+        // Set role RT
+        $user->assignRole('rt');
     }
 
-    return redirect()->route('data_rt.index')->with('success', 'Rukun Tetangga berhasil ditambahkan.');
+    return redirect()->route('admin.rt.index')->with('success', 'Rukun Tetangga berhasil ditambahkan.');
 }
 
 
@@ -115,7 +117,7 @@ public function store(Request $request)
     {
         //
         $rukun_tetangga = Rukun_tetangga::findOrFail($id);
-        return view('data_rt.show', compact('rukun_tetangga'));
+        return view('admin.rt.show', compact('rukun_tetangga'));
     }
 
     /**
@@ -125,7 +127,7 @@ public function store(Request $request)
     {
         //
         $rukun_tetangga = Rukun_tetangga::findOrFail($id);
-        return view('data_rt.edit', compact('rukun_tetangga'));
+        return view('admin.rt.edit', compact('rukun_tetangga'));
     }
 
     /**
@@ -183,39 +185,58 @@ public function update(Request $request, string $id)
     $user = User::where('nik', $request->nik)->first();
 
     if ($user) {
-        $currentRoles = $user->roles ?? ['warga'];
-        if (!in_array('rt', $currentRoles)) {
-            $currentRoles[] = 'rt';
-        }
-
         $user->update([
             'id_rt' => $rukun_tetangga->id,
             'id_rw' => 1,
-            'roles' => array_unique($currentRoles),
         ]);
+
+        if (!$user->hasRole('rt')) {
+            $user->assignRole('rt');
+        }
     } else {
-        User::create([
+        $user = User::create([
             'nik' => $request->nik,
             'nama' => $request->nama,
             'password' => bcrypt('password'),
             'id_rt' => $rukun_tetangga->id,
             'id_rw' => 1,
-            'roles' => ['rt'],
         ]);
+
+        $user->assignRole('rt');
     }
 
-    return redirect()->route('data_rt.index')->with('success', 'Rukun Tetangga berhasil diperbarui.');
+    return redirect()->route('admin.rt.index')->with('success', 'Rukun Tetangga berhasil diperbarui.');
 }
     
 
     public function destroy(string $id)
     {
-        //
-         try {
-        Rukun_tetangga::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'RT berhasil dihapus.');
-    } catch (\Illuminate\Database\QueryException $e) {
-        return redirect()->back()->with('error', 'Tidak bisa menghapus RT karena masih digunakan.');
-    }
+        try {
+            $rt = Rukun_tetangga::findOrFail($id);
+
+            // Cari user terkait RT
+            $user = User::where('id_rt', $rt->id)->first();
+
+            if ($user) {
+                // Jika user punya lebih dari 1 role, hapus role 'rt' saja
+                if ($user->roles()->count() > 1) {
+                    $user->removeRole('rt');
+                    $user->id_rt = null; // reset id_rt
+                    $user->save();
+                } else {
+                    // Jika hanya punya 1 role (yaitu 'rt'), hapus user
+                    $user->delete();
+                }
+            }
+
+            // Hapus data RT dari tabel rukun_tetangga
+            $rt->delete();
+
+            return redirect()->back()->with('success', 'RT berhasil dihapus.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->with('error', 'Tidak bisa menghapus RT karena masih digunakan.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

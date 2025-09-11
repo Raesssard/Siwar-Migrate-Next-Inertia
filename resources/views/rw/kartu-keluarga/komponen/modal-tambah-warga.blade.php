@@ -16,9 +16,9 @@
                     aria-label="Tutup"></button>
             </div>
 
-            <form action="{{ route('warga.store') }}" method="POST">
+            <form action="{{ route('rw.warga.store') }}" method="POST">
                 @csrf
-                <input type="hidden" name="redirect_to" value="{{ route('kartu_keluarga.index') }}">
+                <input type="hidden" name="redirect_to" value="{{ route('rw.kartu_keluarga.index') }}">
                 <input type="hidden" name="form_type" value="tambah">
                 <input type="hidden" name="no_kk" id="modal_no_kk" value="{{ $oldIfTambah('no_kk') }}">
 
@@ -216,6 +216,45 @@
                         </div>
                     </div>
 
+                    {{-- Tambahan field khusus pendatang --}}
+                    <div class="row pendatang-fields d-none">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Alamat Asal</label>
+                            <input type="text" name="alamat_asal" class="form-control {{ $errorIfTambah('alamat_asal') }}"
+                                value="{{ $oldIfTambah('alamat_asal') }}">
+                            @error('alamat_asal')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Alamat Domisili</label>
+                            <input type="text" name="alamat_domisili" class="form-control {{ $errorIfTambah('alamat_domisili') }}"
+                                value="{{ $oldIfTambah('alamat_domisili') }}">
+                            @error('alamat_domisili')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tanggal Mulai Tinggal</label>
+                            <input type="date" name="tanggal_mulai_tinggal" class="form-control {{ $errorIfTambah('tanggal_mulai_tinggal') }}"
+                                value="{{ $oldIfTambah('tanggal_mulai_tinggal') }}">
+                            @error('tanggal_mulai_tinggal')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tujuan Pindah</label>
+                            <input type="text" name="tujuan_pindah" class="form-control {{ $errorIfTambah('tujuan_pindah') }}"
+                                value="{{ $oldIfTambah('tujuan_pindah') }}">
+                            @error('tujuan_pindah')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
                     {{-- Hidden ayah/ibu otomatis --}}
                     <input type="hidden" id="kk_nama_ayah_auto" value="">
                     <input type="hidden" id="kk_nama_ibu_auto" value="">
@@ -236,17 +275,30 @@
         const namaAyahInput = modalTambahWarga.querySelector('#nama_ayah');
         const namaIbuInput = modalTambahWarga.querySelector('#nama_ibu');
 
+        const statusWargaSelect = modalTambahWarga.querySelector('select[name="status_warga"]');
+        const pendatangFields = modalTambahWarga.querySelector('.pendatang-fields');
+
+        // fungsi toggle untuk field pendatang
+        function togglePendatangFields() {
+            if (statusWargaSelect.value === 'pendatang') {
+                pendatangFields.classList.remove('d-none');
+            } else {
+                pendatangFields.classList.add('d-none');
+                pendatangFields.querySelectorAll('input').forEach(input => input.value = '');
+            }
+        }
+
+        statusWargaSelect.addEventListener('change', togglePendatangFields);
+        togglePendatangFields(); // jalankan saat load (untuk old value)
+
         modalTambahWarga.addEventListener('show.bs.modal', function (event) {
-            // Dapatkan data dari tombol yang memicu modal
             const button = event.relatedTarget;
             const namaAyahAuto = button.getAttribute('data-nama_ayah');
             const namaIbuAuto = button.getAttribute('data-nama_ibu');
 
-            // Simpan nilai di bidang tersembunyi (atau langsung gunakan)
             modalTambahWarga.querySelector('#kk_nama_ayah_auto').value = namaAyahAuto;
             modalTambahWarga.querySelector('#kk_nama_ibu_auto').value = namaIbuAuto;
 
-            // Reset bidang saat modal dibuka untuk mencegah nilai lama tetap ada
             statusHubunganSelect.value = '';
             namaAyahInput.value = '';
             namaIbuInput.value = '';
