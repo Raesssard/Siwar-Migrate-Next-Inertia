@@ -30,6 +30,8 @@ class Warga extends Model
         'nama_ayah',
         'nama_ibu',
         'status_warga',
+
+        // --- Data tambahan untuk WNA ---
         'no_paspor',
         'tgl_terbit_paspor',
         'tgl_berakhir_paspor',
@@ -39,6 +41,12 @@ class Warga extends Model
         'no_kitap',
         'tgl_terbit_kitap',
         'tgl_berakhir_kitap',
+
+        // --- Data tambahan untuk pendatang ---
+        'alamat_asal',
+        'alamat_domisili',
+        'tanggal_mulai_tinggal',
+        'tujuan_pindah',
     ];
 
     public function kartuKeluarga(): BelongsTo
@@ -46,10 +54,8 @@ class Warga extends Model
         return $this->belongsTo(Kartu_keluarga::class, 'no_kk', 'no_kk');
     }
 
-    public function user()
+    public function user(): HasOne
     {
-        // data warga dimiliki oleh 1 user
         return $this->hasOne(User::class, 'nik', 'nik');
     }
-    
 }

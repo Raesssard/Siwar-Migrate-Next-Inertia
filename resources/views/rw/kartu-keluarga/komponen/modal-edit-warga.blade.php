@@ -45,149 +45,16 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Jenis Kelamin</label>
-                            <select name="jenis_kelamin"
-                                class="form-select @error('jenis_kelamin') is-invalid @enderror"
-                                required>
-                                <option value="laki-laki"
-                                    {{ (old('jenis_kelamin') ?? $item->jenis_kelamin) == 'laki-laki' ? 'selected' : '' }}>
-                                    Laki-laki
-                                </option>
-                                <option value="perempuan"
-                                    {{ (old('jenis_kelamin') ?? $item->jenis_kelamin) == 'perempuan' ? 'selected' : '' }}>
-                                    Perempuan
-                                </option>
-                            </select>
-                            @error('jenis_kelamin')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Tempat Lahir</label>
-                            <input type="text" name="tempat_lahir"
-                                class="form-control @error('tempat_lahir') is-invalid @enderror"
-                                value="{{ old('tempat_lahir', $item->tempat_lahir) }}"
-                                required>
-                            @error('tempat_lahir')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Tanggal Lahir</label>
-                            <input type="date" name="tanggal_lahir"
-                                class="form-control @error('tanggal_lahir') is-invalid @enderror"
-                                value="{{ old('tanggal_lahir', $item->tanggal_lahir) }}"
-                                required>
-                            @error('tanggal_lahir')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Agama</label>
-                            <input type="text" name="agama"
-                                class="form-control @error('agama') is-invalid @enderror"
-                                value="{{ old('agama', $item->agama) }}" required>
-                            @error('agama')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Pendidikan</label>
-                            <input type="text" name="pendidikan"
-                                class="form-control @error('pendidikan') is-invalid @enderror"
-                                value="{{ old('pendidikan', $item->pendidikan) }}"
-                                required>
-                            @error('pendidikan')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Pekerjaan</label>
-                            <input type="text" name="pekerjaan"
-                                class="form-control @error('pekerjaan') is-invalid @enderror"
-                                value="{{ old('pekerjaan', $item->pekerjaan) }}" required>
-                            @error('pekerjaan')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Status Perkawinan</label>
-                            <select name="status_perkawinan"
-                                class="form-select @error('status_perkawinan') is-invalid @enderror"
-                                required>
-                                <option value="menikah"
-                                    {{ old('status_perkawinan', $item->status_perkawinan) == 'menikah' ? 'selected' : '' }}>
-                                    Menikah</option>
-                                <option value="belum menikah"
-                                    {{ old('status_perkawinan', $item->status_perkawinan) == 'belum menikah' ? 'selected' : '' }}>
-                                    Belum Menikah</option>
-                                <option value="cerai hidup"
-                                    {{ old('status_perkawinan', $item->status_perkawinan) == 'cerai hidup' ? 'selected' : '' }}>
-                                    Cerai Hidup</option>
-                                <option value="cerai mati"
-                                    {{ old('status_perkawinan', $item->status_perkawinan) == 'cerai mati' ? 'selected' : '' }}>
-                                    Cerai Mati</option>
-                            </select>
-                            @error('status_perkawinan')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Hubungan dengan KK</label>
+                            <label class="form-label">Hubungan dalam Keluarga</label>
                             <select name="status_hubungan_dalam_keluarga"
                                 class="form-select @error('status_hubungan_dalam_keluarga') is-invalid @enderror"
                                 required>
-                                <option value="kepala keluarga"
-                                    {{ old('status_hubungan_dalam_keluarga', $item->status_hubungan_dalam_keluarga) == 'kepala keluarga' ? 'selected' : '' }}>
-                                    Kepala Keluarga</option>
-                                <option value="istri"
-                                    {{ old('status_hubungan_dalam_keluarga', $item->status_hubungan_dalam_keluarga) == 'istri' ? 'selected' : '' }}>
-                                    Istri</option>
-                                <option value="anak"
-                                    {{ old('status_hubungan_dalam_keluarga', $item->status_hubungan_dalam_keluarga) == 'anak' ? 'selected' : '' }}>
-                                    Anak</option>
+                                <option value="">-- Pilih --</option>
+                                <option value="kepala keluarga" {{ old('status_hubungan_dalam_keluarga', $item->status_hubungan_dalam_keluarga) == 'kepala keluarga' ? 'selected' : '' }}>Kepala Keluarga</option>
+                                <option value="istri" {{ old('status_hubungan_dalam_keluarga', $item->status_hubungan_dalam_keluarga) == 'istri' ? 'selected' : '' }}>Istri</option>
+                                <option value="anak" {{ old('status_hubungan_dalam_keluarga', $item->status_hubungan_dalam_keluarga) == 'anak' ? 'selected' : '' }}>Anak</option>
                             </select>
                             @error('status_hubungan_dalam_keluarga')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Golongan Darah</label>
-                            <select name="golongan_darah"
-                                class="form-select @error('golongan_darah') is-invalid @enderror"
-                                required>
-                                @foreach (['A', 'B', 'AB', 'O'] as $gd)
-                                    <option value="{{ $gd }}"
-                                        {{ old('golongan_darah', $item->golongan_darah) == $gd ? 'selected' : '' }}>
-                                        {{ $gd }}</option>
-                                @endforeach
-                            </select>
-                            @error('golongan_darah')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Kewarganegaraan</label>
-                            <select name="kewarganegaraan"
-                                class="form-select @error('kewarganegaraan') is-invalid @enderror"
-                                required>
-                                <option value="WNI"
-                                    {{ old('kewarganegaraan', $item->kewarganegaraan) == 'WNI' ? 'selected' : '' }}>
-                                    WNI</option>
-                                <option value="WNA"
-                                    {{ old('kewarganegaraan', $item->kewarganegaraan) == 'WNA' ? 'selected' : '' }}>
-                                    WNA</option>
-                            </select>
-                            @error('kewarganegaraan')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -213,47 +80,133 @@
                         </div>
 
                         <div class="col-md-6">
+                            <label class="form-label">Jenis Kelamin</label>
+                            <select name="jenis_kelamin"
+                                class="form-select @error('jenis_kelamin') is-invalid @enderror" required>
+                                <option value="">-- Pilih --</option>
+                                <option value="laki-laki" {{ old('jenis_kelamin', $item->jenis_kelamin) == 'laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                                <option value="perempuan" {{ old('jenis_kelamin', $item->jenis_kelamin) == 'perempuan' ? 'selected' : '' }}>Perempuan</option>
+                            </select>
+                            @error('jenis_kelamin')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Tempat Lahir</label>
+                            <input type="text" name="tempat_lahir"
+                                class="form-control @error('tempat_lahir') is-invalid @enderror"
+                                value="{{ old('tempat_lahir', $item->tempat_lahir) }}" required>
+                            @error('tempat_lahir')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Tanggal Lahir</label>
+                            <input type="date" name="tanggal_lahir"
+                                class="form-control @error('tanggal_lahir') is-invalid @enderror"
+                                value="{{ old('tanggal_lahir', $item->tanggal_lahir) }}" required>
+                            @error('tanggal_lahir')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Agama</label>
+                            <input type="text" name="agama"
+                                class="form-control @error('agama') is-invalid @enderror"
+                                value="{{ old('agama', $item->agama) }}" required>
+                            @error('agama')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Pendidikan</label>
+                            <input type="text" name="pendidikan"
+                                class="form-control @error('pendidikan') is-invalid @enderror"
+                                value="{{ old('pendidikan', $item->pendidikan) }}" required>
+                            @error('pendidikan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Pekerjaan</label>
+                            <input type="text" name="pekerjaan"
+                                class="form-control @error('pekerjaan') is-invalid @enderror"
+                                value="{{ old('pekerjaan', $item->pekerjaan) }}" required>
+                            @error('pekerjaan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Status Perkawinan</label>
+                            <select name="status_perkawinan"
+                                class="form-select @error('status_perkawinan') is-invalid @enderror" required>
+                                <option value="">-- Pilih --</option>
+                                @foreach (['belum menikah','menikah','cerai hidup','cerai mati'] as $status)
+                                    <option value="{{ $status }}" {{ old('status_perkawinan', $item->status_perkawinan) == $status ? 'selected' : '' }}>
+                                        {{ ucfirst($status) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('status_perkawinan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Golongan Darah</label>
+                            <select name="golongan_darah"
+                                class="form-select @error('golongan_darah') is-invalid @enderror" required>
+                                <option value="">-- Pilih --</option>
+                                @foreach (['A','B','AB','O'] as $gol)
+                                    <option value="{{ $gol }}" {{ old('golongan_darah', $item->golongan_darah) == $gol ? 'selected' : '' }}>
+                                        {{ $gol }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('golongan_darah')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
                             <label class="form-label">Status Warga</label>
                             <select name="status_warga"
-                                class="form-select @error('status_warga') is-invalid @enderror"
-                                required>
-                                <option value="penduduk"
-                                    {{ old('status_warga', $item->status_warga) == 'penduduk' ? 'selected' : '' }}>
-                                    Penduduk</option>
-                                <option value="pendatang"
-                                    {{ old('status_warga', $item->status_warga) == 'pendatang' ? 'selected' : '' }}>
-                                    Pendatang</option>
+                                class="form-select @error('status_warga') is-invalid @enderror" required>
+                                <option value="">-- Pilih --</option>
+                                <option value="penduduk" {{ old('status_warga', $item->status_warga) == 'penduduk' ? 'selected' : '' }}>Penduduk</option>
+                                <option value="pendatang" {{ old('status_warga', $item->status_warga) == 'pendatang' ? 'selected' : '' }}>Pendatang</option>
                             </select>
                             @error('status_warga')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        {{-- Bagian Paspor, KITAS, KITAP (opsional, jika ada) --}}
+                        <div class="col-md-6">
+                            <label class="form-label">Kewarganegaraan</label>
+                            <select name="kewarganegaraan"
+                                class="form-select @error('kewarganegaraan') is-invalid @enderror" required>
+                                <option value="">-- Pilih --</option>
+                                <option value="WNI" {{ old('kewarganegaraan', $item->kewarganegaraan) == 'WNI' ? 'selected' : '' }}>WNI</option>
+                                <option value="WNA" {{ old('kewarganegaraan', $item->kewarganegaraan) == 'WNA' ? 'selected' : '' }}>WNA</option>
+                            </select>
+                            @error('kewarganegaraan')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- Paspor, KITAS, KITAP --}}
                         <div class="col-md-6">
                             <label class="form-label">Nomor Paspor</label>
                             <input type="text" name="no_paspor"
                                 class="form-control @error('no_paspor') is-invalid @enderror"
                                 value="{{ old('no_paspor', $item->no_paspor) }}">
                             @error('no_paspor')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Tanggal Terbit Paspor</label>
-                            <input type="date" name="tgl_terbit_paspor"
-                                class="form-control @error('tgl_terbit_paspor') is-invalid @enderror"
-                                value="{{ old('tgl_terbit_paspor', $item->tgl_terbit_paspor) }}">
-                            @error('tgl_terbit_paspor')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Tanggal Berakhir Paspor</label>
-                            <input type="date" name="tgl_berakhir_paspor"
-                                class="form-control @error('tgl_berakhir_paspor') is-invalid @enderror"
-                                value="{{ old('tgl_berakhir_paspor', $item->tgl_berakhir_paspor) }}">
-                            @error('tgl_berakhir_paspor')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -276,7 +229,50 @@
                             @enderror
                         </div>
 
+                                            <div class="col-12 pendatang-fields" 
+                        style="{{ (old('status_warga', $item->status_warga) == 'pendatang') ? '' : 'display:none;' }}">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Alamat Asal</label>
+                                <input type="text" name="alamat_asal"
+                                    class="form-control @error('alamat_asal') is-invalid @enderror"
+                                    value="{{ old('alamat_asal', $item->alamat_asal) }}">
+                                @error('alamat_asal')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label">Alamat Domisili</label>
+                                <input type="text" name="alamat_domisili"
+                                    class="form-control @error('alamat_domisili') is-invalid @enderror"
+                                    value="{{ old('alamat_domisili', $item->alamat_domisili) }}">
+                                @error('alamat_domisili')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Tanggal Mulai Tinggal</label>
+                                <input type="date" name="tanggal_mulai_tinggal"
+                                    class="form-control @error('tanggal_mulai_tinggal') is-invalid @enderror"
+                                    value="{{ old('tanggal_mulai_tinggal', $item->tanggal_mulai_tinggal) }}">
+                                @error('tanggal_mulai_tinggal')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Tujuan Pindah</label>
+                                <input type="text" name="tujuan_pindah"
+                                    class="form-control @error('tujuan_pindah') is-invalid @enderror"
+                                    value="{{ old('tujuan_pindah', $item->tujuan_pindah) }}">
+                                @error('tujuan_pindah')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
 
@@ -287,3 +283,32 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const modalId = '#modalEditwarga{{ $item->nik }}';
+    const modalElement = document.querySelector(modalId);
+
+    if (modalElement) {
+        const statusSelect = modalElement.querySelector('select[name="status_warga"]');
+        const pendatangFields = modalElement.querySelector('.pendatang-fields');
+
+        function togglePendatangFields() {
+            if (statusSelect.value === 'pendatang') {
+                pendatangFields.style.display = '';
+            } else {
+                pendatangFields.style.display = 'none';
+            }
+        }
+
+        // pasang listener langsung
+        statusSelect.addEventListener('change', togglePendatangFields);
+
+        // jalankan sekali waktu modal dibuka
+        modalElement.addEventListener('shown.bs.modal', togglePendatangFields);
+
+        // jalankan juga awal (biar sesuai value yang tersimpan di DB/old)
+        togglePendatangFields();
+    }
+});
+</script>

@@ -13,15 +13,15 @@
             <form action="{{ route('rw.warga.update', $item->nik) }}" method="POST">
                 @csrf
                 @method('PUT')
-                <input type="hidden" name="redirect_to"
-                    value="{{ route('rw.warga.index') }}">
+                <input type="hidden" name="redirect_to" value="{{ route('rw.warga.index') }}">
 
                 <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                     <div class="row g-3">
 
                         <div class="col-md-6">
                             <label class="form-label">NIK</label>
-                            <input type="text" name="nik" class="form-control @error('nik') is-invalid @enderror"
+                            <input type="text" name="nik"
+                                class="form-control @error('nik') is-invalid @enderror"
                                 value="{{ old('nik', $item->nik) }}" required>
                             @error('nik')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -67,8 +67,7 @@
                             <label class="form-label">Tempat Lahir</label>
                             <input type="text" name="tempat_lahir"
                                 class="form-control @error('tempat_lahir') is-invalid @enderror"
-                                value="{{ old('tempat_lahir', $item->tempat_lahir) }}"
-                                required>
+                                value="{{ old('tempat_lahir', $item->tempat_lahir) }}" required>
                             @error('tempat_lahir')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -78,8 +77,7 @@
                             <label class="form-label">Tanggal Lahir</label>
                             <input type="date" name="tanggal_lahir"
                                 class="form-control @error('tanggal_lahir') is-invalid @enderror"
-                                value="{{ old('tanggal_lahir', $item->tanggal_lahir) }}"
-                                required>
+                                value="{{ old('tanggal_lahir', $item->tanggal_lahir) }}" required>
                             @error('tanggal_lahir')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -99,8 +97,7 @@
                             <label class="form-label">Pendidikan</label>
                             <input type="text" name="pendidikan"
                                 class="form-control @error('pendidikan') is-invalid @enderror"
-                                value="{{ old('pendidikan', $item->pendidikan) }}"
-                                required>
+                                value="{{ old('pendidikan', $item->pendidikan) }}" required>
                             @error('pendidikan')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -153,6 +150,9 @@
                                 <option value="anak"
                                     {{ old('status_hubungan_dalam_keluarga', $item->status_hubungan_dalam_keluarga) == 'anak' ? 'selected' : '' }}>
                                     Anak</option>
+                                <option value="famili lain"
+                                    {{ old('status_hubungan_dalam_keluarga', $item->status_hubungan_dalam_keluarga) == 'famili lain' ? 'selected' : '' }}>
+                                    Famili Lain</option>
                             </select>
                             @error('status_hubungan_dalam_keluarga')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -229,53 +229,56 @@
                             @enderror
                         </div>
 
-                        {{-- Bagian Paspor, KITAS, KITAP (opsional, jika ada) --}}
+                        {{-- Paspor, KITAS, KITAP selalu tampil --}}
                         <div class="col-md-6">
                             <label class="form-label">Nomor Paspor</label>
-                            <input type="text" name="no_paspor"
-                                class="form-control @error('no_paspor') is-invalid @enderror"
+                            <input type="text" name="no_paspor" class="form-control"
                                 value="{{ old('no_paspor', $item->no_paspor) }}">
-                            @error('no_paspor')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Tanggal Terbit Paspor</label>
-                            <input type="date" name="tgl_terbit_paspor"
-                                class="form-control @error('tgl_terbit_paspor') is-invalid @enderror"
+                            <input type="date" name="tgl_terbit_paspor" class="form-control"
                                 value="{{ old('tgl_terbit_paspor', $item->tgl_terbit_paspor) }}">
-                            @error('tgl_terbit_paspor')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Tanggal Berakhir Paspor</label>
-                            <input type="date" name="tgl_berakhir_paspor"
-                                class="form-control @error('tgl_berakhir_paspor') is-invalid @enderror"
+                            <input type="date" name="tgl_berakhir_paspor" class="form-control"
                                 value="{{ old('tgl_berakhir_paspor', $item->tgl_berakhir_paspor) }}">
-                            @error('tgl_berakhir_paspor')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Nomor KITAS</label>
-                            <input type="text" name="no_kitas"
-                                class="form-control @error('no_kitas') is-invalid @enderror"
+                            <input type="text" name="no_kitas" class="form-control"
                                 value="{{ old('no_kitas', $item->no_kitas) }}">
-                            @error('no_kitas')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Nomor KITAP</label>
-                            <input type="text" name="no_kitap"
-                                class="form-control @error('no_kitap') is-invalid @enderror"
+                            <input type="text" name="no_kitap" class="form-control"
                                 value="{{ old('no_kitap', $item->no_kitap) }}">
-                            @error('no_kitap')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
 
+                        {{-- Tambahan untuk Pendatang --}}
+                        <div class="pendatang-fields row g-3" style="display: none;">
+                            <div class="col-md-6">
+                                <label class="form-label">Alamat Asal</label>
+                                <input type="text" name="alamat_asal" class="form-control"
+                                    value="{{ old('alamat_asal', $item->alamat_asal) }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Alamat Domisili</label>
+                                <input type="text" name="alamat_domisili" class="form-control"
+                                    value="{{ old('alamat_domisili', $item->alamat_domisili) }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tanggal Mulai Tinggal</label>
+                                <input type="date" name="tanggal_mulai_tinggal" class="form-control"
+                                    value="{{ old('tanggal_mulai_tinggal', $item->tanggal_mulai_tinggal) }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tujuan Pindah</label>
+                                <input type="text" name="tujuan_pindah" class="form-control"
+                                    value="{{ old('tujuan_pindah', $item->tujuan_pindah) }}">
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -287,3 +290,26 @@
         </div>
     </div>
 </div>
+
+{{-- Script toggle Pendatang --}}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("modalEditwarga{{ $item->nik }}");
+    if (!modal) return;
+
+    const statusWarga = modal.querySelector('select[name="status_warga"]');
+    const pendatangFields = modal.querySelector('.pendatang-fields');
+
+    function togglePendatangFields() {
+        if (statusWarga.value === "pendatang") {
+            pendatangFields.style.display = "";
+        } else {
+            pendatangFields.style.display = "none";
+        }
+    }
+
+    togglePendatangFields();
+    statusWarga.addEventListener("change", togglePendatangFields);
+    modal.addEventListener("shown.bs.modal", togglePendatangFields);
+});
+</script>

@@ -147,29 +147,34 @@ class UsersSeeder extends Seeder
         $admin->assignRole('admin');
 
         $pakRw = User::create([
-            'nik' => '1234567890123452',
-            'nama' => 'Pak RW',
+            'nik' => $rw->nik,
+            'nama' => $rw->nama_ketua_rw,
             'password' => Hash::make('password'),
             'id_rw' => $rw->id,
         ]);
         $pakRw->assignRole('rw');
 
-        $pakRt = User::create([
-            'nik' => $rt->nik,
-            'nama' => $rt->nama,
-            'password' => Hash::make('password'),
-            'id_rt' => $rt->id,
-            'id_rw' => $rw->id,
-        ]);
-        $pakRt->assignRole(['rt', 'warga']); // multi role
+        // hanya kepala keluarga yang dapat user
+        if ($warga_rt->status_hubungan_dalam_keluarga === 'kepala keluarga') {
+            $pakRt = User::create([
+                'nik' => $warga_rt->nik,
+                'nama' => $warga_rt->nama,
+                'password' => Hash::make('password'),
+                'id_rt' => $rt->id,
+                'id_rw' => $rw->id,
+            ]);
+            $pakRt->assignRole(['rt', 'warga']); // multi role
+        }
 
-        $joko = User::create([
-            'nik' => $warga_biasa->nik,
-            'nama' => $warga_biasa->nama,
-            'password' => Hash::make('password'),
-            'id_rt' => $rt->id,
-            'id_rw' => $rw->id,
-        ]);
-        $joko->assignRole('warga');
+        if ($warga_biasa->status_hubungan_dalam_keluarga === 'kepala keluarga') {
+            $joko = User::create([
+                'nik' => $warga_biasa->nik,
+                'nama' => $warga_biasa->nama,
+                'password' => Hash::make('password'),
+                'id_rt' => $rt->id,
+                'id_rw' => $rw->id,
+            ]);
+            $joko->assignRole('warga');
+        }
     }
 }

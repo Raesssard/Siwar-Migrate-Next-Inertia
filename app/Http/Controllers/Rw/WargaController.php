@@ -113,6 +113,11 @@ class WargaController extends Controller
             'no_kitap' => 'nullable|string|unique:warga,no_kitap',
             'tgl_terbit_kitap' => 'nullable|date',
             'tgl_berakhir_kitap' => 'nullable|date',
+            // Tambahan khusus pendatang
+            'alamat_asal' => 'nullable|string|max:255',
+            'alamat_domisili' => 'nullable|string|max:255',
+            'tanggal_mulai_tinggal' => 'nullable|date',
+            'tujuan_pindah' => 'nullable|string|max:255',
         ], [
             'nik.unique' => 'NIK sudah terdaftar.',
             'no_kk.exists' => 'Nomor KK tidak ditemukan.',
@@ -191,8 +196,10 @@ class WargaController extends Controller
             'no_kitap' => $request->no_kitap,
             'tgl_terbit_kitap' => $request->tgl_terbit_kitap,
             'tgl_berakhir_kitap' => $request->tgl_berakhir_kitap,
-            'id_rt' => $kk->id_rt,
-            'id_rw' => $kk->id_rw,
+            'alamat_asal' => $request->alamat_asal,
+            'alamat_domisili' => $request->alamat_domisili,
+            'tanggal_mulai_tinggal' => $request->tanggal_mulai_tinggal,
+            'tujuan_pindah' => $request->tujuan_pindah,
         ]);
 
         // Buat user hanya jika status kepala keluarga
@@ -205,7 +212,6 @@ class WargaController extends Controller
                 'id_rw' => $kk->id_rw,
             ]);
 
-            // Tambahkan role warga pakai Spatie
             $user->assignRole('warga');
         }
 
@@ -259,7 +265,7 @@ class WargaController extends Controller
             'no_paspor' => [
                 'nullable',
                 'string',
-                Rule::unique('warga', 'no_paspor')->ignore($nik, 'nik'), // Mengabaikan berdasarkan NIK record yang SEDANG diupdate
+                Rule::unique('warga', 'no_paspor')->ignore($nik, 'nik'),
             ],
             'no_kitas' => [
                 'nullable',
@@ -277,6 +283,12 @@ class WargaController extends Controller
             'tgl_berakhir_kitas' => 'nullable|date',
             'tgl_terbit_kitap' => 'nullable|date',
             'tgl_berakhir_kitap' => 'nullable|date',
+
+            // Tambahan khusus pendatang
+            'alamat_asal' => 'nullable|string|max:255',
+            'alamat_domisili' => 'nullable|string|max:255',
+            'tanggal_mulai_tinggal' => 'nullable|date',
+            'tujuan_pindah' => 'nullable|string|max:255',
         ], [
             'nik.unique' => 'NIK sudah terdaftar.',
             'no_kk.exists' => 'Nomor KK tidak ditemukan.',
@@ -286,7 +298,6 @@ class WargaController extends Controller
             'tgl_terbit_paspor.date' => 'Tanggal terbit paspor harus berupa tanggal yang valid.',
             'tgl_berakhir_paspor.date' => 'Tanggal berakhir paspor harus berupa tanggal yang valid.',
             'tgl_terbit_kitas.date' => 'Tanggal terbit KITAS harus berupa tanggal yang valid.',
-            'tgl_berakhir_kitas.date' => 'Tanggal berakhir KITAS harus berupa tanggal yang valid.',
             'tgl_berakhir_kitas.date' => 'Tanggal berakhir KITAS harus berupa tanggal yang valid.',
             'tgl_terbit_kitap.date' => 'Tanggal terbit KITAP harus berupa tanggal yang valid.',
             'tgl_berakhir_kitap.date' => 'Tanggal berakhir KITAP harus berupa tanggal yang valid.',
@@ -313,53 +324,8 @@ class WargaController extends Controller
                 ->with('open_edit_modal', $nik);
         }
 
-        // Temukan catatan Warga yang ada menggunakan NIK asli
-        $warga = Warga::findOrFail($nik);
-        $kk = Kartu_keluarga::where('no_kk', $request->no_kk)->firstOrFail();
+        $warga = Warga::where('nik', $nik)->firstOrFail();
 
-        // Simpan NIK lama sebelum memperbarui catatan warga
-        $oldNik = $warga->nik;
-
-        if ($request->status_hubungan_dalam_keluarga === 'kepala keluarga') {
-            $existingKepala = Warga::where('no_kk', $request->no_kk)
-                ->where('nik', '!=', $request->nik) // NIK selain yang diupdate
-                ->where('status_hubungan_dalam_keluarga', 'kepala keluarga')
-                ->exists();
-
-            if ($existingKepala) {
-                return redirect()->back()
-                    ->withErrors(['status_hubungan_dalam_keluarga' => 'Nomor KK ini sudah memiliki Kepala Keluarga.'])
-                    ->withInput()
-                    ->with('open_edit_modal', $nik);
-            }
-
-            // Jika NIK berubah, hapus user lama
-            if ($oldNik !== $request->nik) {
-                User::where('nik', $oldNik)->delete();
-            }
-
-            // Buat atau update user untuk kepala keluarga
-            $user = User::updateOrCreate(
-                ['nik' => $request->nik],
-                [
-                    'name' => $request->nama,
-                    'password' => bcrypt('password'),
-                    'id_rt' => $kk->id_rt,
-                    'id_rw' => $kk->id_rw,
-                ]
-            );
-
-            // Pastikan role warga terpasang
-            if (!$user->hasRole('warga')) {
-                $user->assignRole('warga');
-            }
-
-        } else {
-            // Kalau bukan kepala keluarga, hapus user yang terkait
-            User::where('nik', $oldNik)->delete();
-        }
-
-        // Perbarui catatan Warga dengan data baru
         $warga->update([
             'nik' => $request->nik,
             'no_kk' => $request->no_kk,
@@ -386,11 +352,13 @@ class WargaController extends Controller
             'no_kitap' => $request->no_kitap,
             'tgl_terbit_kitap' => $request->tgl_terbit_kitap,
             'tgl_berakhir_kitap' => $request->tgl_berakhir_kitap,
-            'id_rt' => $kk->id_rt,
-            'id_rw' => $kk->id_rw,
+            'alamat_asal' => $request->alamat_asal,
+            'alamat_domisili' => $request->alamat_domisili,
+            'tanggal_mulai_tinggal' => $request->tanggal_mulai_tinggal,
+            'tujuan_pindah' => $request->tujuan_pindah,
         ]);
 
-        return redirect()->to($request->redirect_to)->with('success', 'Data warga berhasil diperbarui.');
+        return redirect()->to($request->redirect_to)->with('success', 'Data Warga Berhasil Diperbarui');
     }
 
     /**
