@@ -106,7 +106,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($pengumuman as $data)
+                                        @forelse ($pengumuman as $data)
                                             <tr>
                                                 <th scope="row">{{ $loop->iteration }}</th>
                                                 <td>{{ $data->judul }}</td>
@@ -128,7 +128,11 @@
 
                                             <!-- Modal Detail Pengumuman -->
                                             @include('warga.pengumuman.komponen.warga_detail_pengumuman')
-                                        @endforeach
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" class="text-center">Tidak ada pengumuman</td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>

@@ -153,7 +153,16 @@ class Rt_tagihanController extends Controller
                 'bukti_transfer' => $validated['bukti_transfer'] ?? null,
             ]);
 
-            return redirect()->route('rt.tagihan.index')->with('success', 'Tagihan manual berhasil diperbarui.');
+            if ($validated['status_bayar'] === 'sudah_bayar') {
+                Transaksi::create([
+                    'rt' => $tagihan->iuran->rt->rt,
+                    'tanggal' => $tagihan->tgl_bayar,
+                    'jenis' => 'pemasukan',
+                    'nominal' => $tagihan->nominal,
+                    'nama_transaksi' => $tagihan->nama,
+                    'keterangan' => 'Pembayaran ' . $tagihan->nama
+                ]);
+            }
 
             return redirect()->route('rt_tagihan.index')->with('success', 'Tagihan manual berhasil diperbarui.');
         } catch (\Exception $e) {
