@@ -56,10 +56,10 @@
                                 <table class="table table-hover table-sm scroll-table text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th scope="col">No</th>
-                                            <th scope="col">TANGGAL</th>
-                                            <th scope="col">NAMA TRANSAKSI</th>
-                                            <th scope="col">NOMINAL</th>
+                                            <th scope="col">No.</th>
+                                            <th scope="col">Tanggal</th>
+                                            <th scope="col">Nama Transaksi</th>
+                                            <th scope="col">Nominal</th>
                                         </tr>
                                     </thead>
                                     <tbody>

@@ -161,6 +161,28 @@
     </div>
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2 card-clickable">
+            <a href="{{ route('pengaduan.index') }}" class="text-decoration-none">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pengaduan
+                            </div>
+                            <div class="h4 mb-0 font-weight-bolder text-gray-800">
+                                {{ $pengaduan }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-paper-plane fa-3x text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-danger shadow h-100 py-2 card-clickable">
             <a href="{{ route('tagihan') }}" class="text-decoration-none">
                 <div class="card-body">
@@ -247,6 +269,5 @@
                 </div>
             </a>
         </div>
-
     </div>
 </div>

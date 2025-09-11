@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Warga;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pengaduan;
 use App\Models\Pengumuman;
 use App\Models\Tagihan;
 use App\Models\Transaksi;
@@ -74,6 +75,8 @@ class DashboardWargaController extends Controller
         $jumlah_transaksi = (clone $transaksi)->count();
         $total_transaksi = $pemasukan - $pengeluaran;
 
-        return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman', 'total_tagihan', 'total_transaksi', 'jumlah_tagihan', 'jumlah_transaksi'));
+        $pengaduan = Pengaduan::where('nik_warga', $nik)->count();
+
+        return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman', 'total_tagihan', 'total_transaksi', 'jumlah_tagihan', 'jumlah_transaksi', 'pengaduan'));
     }
 }

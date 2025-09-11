@@ -60,7 +60,7 @@
                     <table class="table table-hover table-sm text-nowrap">
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th>No.</th>
                                 <th>Nama Iuran</th>
                                 <th>Nominal</th>
                                 <th>Tgl Tagih</th>
@@ -118,7 +118,7 @@
                     <table class="table table-hover table-sm text-nowrap">
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th>No.</th>
                                 <th>Nama Iuran</th>
                                 <th>Nominal</th>
                                 <th>Tgl Tagih</th>

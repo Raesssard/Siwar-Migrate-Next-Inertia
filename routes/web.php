@@ -32,11 +32,13 @@ use App\Http\Controllers\Rw\{
 use App\Http\Controllers\Warga\{
     DashboardWargaController,
     LihatKKController,
+    PengaduanController,
     PengumumanWargaController,
     WargatagihanController,
     WargatransaksiController
 };
 use App\Http\Controllers\UserController;
+use App\Models\Pengaduan;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +134,7 @@ Route::middleware(['auth', 'role:warga'])->group(function () {
     Route::get('/warga/lihat_kk', [LihatKKController::class, 'index'])->name('lihat_kk');
     Route::get('/warga/tagihan', [WargatagihanController::class, 'index'])->name('tagihan');
     Route::get('/warga/transaksi', [WargatransaksiController::class, 'index'])->name('transaksi');
+    Route::resource('/warga/pengaduan', PengaduanController::class);
 });
 
 /*
