@@ -31,7 +31,7 @@
             <!-- Content Row -->
 
             <div class="row">
-                <form action="{{ route('rukun_tetangga.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rw.rukun_tetangga.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -68,7 +68,7 @@
                             </select>
                         </div>
                         <button class="btn btn-sm btn-primary" type="submit">Filter</button> {{-- Tambahkan type="submit" --}}
-                        <a href="{{ route('rukun_tetangga.index') }}" class="btn btn-sm btn-secondary">Reset</a>
+                        <a href="{{ route('rw.rukun_tetangga.index') }}" class="btn btn-sm btn-secondary">Reset</a>
                         {{-- Perbarui ke route rukun_tetangga.index --}}
                     </div>
                 </form>
@@ -128,7 +128,7 @@
                                                     {{ \Carbon\Carbon::parse($rt->akhir_jabatan)->format('d-m-Y') }}</td>
 
                                                 <td>
-                                                    <form action="{{ route('rukun_tetangga.destroy', $rt->id) }}"
+                                                    <form action="{{ route('rw.rukun_tetangga.destroy', $rt->id) }}"
                                                         method="POST" class="d-inline"
                                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus RT ini?')">
                                                         @csrf

@@ -69,6 +69,7 @@ class DashboardWargaController extends Controller
                     ->where('nik', $nik);
             })
             ->sum('nominal');
+
         $transaksi = Transaksi::where('rt', Auth::user()->warga->kartuKeluarga->rukunTetangga->rt);
         $pemasukan = (clone $transaksi)->where('jenis', 'pemasukan')->sum('nominal');
         $pengeluaran = (clone $transaksi)->where('jenis', 'pengeluaran')->sum('nominal');

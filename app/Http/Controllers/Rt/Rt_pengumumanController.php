@@ -276,7 +276,7 @@ class Rt_pengumumanController extends Controller
 
         $pengumuman->update($dataToUpdate);
 
-        return redirect()->route('rt_pengumuman.index')
+        return redirect()->route('rt.pengumuman.index')
             ->with('success', 'Pengumuman berhasil diperbarui.');
     }
 
@@ -313,7 +313,7 @@ class Rt_pengumumanController extends Controller
 
         $pengumuman->delete();
 
-        return redirect()->route('rt_pengumuman.index')
+        return redirect()->route('rt.pengumuman.index')
             ->with('success', 'Pengumuman berhasil dihapus.');
     }
 

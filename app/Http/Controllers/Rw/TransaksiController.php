@@ -89,7 +89,7 @@ class TransaksiController extends Controller
         try {
             Transaksi::create($validator->validated());
 
-            return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
+            return redirect()->route('rw.transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
         } catch (\Exception $e) {
             Log::error('Gagal menambahkan transaksi:', [
                 'message' => $e->getMessage(),
@@ -126,7 +126,7 @@ class TransaksiController extends Controller
         try {
             $transaksi->update($validator->validated());
 
-            return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
+            return redirect()->route('rw.transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
         } catch (\Exception $e) {
             Log::error('Gagal update transaksi:', [
                 'message' => $e->getMessage(),
@@ -145,7 +145,7 @@ class TransaksiController extends Controller
             $transaksi = Transaksi::findOrFail($id);
             $transaksi->delete();
 
-            return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
+            return redirect()->route('rw.transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
         } catch (\Exception $e) {
             Log::error('Gagal hapus transaksi:', ['message' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Terjadi kesalahan.');

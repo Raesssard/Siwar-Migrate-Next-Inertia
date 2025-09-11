@@ -119,7 +119,8 @@ class Rt_tagihanController extends Controller
 
             Tagihan::create($dataToStore);
 
-            return redirect()->route('rt_iuran.index')->with('success', 'Tagihan manual berhasil ditambahkan.');
+            return redirect()->route('rt.iuran.index')->with('success', 'Tagihan manual berhasil ditambahkan.');
+
         } catch (\Exception $e) {
             Log::error('Error creating tagihan manual:', ['message' => $e->getMessage()]);
             return redirect()->back()->withInput()->with('error', 'Gagal menambahkan tagihan manual. Error: ' . $e->getMessage());
@@ -184,7 +185,8 @@ class Rt_tagihanController extends Controller
 
             $tagihan->delete();
 
-            return redirect()->route('rt_iuran.index')->with('success', 'Tagihan manual berhasil dihapus.');
+            return redirect()->route('rt.iuran.index')->with('success', 'Tagihan manual berhasil dihapus.');
+
         } catch (\Exception $e) {
             Log::error('Error deleting tagihan manual:', ['message' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Gagal menghapus tagihan manual. Error: ' . $e->getMessage());

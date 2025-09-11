@@ -18,7 +18,7 @@
             <!-- Content Row -->
 
             <div class="row">
-                <form action="{{ route('rt_warga.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rt.warga.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -37,7 +37,7 @@
                                 Perempuan</option>
                         </select>
                         <button class="btn btn-sm btn-primary">Filter</button>
-                        <a href="{{ route('rt_warga.index') }}" class="btn btn-sm btn-secondary">Reset</a>
+                        <a href="{{ route('rt.warga.index') }}" class="btn btn-sm btn-secondary">Reset</a>
                     </div>
                 </form>
 

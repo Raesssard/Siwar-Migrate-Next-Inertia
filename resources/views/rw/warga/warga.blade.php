@@ -18,7 +18,7 @@
             <!-- Content Row -->
 
             <div class="row">
-                <form action="{{ route('warga.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rw.warga.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -50,7 +50,7 @@
                                 Perempuan</option>
                         </select>
                         <button class="btn btn-sm btn-primary">Filter</button>
-                        <a href="{{ route('warga.index') }}" class="btn btn-sm btn-secondary">Reset</a>
+                        <a href="{{ route('rw.warga.index') }}" class="btn btn-sm btn-secondary">Reset</a>
                     </div>
                 </form>
 
@@ -76,7 +76,7 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">NO</th>
-                                            <th scope="col">NO KK</th> {{-- No. Kartu Keluarga dari warga tersebut --}}
+                                            <th scope="col">NO KK</th>
                                             <th scope="col">NIK</th>
                                             <th scope="col">NAMA LENGKAP</th>
                                             <th scope="col">JENIS KELAMIN</th>
@@ -94,16 +94,20 @@
                                             <th scope="col">NAMA AYAH</th>
                                             <th scope="col">NAMA IBU</th>
                                             <th scope="col">STATUS WARGA</th>
-                                            <th scope="col">RT</th> {{-- RT dari KK warga tersebut --}}
+                                            {{-- Tambahan khusus pendatang --}}
+                                            <th scope="col">ALAMAT ASAL</th>
+                                            <th scope="col">ALAMAT DOMISILI</th>
+                                            <th scope="col">MULAI TINGGAL</th>
+                                            <th scope="col">TUJUAN PINDAH</th>
+                                            <th scope="col">RT</th>
                                             <th scope="col">AKSI</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
                                         @foreach ($warga as $item)
                                             <tr>
                                                 <th scope="row">{{ $loop->iteration }}</th>
-                                                <td>{{ $item->kartuKeluarga->no_kk ?? '-' }}</td> {{-- Pastikan relasi kartuKeluarga dimuat --}}
+                                                <td>{{ $item->kartuKeluarga->no_kk ?? '-' }}</td>
                                                 <td>{{ $item->nik ?? '-' }}</td>
                                                 <td>{{ strtoupper($item->nama ?? '-') }}</td>
                                                 <td class="text-center">{{ ucwords($item->jenis_kelamin ?? '-') }}</td>
@@ -117,8 +121,7 @@
                                                 <td class="text-center">{{ $item->golongan_darah ?? '-' }}</td>
                                                 <td class="text-center">{{ ucwords($item->status_perkawinan ?? '-') }}</td>
                                                 <td>{{ ucwords($item->status_hubungan_dalam_keluarga ?? '-') }}</td>
-                                                <td class="text-center">{{ strtoupper($item->kewarganegaraan ?? 'WNI') }}
-                                                </td>
+                                                <td class="text-center">{{ strtoupper($item->kewarganegaraan ?? 'WNI') }}</td>
                                                 <td class="text-center">{{ $item->no_paspor ?? '-' }}</td>
                                                 <td class="text-center">
                                                     @if ($item->no_kitas && $item->no_kitap)
@@ -134,17 +137,26 @@
                                                 <td>{{ $item->nama_ayah ?? '-' }}</td>
                                                 <td>{{ $item->nama_ibu ?? '-' }}</td>
                                                 <td class="text-center">{{ ucwords($item->status_warga ?? '-') }}</td>
+                                                {{-- Tampilkan hanya jika pendatang --}}
+                                                <td>{{ $item->status_warga == 'pendatang' ? ($item->alamat_asal ?? '-') : '-' }}</td>
+                                                <td>{{ $item->status_warga == 'pendatang' ? ($item->alamat_domisili ?? '-') : '-' }}</td>
+                                                <td class="text-center">
+                                                    {{ $item->status_warga == 'pendatang' && $item->tanggal_mulai_tinggal
+                                                        ? \Carbon\Carbon::parse($item->tanggal_mulai_tinggal)->format('d-m-Y')
+                                                        : '-' }}
+                                                </td>
+                                                <td>{{ $item->status_warga == 'pendatang' ? ($item->tujuan_pindah ?? '-') : '-' }}</td>
                                                 <td>{{ $item->kartuKeluarga->rukunTetangga->rt ?? '-' }}</td>
-                                                {{-- Pastikan relasi kartuKeluarga dan rukunTetangga dimuat --}}
                                                 <td class="text-center align-middle d-flex">
                                                     <div class="d-flex justify-content-center gap-1">
-                                                        <form action="{{ route('warga.destroy', $item->nik) }}"
+                                                        {{-- Hapus & Edit button tetap --}}
+                                                        <form action="{{ route('rw.warga.destroy', $item->nik) }}"
                                                             method="POST"
                                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                             @csrf
                                                             @method('DELETE')
                                                             <input type="hidden" name="redirect_to"
-                                                                value="{{ route('warga.index') }}"> {{-- Kembali ke halaman index warga --}}
+                                                                value="{{ route('rw.warga.index') }}"> {{-- Kembali ke halaman index warga --}}
                                                             <button type="submit" class="btn btn-danger btn-sm"
                                                                 title="Hapus Warga">
                                                                 <i class="fas fa-trash-alt"></i>
@@ -160,11 +172,8 @@
                                                 </td>
                                             </tr>
 
-
-
                                             @include('rw.warga.komponen.edit_warga_modal')
                                         @endforeach
-
                                     </tbody>
                                 </table>
 

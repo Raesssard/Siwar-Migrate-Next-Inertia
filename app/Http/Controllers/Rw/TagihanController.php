@@ -94,7 +94,7 @@ class TagihanController extends Controller
 
             Tagihan::create($dataToStore);
 
-            return redirect()->route('iuran.index')->with('success', 'Tagihan manual berhasil ditambahkan.');
+            return redirect()->route('rw.iuran.index')->with('success', 'Tagihan manual berhasil ditambahkan.');
 
         } catch (\Exception $e) {
             Log::error('Error creating tagihan manual:', ['message' => $e->getMessage()]);
@@ -145,7 +145,6 @@ class TagihanController extends Controller
                 $kk = Kartu_keluarga::where('no_kk', $tagihan->no_kk)->first();
 
                 if ($kk) {
-                    // cari nomor RT dari relasi id_rt
                     $rt = Rukun_tetangga::where('id', $kk->id_rt)->value('rt');
 
                     if ($rt) {
@@ -163,7 +162,17 @@ class TagihanController extends Controller
                 }
             }
 
-            return redirect()->route('tagihan.index')->with('success', 'Tagihan berhasil diperbarui.');
+            // === hapus transaksi jika status berubah dari sudah_bayar -> belum_bayar ===
+            if ($statusLama === 'sudah_bayar' && $validated['status_bayar'] === 'belum_bayar') {
+                $kk = Kartu_keluarga::where('no_kk', $tagihan->no_kk)->first();
+
+                if ($kk) {
+                    Transaksi::where('nama_transaksi', 'Iuran ' . $tagihan->nama)
+                        ->where('keterangan', 'Pembayaran iuran oleh KK ' . $kk->no_kk)
+                        ->delete();
+                }
+            }
+            return redirect()->route('rw.tagihan.index')->with('success', 'Tagihan berhasil diperbarui.');
         } catch (\Exception $e) {
             Log::error('Error updating tagihan:', ['message' => $e->getMessage()]);
             return redirect()->back()->withInput()->with('error', 'Gagal memperbarui tagihan. Error: ' . $e->getMessage());
@@ -185,7 +194,7 @@ class TagihanController extends Controller
 
             $tagihan->delete();
 
-            return redirect()->route('iuran.index')->with('success', 'Tagihan manual berhasil dihapus.');
+            return redirect()->route('rw.tagihan.index')->with('success', 'Tagihan manual berhasil dihapus.');
 
         } catch (\Exception $e) {
             Log::error('Error deleting tagihan manual:', ['message' => $e->getMessage()]);

@@ -32,7 +32,7 @@
 
             <div class="row">
 
-                <form action="{{ route('rt_pengumuman.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rt.pengumuman.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -67,7 +67,7 @@
                             @endforeach
                         </select>
                         <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                        <a href="{{ route('rt_pengumuman.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                        <a href="{{ route('rt.pengumuman.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                     </div>
                 </form>
 
@@ -128,7 +128,7 @@
                                                 <td class="text-center align-item-center">
                                                     {{-- Tombol Aksi: Hapus, Edit, Detail --}}
                                                     @if ($data->id_rt)
-                                                        <form action="{{ route('rt_pengumuman.destroy', $data->id) }}"
+                                                        <form action="{{ route('rt.pengumuman.destroy', $data->id) }}"
                                                             method="POST" class="d-inline"
                                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')">
                                                             @csrf

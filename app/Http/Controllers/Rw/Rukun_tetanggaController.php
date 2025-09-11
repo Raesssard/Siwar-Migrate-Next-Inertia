@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Rw;
+
 use App\Http\Controllers\Controller;
 use App\Models\Kartu_keluarga;
 use App\Models\Rukun_tetangga;
@@ -201,32 +202,31 @@ class Rukun_tetanggaController extends Controller
                 'id_rw' => $id_rw,
             ]);
 
-            // Buat atau update user untuk RT
+            // Buat atau update user untuk RT menggunakan Spatie assignRole
             $user = User::where('nik', $request->nik)->first();
             if ($user) {
-                // Tambah role 'rt' tanpa hapus role lama
-                $currentRoles = $user->roles ?? ['warga']; // Default role 'warga' kalau kepala keluarga
-                if (!in_array('rt', $currentRoles)) {
-                    $currentRoles[] = 'rt';
-                    $user->update([
-                        'id_rt' => $rt->id,
-                        'id_rw' => $id_rw,
-                        'roles' => array_unique($currentRoles),
-                        'password' => Hash::make('password'),
-                    ]);
+                $user->update([
+                    'id_rt' => $rt->id,
+                    'id_rw' => $id_rw,
+                    'password' => Hash::make('password'),
+                ]);
+                // Tambahkan role 'rt' jika belum ada
+                if (!$user->hasRole('rt')) {
+                    $user->assignRole('rt');
                 }
             } else {
-                User::create([
+                $user = User::create([
                     'nik' => $request->nik,
                     'nama' => $request->nama,
                     'password' => Hash::make('password'),
                     'id_rt' => $rt->id,
                     'id_rw' => $id_rw,
-                    'roles' => ['rt'],
                 ]);
+                // Assign role 'rt' menggunakan Spatie
+                $user->assignRole('rt');
             }
 
-            return redirect()->route('rukun_tetangga.index')
+            return redirect()->route('rw.rukun_tetangga.index')
                 ->with('success', 'Data RT dan akun pengguna berhasil ditambahkan.');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -251,7 +251,7 @@ class Rukun_tetanggaController extends Controller
     {
         //
         $rukun_tetangga = Rukun_tetangga::findOrFail($id);
-        return view('rukun_tetangga.show', compact('rukun_tetangga'));
+        return view('rw.rukun_tetangga.show', compact('rukun_tetangga'));
     }
 
     /**
@@ -261,7 +261,7 @@ class Rukun_tetanggaController extends Controller
     {
         //
         $rukun_tetangga = Rukun_tetangga::findOrFail($id);
-        return view('rukun_tetangga.edit', compact('rukun_tetangga'));
+        return view('rw.rukun_tetangga.edit', compact('rukun_tetangga'));
     }
 
     /**
@@ -374,8 +374,6 @@ class Rukun_tetanggaController extends Controller
                 'jabatan.in' => 'Jabatan tidak valid. Pilih antara ketua, sekretaris, atau bendahara.',
             ]);
 
-            // --- 3. Memperbarui Data Rukun Tetangga ---
-            // Memperbarui atribut-atribut model $rukunTetangga dengan data dari request.
             $rukunTetangga->update([
                 'no_kk' => $request->no_kk,
                 'nik' => $request->nik,
@@ -384,26 +382,24 @@ class Rukun_tetanggaController extends Controller
                 'mulai_menjabat' => $request->mulai_menjabat,
                 'akhir_jabatan' => $request->akhir_jabatan,
                 'jabatan' => $request->jabatan,
-                // id_rw tidak perlu diupdate karena diasumsikan RT tidak berpindah RW
             ]);
 
-            // --- 4. Memperbarui Data User Terkait (Opsional tapi Direkomendasikan) ---
-            // Jika NIK atau Nama pengurus RT berubah, update juga di tabel users.
+            // Update user terkait RT dan assign Spatie role
             $user = User::where('id_rt', $rukunTetangga->id)->first();
             if ($user) {
-                // Perbarui NIK dan Nama di tabel users jika ada perubahan
-                $user->nik = $request->nik;
-                $user->nama = $request->nama;
-                $user->save();
+                $user->update([
+                    'nik' => $request->nik,
+                    'nama' => $request->nama,
+                ]);
+                if (!$user->hasRole('rt')) {
+                    $user->assignRole('rt');
+                }
             } else {
-                // Log atau buat user baru jika tidak ditemukan (skenario jarang terjadi jika alur store benar)
-                Log::warning('User tidak ditemukan untuk RT ID: ' . $rukunTetangga->id . '. Mungkin perlu dibuat ulang.');
-                // Jika ingin membuat ulang user jika tidak ada, bisa tambahkan logic create user di sini
+                Log::warning('User tidak ditemukan untuk RT ID: ' . $rukunTetangga->id . '.');
+                // Jika ingin membuat user baru bisa tambahkan create user di sini
             }
 
-            // --- 5. Pengalihan Halaman dan Pesan Sukses ---
-            // Redirect pengguna kembali ke halaman indeks Rukun Tetangga dengan pesan sukses.
-            return redirect()->route('rukun_tetangga.index')->with('success', 'Data Rukun Tetangga berhasil diperbarui. 👍');
+            return redirect()->route('rw.rukun_tetangga.index')->with('success', 'Data Rukun Tetangga berhasil diperbarui. 👍');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Menangkap error validasi dan mengembalikan ke halaman sebelumnya dengan pesan error.
@@ -425,12 +421,32 @@ class Rukun_tetanggaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
-         try {
-        Rukun_tetangga::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'RT berhasil dihapus.');
-    } catch (\Illuminate\Database\QueryException $e) {
-        return redirect()->back()->with('error', 'Tidak bisa menghapus RT karena masih digunakan.');
-    }
+        try {
+            $rt = Rukun_tetangga::findOrFail($id);
+
+            // Cari user terkait RT
+            $user = User::where('id_rt', $rt->id)->first();
+
+            if ($user) {
+                // Jika user punya lebih dari 1 role, hapus role 'rt' saja
+                if ($user->roles()->count() > 1) {
+                    $user->removeRole('rt');
+                    $user->id_rt = null; // reset id_rt
+                    $user->save();
+                } else {
+                    // Jika hanya punya 1 role (yaitu 'rt'), hapus user
+                    $user->delete();
+                }
+            }
+
+            // Hapus data RT dari tabel rukun_tetangga
+            $rt->delete();
+
+            return redirect()->back()->with('success', 'RT berhasil dihapus.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->back()->with('error', 'Tidak bisa menghapus RT karena masih digunakan.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

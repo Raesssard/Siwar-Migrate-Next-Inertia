@@ -2,7 +2,7 @@
     aria-labelledby="modalEditkkLabel{{ $kk->no_kk }}" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content shadow border-0">
-            <form action="{{ route('kartu_keluarga.update', $kk->no_kk) }}" method="POST">
+            <form action="{{ route('rw.kartu_keluarga.update', $kk->no_kk) }}" method="POST">
                 @csrf
                 @method('PUT')
 

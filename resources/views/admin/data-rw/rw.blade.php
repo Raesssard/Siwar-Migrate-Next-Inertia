@@ -70,7 +70,7 @@
                                                 <td>{{ $data->mulai_menjabat }}</td>
                                                 <td>{{ $data->akhir_jabatan }}</td>
                                                 <td>
-                                                    <form action="{{ route('data_rw.destroy', $data->id) }}" method="POST"
+                                                    <form action="{{ route('admin.rw.destroy', $data->id) }}" method="POST"
                                                         class="d-inline"
                                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus RW ini?')">
                                                         {{-- Alert Konfirmasi Hapus --}}
@@ -113,7 +113,7 @@
                                                             <button type="button" class="btn-close btn-close-white"
                                                                 data-bs-dismiss="modal" aria-label="Tutup"></button>
                                                         </div>
-                                                        <form action="{{ route('data_rw.update', $data->id) }}"
+                                                        <form action="{{ route('admin.rw.update', $data->id) }}"
                                                             method="POST">
                                                             @csrf
                                                             @method('PUT')
@@ -232,7 +232,7 @@
                                     </div>
                                     <div class="modal-body">
                                         {{-- Form Tambah Warga --}}
-                                        <form action="{{ route('data_rw.store') }}" method="POST" class="p-4">
+                                        <form action="{{ route('admin.rw.store') }}" method="POST" class="p-4">
                                             @csrf
 
                                             <div class="mb-3">

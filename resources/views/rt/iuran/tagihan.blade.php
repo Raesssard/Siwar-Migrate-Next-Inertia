@@ -30,7 +30,7 @@
                 @endif
 
                 {{-- Form Filter dan Pencarian --}}
-                <form action="{{ route('rt_tagihan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rt.tagihan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -52,7 +52,7 @@
                             @endforeach
                         </select>
                         <button type="submit" class="btn btn-sm btn-primary">Filter</button>
-                        <a href="{{ route('rt_tagihan.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                        <a href="{{ route('rt.tagihan.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                     </div>
                 </form>
 
@@ -192,7 +192,7 @@
                                                     </button>
 
                                                     <!-- Tombol Hapus -->
-                                                    <form action="{{ route('rt_tagihan.destroy', $item->id) }}"
+                                                    <form action="{{ route('rt.tagihan.destroy', $item->id) }}"
                                                         method="POST" class="d-inline"
                                                         onsubmit="return confirm('Yakin ingin menghapus tagihan otomatis ini?');">
                                                         @csrf
@@ -231,7 +231,7 @@
                                 </div>
                                 <div class="modal-body">
                                     {{-- Form Edit Tagihan --}}
-                                    <form action="{{ route('rt_tagihan.update', $item->id) }}" method="POST"
+                                    <form action="{{ route('rt.tagihan.update', $item->id) }}" method="POST"
                                         class="p-4">
                                         @csrf
                                         @method('PUT')
@@ -492,7 +492,7 @@
                                 </div>
                                 <div class="modal-body">
                                     {{-- Form Edit Tagihan --}}
-                                    <form action="{{ route('rt_tagihan.update', $item->id) }}" method="POST"
+                                    <form action="{{ route('rt.tagihan.update', $item->id) }}" method="POST"
                                         class="p-4">
                                         @csrf
                                         @method('PUT')
@@ -738,6 +738,157 @@
                     </div>
                 @endforeach
 
+                {{-- Modal Tambah Tagihan --}}
+                <div class="modal fade" id="modalTambahTagihan" tabindex="-1" aria-labelledby="modalTambahTagihanLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content shadow-lg">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="modalTambahTagihanLabel">Tambah Data Tagihan</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Tutup"></button>
+                            </div>
+                            <div class="modal-body">
+                                {{-- Form Tambah Tagihan --}}
+                                <form action="{{ route('rt.iuran.store') }}" method="POST" class="p-4">
+                                    @csrf
+
+                                    <div class="mb-3">
+                                        <label for="nama" class="form-label">Nama Iuran</label>
+                                        <input type="text" name="nama" placeholder="Nama Iuran"
+                                            class="form-control @error('nama') is-invalid @enderror"
+                                            value="{{ old('nama') }}">
+                                        @error('nama')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="tgl_tagih" class="form-label">Tanggal Tagih</label>
+                                        <input type="date" name="tgl_tagih"
+                                            class="form-control @error('tgl_tagih') is-invalid @enderror"
+                                            value="{{ old('tgl_tagih') }}" required>
+                                        @error('tgl_tagih')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="tgl_tempo" class="form-label">Tanggal Tempo</label>
+                                        <input type="date" name="tgl_tempo" id="tgl_tempo"
+                                            class="form-control @error('tgl_tempo') is-invalid @enderror"
+                                            value="{{ old('tgl_tempo') }}" required>
+                                        @error('tgl_tempo')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="jenis" class="form-label">Jenis Tagihan</label>
+                                        <input type="text" class="form-control" value="Manual" disabled>
+                                        <input type="hidden" name="jenis" value="manual">
+                                    </div>
+
+                                    {{-- Tambahkan field no_kk di modal tambah --}}
+                                    <div class="mb-3">
+                                        <label for="no_kk" class="form-label">Nomor Kartu Keluarga</label>
+                                        <input type="text" name="no_kk"
+                                            class="form-control @error('no_kk') is-invalid @enderror"
+                                            value="{{ old('no_kk') }}" placeholder="Nomor Kartu Keluarga" required>
+                                        @error('no_kk')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    {{-- Tambahkan field status_bayar di modal tambah --}}
+                                    <div class="mb-3">
+                                        <label for="status_bayar" class="form-label">Status Pembayaran</label>
+                                        <select name="status_bayar"
+                                            class="form-select @error('status_bayar') is-invalid @enderror">
+                                            <option value="belum_bayar"
+                                                {{ old('status_bayar') == 'belum_bayar' ? 'selected' : '' }}>Belum Bayar
+                                            </option>
+                                            <option value="sudah_bayar"
+                                                {{ old('status_bayar') == 'sudah_bayar' ? 'selected' : '' }}>Sudah Bayar
+                                            </option>
+                                        </select>
+                                        @error('status_bayar')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    {{-- Tambahkan field tgl_bayar di modal tambah --}}
+                                    <div class="mb-3">
+                                        <label for="tgl_bayar" class="form-label">Tanggal Bayar (Opsional)</label>
+                                        <input type="datetime-local" name="tgl_bayar"
+                                            class="form-control @error('tgl_bayar') is-invalid @enderror"
+                                            value="{{ old('tgl_bayar') }}">
+                                        @error('tgl_bayar')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+
+                                    {{-- Tambahkan field kategori_pembayaran di modal tambah --}}
+                                    <div class="mb-3">
+                                        <label for="kategori_pembayaran" class="form-label">Kategori Pembayaran
+                                            (Opsional)</label>
+                                        <select name="kategori_pembayaran"
+                                            class="form-select @error('kategori_pembayaran') is-invalid @enderror">
+                                            <option value="">Pilih Kategori</option>
+                                            <option value="transfer"
+                                                {{ old('kategori_pembayaran') == 'transfer' ? 'selected' : '' }}>Transfer
+                                            </option>
+                                            <option value="tunai"
+                                                {{ old('kategori_pembayaran') == 'tunai' ? 'selected' : '' }}>
+                                                Tunai</option>
+                                        </select>
+                                        @error('kategori_pembayaran')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    {{-- Tambahkan field bukti_transfer di modal tambah --}}
+                                    <div class="mb-3">
+                                        <label for="bukti_transfer" class="form-label">Bukti Transfer (URL/Path,
+                                            Opsional)</label>
+                                        <input type="text" name="bukti_transfer"
+                                            class="form-control @error('bukti_transfer') is-invalid @enderror"
+                                            value="{{ old('bukti_transfer') }}"
+                                            placeholder="URL atau Path Bukti Transfer">
+                                        @error('bukti_transfer')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    {{-- Hanya tampilkan field nominal manual --}}
+                                    <div class="mb-3" id="manual-field">
+                                        <label class="form-label">Nominal</label>
+                                        <input type="number" name="nominal_manual" class="form-control"
+                                            placeholder="Masukkan nominal manual" value="{{ old('nominal_manual') }}"
+                                            required>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary">Simpan Data</button>
+                                    </div>
+                                </form>
+                                {{-- Kondisi untuk menampilkan error validasi form tambah --}}
+                                @if ($errors->any() && !request()->has('search') && !request()->has('no_kk_filter'))
+                                    <div class="alert alert-danger mt-3">
+                                        <ul class="mb-0">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

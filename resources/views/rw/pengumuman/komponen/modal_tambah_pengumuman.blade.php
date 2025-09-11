@@ -8,7 +8,7 @@
                                             aria-label="Tutup"></button>
                                     </div>
 
-                                    <form action="{{ route('pengumuman.store') }}" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ route('rw.pengumuman.store') }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="modal-body px-4" style="max-height: 70vh; overflow-y: auto;">
                                             <div class="mb-3">

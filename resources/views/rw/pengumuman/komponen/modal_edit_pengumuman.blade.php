@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                     aria-label="Tutup"></button>
             </div>
-            <form action="{{ route('pengumuman.update', $data->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('rw.pengumuman.update', $data->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-body modal-body-scroll px-4">

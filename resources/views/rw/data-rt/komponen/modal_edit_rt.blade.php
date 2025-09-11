@@ -10,7 +10,7 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             {{-- Tambahkan id_for_modal untuk menandai modal mana yang aktif saat ada error --}}
-            <form action="{{ route('rukun_tetangga.update', $rt->id) }}" method="POST">
+            <form action="{{ route('rw.rukun_tetangga.update', $rt->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id_for_modal" value="{{ $rt->id }}"> {{-- Penting untuk validasi --}}
