@@ -173,7 +173,7 @@
                                 Pengaduan
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
-                                {{ $pengaduan_rt_sayan }}
+                                {{ $pengaduan_rt_saya }}
                             </div>
                         </div>
                         <div class="col-auto">

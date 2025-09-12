@@ -242,11 +242,22 @@
                                     <span>Pengumuman RT</span>
                                 </a>
                             </li>
-
+                            <li class="nav-item {{ Request::is('rw/iuran*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rw.iuran.index') }}">
+                                    <i class="fas fa-coins"></i>
+                                    <span>Iuran</span>
+                                </a>
+                            </li>
                             <li class="nav-item {{ Request::is('rw/tagihan*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rw.tagihan.index') }}">
                                     <i class="fas fa-file-invoice-dollar"></i>
-                                    <span>Manajemen Keuangan</span>
+                                    <span>Tagihan</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('rw/transaksi*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rw.transaksi.index') }}">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>transaksi</span>
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">

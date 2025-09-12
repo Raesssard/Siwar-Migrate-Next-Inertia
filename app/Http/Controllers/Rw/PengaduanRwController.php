@@ -43,7 +43,7 @@ class PengaduanRwController extends Controller
         $pengaduan = Pengaduan::findOrFail($id);
 
         $request->validate([
-            'status' => 'required|in:diproses,selesai',
+            'status' => 'required|in:belum,sudah',
             'bukti_selesai' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         ]);
 
