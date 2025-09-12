@@ -18,7 +18,7 @@
                 </p>
                 <p><strong>Tanggal:</strong> {{ $item->created_at->format('d-m-Y H:i') }}</p>
                 <hr>
-                <p>{{ $item->isi }}</p>
+                <p>Isi : {{ $item->isi }}</p>
 
                 {{-- Lampiran --}}
                 @if ($item->file_path)
