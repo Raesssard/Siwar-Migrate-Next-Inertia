@@ -97,12 +97,12 @@
                                 <table class="table table-sm table-hover text-nowrap">
                                     <thead>
                                         <tr>
-                                            <th scope="col">NO</th>
-                                            <th scope="col">JUDUL</th>
+                                            <th scope="col">No.</th>
+                                            <th scope="col">Judul</th>
                                             <th scope="col">Kategori</th>
-                                            <th scope="col">RINGKASAN ISI</th>
-                                            <th scope="col">TANGGAL</th>
-                                            <th scope="col" class="text-center">AKSI</th>
+                                            <th scope="col">Ringkasan isi</th>
+                                            <th scope="col">Tanggal</th>
+                                            <th scope="col" class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>

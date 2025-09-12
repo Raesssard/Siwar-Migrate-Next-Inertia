@@ -30,22 +30,24 @@ use App\Http\Controllers\Rw\{
 use App\Http\Controllers\Warga\{
     DashboardWargaController,
     LihatKKController,
+    PengaduanController,
     PengumumanWargaController,
     WargatagihanController,
     WargatransaksiController
 };
 use App\Http\Controllers\UserController;
+use App\Models\Pengaduan;
 
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
 |--------------------------------------------------------------------------
 */
+
 Route::prefix('admin')->as('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [Admin_dashboardController::class, 'index'])->name('dashboard');
     Route::resource('rt', Admin_rtController::class);
     Route::resource('rw', Admin_rwController::class);
-    
 });
 
 /*
@@ -121,6 +123,7 @@ Route::prefix('warga')->as('warga.')->middleware(['auth', 'role:warga'])->group(
     Route::get('kk', [LihatKKController::class, 'index'])->name('kk');
     Route::get('tagihan', [WargatagihanController::class, 'index'])->name('tagihan');
     Route::get('transaksi', [WargatransaksiController::class, 'index'])->name('transaksi');
+    Route::resource('/warga/pengaduan', PengaduanController::class);
 });
 
 /*
@@ -162,5 +165,3 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/choose-role', [LoginController::class, 'chooseRole'])->name('choose-role');
     Route::post('/choose-role', [LoginController::class, 'setRole'])->name('choose.role');
 });
-
-

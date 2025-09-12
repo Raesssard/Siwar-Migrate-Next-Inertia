@@ -17,10 +17,10 @@
             'lihat_kk' => 'Data Kartu Keluarga',
             'warga' => 'Dashboard', // Ini untuk URL seperti /warga
             'warga_pengumuman' => 'Pengumuman',
-            'tagihan' => 'Tagihan',
+            'tagihan' => 'Tagihan Saya',
             'iuran' => 'Iuran',
-            'pengeluaran' => 'Pengeluaran',
-            'laporan_pengeluaran_bulanan' => 'Laporan Pengeluaran Bulanan',
+            'transaksi' => 'Transaksi',
+            'pengaduan' => 'Pengaduan Saya',
             default => ucwords(str_replace('-', ' ', $segment)),
             
         };

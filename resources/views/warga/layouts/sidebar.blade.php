@@ -116,14 +116,12 @@
     </li>
 
 
-    {{-- Tagihan --}}
-
-    {{-- <li class="nav-item {{ Request::is('rt/rt_tagihan*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rt_tagihan.index') }}">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <span>Manajemen Keuangan</span>
+    <li class="nav-item {{ Request::is('warga/pengaduan*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('pengaduan.index') }}">
+            <i class="fas fa-paper-plane"></i>
+            <span>Pengaduan</span>
         </a>
-    </li> --}}
+    </li>
 
     <hr class="sidebar-divider d-none d-md-block">
 

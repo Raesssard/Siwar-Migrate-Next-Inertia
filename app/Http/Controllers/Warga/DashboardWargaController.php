@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Warga;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pengaduan;
 use App\Models\Pengumuman;
 use App\Models\Tagihan;
 use App\Models\Transaksi;
@@ -75,6 +76,8 @@ class DashboardWargaController extends Controller
         $jumlah_transaksi = (clone $transaksi)->count();
         $total_transaksi = $pemasukan - $pengeluaran;
 
+        $pengaduan = Pengaduan::where('nik_warga', $nik)->count();
+
         $total_pemasukan_iuran = Tagihan::where('status_bayar', 'sudah_bayar')
             ->sum('nominal');
 
@@ -88,6 +91,6 @@ class DashboardWargaController extends Controller
         // Saldo akhir
         $total_saldo_akhir = $total_pemasukan - $total_pengeluaran;
 
-        return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman', 'total_tagihan', 'total_transaksi', 'jumlah_tagihan', 'jumlah_transaksi','total_saldo_akhir'));
+        return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman', 'total_tagihan', 'total_transaksi', 'jumlah_tagihan', 'jumlah_transaksi','total_saldo_akhir', 'pengaduan'));
     }
 }
