@@ -162,7 +162,7 @@
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-warning shadow h-100 py-2 card-clickable">
-            <a href="{{ route('pengaduan.index') }}" class="text-decoration-none">
+            <a href="{{ route('warga.pengaduan.index') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">

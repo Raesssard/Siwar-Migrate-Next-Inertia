@@ -10,7 +10,7 @@
                     aria-label="Tutup"></button>
             </div>
             {{-- Tambahkan enctype="multipart/form-data" pada form --}}
-            <form action="{{ route('pengaduan.update', $item->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('warga.pengaduan.update', $item->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-body modal-body-scroll px-4">

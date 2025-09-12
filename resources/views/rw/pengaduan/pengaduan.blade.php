@@ -1,10 +1,10 @@
-@extends('rt.layouts.app')
+@extends('rw.layouts.app')
 
 @section('title', $title)
 
 @section('content')
 <div id="content">
-    @include('rt.layouts.topbar')
+    @include('rw.layouts.topbar')
 
     <div class="container-fluid">
         <div class="row">
@@ -26,7 +26,7 @@
             @endif
 
             {{-- Search & Filter --}}
-            <form action="{{ route('rt.pengaduan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+            <form action="{{ route('rw.pengaduan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                 <div class="col-md-5">
                     <div class="input-group input-group-sm">
                         <input type="text" name="search" value="{{ request('search') }}" 
@@ -44,7 +44,7 @@
                     </select>
                 </div>
                 <div class="col-md-3 d-flex gap-2">
-                    <a href="{{ route('rt.pengaduan.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                    <a href="{{ route('rw.pengaduan.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                 </div>
             </form>
 
@@ -102,7 +102,7 @@
                                             </td>
                                         </tr>
                                         {{-- Modal detail --}}
-                                        @include('rt.pengaduan.komponen.detail_pengaduan', ['item' => $item])
+                                        @include('rw.pengaduan.komponen.detail_pengaduan', ['item' => $item])
                                     @empty
                                         <tr>
                                             <td colspan="8" class="text-center">Tidak ada pengaduan</td>

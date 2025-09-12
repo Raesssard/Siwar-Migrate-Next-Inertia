@@ -145,6 +145,12 @@
             <span>Transaksi</span>
         </a>
     </li>
+    <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
+            <i class="fas fa-paper-plane"></i>
+            <span>Pengaduan</span>
+        </a>
+    </li>
         <hr class="sidebar-divider d-none d-md-block">
 
     <div class="text-center">

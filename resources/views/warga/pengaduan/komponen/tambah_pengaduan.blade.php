@@ -7,7 +7,7 @@
                     aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('pengaduan.store') }}" method="POST" class="p-3" enctype="multipart/form-data">
+                <form action="{{ route('warga.pengaduan.store') }}" method="POST" class="p-3" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <label for="judul" class="form-label">Judul</label>

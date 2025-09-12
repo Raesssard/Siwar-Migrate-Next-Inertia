@@ -161,7 +161,7 @@ class PengaduanController extends Controller
 
         $pengaduan->update($dataYangDiUpdate);
 
-        return redirect()->route('pengaduan.index')
+        return redirect()->route('warga.pengaduan.index')
             ->with('success', 'Pengaduan berhasil diperbarui.');
     }
 
@@ -184,7 +184,7 @@ class PengaduanController extends Controller
 
         $pengaduan->delete();
 
-        return redirect()->route('pengaduan.index')
+        return redirect()->route('warga.pengaduan.index')
             ->with('success', 'Pengaduan berhasil diperbarui.');
     }
 }
