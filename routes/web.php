@@ -11,6 +11,7 @@ use App\Http\Controllers\Rt\{
     Rt_tagihanController,
     Rt_transaksiController,
     ExportController,
+    Rt_pengaduanController,
     RtiuranController
 };
 use App\Http\Controllers\Rw\{
@@ -98,6 +99,10 @@ Route::prefix('rt')->as('rt.')->middleware(['auth', 'role:rt'])->group(function 
     Route::resource('iuran', RtiuranController::class);
     Route::resource('tagihan', Rt_tagihanController::class);
     Route::resource('transaksi', Rt_transaksiController::class);
+    Route::resource('pengaduan', Rt_pengaduanController::class);
+
+    Route::patch('pengaduan/{id}/baca', [Rt_pengaduanController::class, 'baca'])
+        ->name('pengaduan.baca');
 
     // Upload / delete foto KK RT
     Route::put('kartu_keluarga/{rt_kartu_keluarga}/upload-foto', [Rt_kartu_keluargaController::class, 'uploadFoto'])->name('kartu_keluarga.upload_foto');

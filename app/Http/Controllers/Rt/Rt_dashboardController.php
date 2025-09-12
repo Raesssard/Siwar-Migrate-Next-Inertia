@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Rt;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kartu_keluarga;
+use App\Models\Pengaduan;
 use App\Models\Pengumuman;
 use App\Models\Tagihan;
 use App\Models\Transaksi;
@@ -44,6 +45,14 @@ class Rt_dashboardController extends Controller
                 });
         })->count();
 
+        $user = Auth::user();
+
+        $pengaduan_rt = $user->rukunTetangga->rt;
+
+        $pengaduan_rt_saya = Pengaduan::WhereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($pengaduan_rt) {
+            $aduan->where('rt', $pengaduan_rt);
+        })->count();
+
         // Jumlah Warga dengan jenis 'penduduk' DI RT yang login
         // KOREKSI: Gunakan whereIn untuk membatasi scope hanya pada KK di RT yang login
         $jumlah_warga_penduduk = Warga::where('status_warga', 'penduduk')
@@ -69,6 +78,7 @@ class Rt_dashboardController extends Controller
             'jumlah_warga_pendatang',
             'total_pemasukan',
             'total_saldo_akhir',
+            'pengaduan_rt_saya',
             'pengeluaran'
         ));
     }

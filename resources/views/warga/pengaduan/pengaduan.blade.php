@@ -22,7 +22,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-                <form action="{{ route('pengaduan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('warga.pengaduan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 d-flex gap-2">
-                        <a href="{{ route('pengaduan.index') }}" class="btn btn-secondary btn-sm">Reset Pencarian</a>
+                        <a href="{{ route('warga.pengaduan.index') }}" class="btn btn-secondary btn-sm">Reset Pencarian</a>
                     </div>
                 </form>
                 <div class="col-xl-12 col-lg-7">
@@ -74,7 +74,7 @@
                                                 <th scope="row" class="text-center">
                                                     {{ $loop->iteration }}</th>
                                                 <td class="text-center">
-                                                    @if ($item->status === 'selesai')
+                                                    @if ($item->status === 'sudah')
                                                         {{ \Carbon\Carbon::parse($item->updated_at)->translatedFormat('d F Y H:i') }}
                                                     @else
                                                         {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y H:i') }}
@@ -85,14 +85,14 @@
                                                     {{ \Illuminate\Support\Str::limit($item->isi, 50, '...') }}
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($item->status === 'diproses')
-                                                        <span class="badge bg-warning">Diproses</span>
+                                                    @if ($item->status === 'belum')
+                                                        <span class="badge bg-warning">Belum dibaca</span>
                                                     @else
-                                                        <span class="badge bg-success">Selesai</span>
+                                                        <span class="badge bg-success">Sudah dibaca</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center align-item-center">
-                                                    <form action="{{ route('pengaduan.destroy', $item->id) }}"
+                                                    <form action="{{ route('warga.pengaduan.destroy', $item->id) }}"
                                                         method="POST" class="d-inline"
                                                         onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengaduan ini?')">
                                                         @csrf

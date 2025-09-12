@@ -117,7 +117,7 @@
 
 
     <li class="nav-item {{ Request::is('warga/pengaduan*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('pengaduan.index') }}">
+        <a class="nav-link" href="{{ route('warga.pengaduan.index') }}">
             <i class="fas fa-paper-plane"></i>
             <span>Pengaduan</span>
         </a>
