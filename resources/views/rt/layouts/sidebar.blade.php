@@ -124,6 +124,12 @@
             <span>Transaksi</span>
         </a>
     </li>
+    <li class="nav-item {{ Request::is('rt/rt.pengaduan*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('rt.pengaduan.index') }}">
+            <i class="fas fa-comment-dots"></i>
+            <span>Pengaduan Warga</span>
+        </a>
+    </li>
 
 
     {{-- Tagihan --}}

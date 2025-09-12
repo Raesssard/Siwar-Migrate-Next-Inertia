@@ -25,34 +25,6 @@
         object-fit: contain;
     }
 
-    /* Gaya khusus untuk thumbnail PDF */
-    .pdf-thumbnail-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        background-color: #e9ecef;
-        /* Warna latar belakang untuk thumbnail PDF */
-    }
-
-    .pdf-icon {
-        font-size: 3rem;
-        /* Ukuran ikon PDF */
-        color: #dc3545;
-        /* Warna ikon PDF */
-        margin-bottom: 5px;
-    }
-
-    .pdf-filename {
-        font-size: 0.8rem;
-        color: #6c757d;
-        text-align: center;
-        padding: 0 5px;
-        word-break: break-all;
-    }
-
     /* Overlay dan teks tanpa dokumen */
     .file-display .view-file-overlay {
         position: absolute;
@@ -88,7 +60,7 @@
     aria-labelledby="modalDetailPengaduanLabel{{ $item->id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content shadow-lg border-0">
-            <div class="modal-header bg-success text-white">
+            <div class="modal-header bg-{{$item->status === 'sudah' ? 'success' : 'warning'}} text-white">
                 <h5 class="modal-title mb-0" id="modalDetailPengaduanLabel{{ $item->id }}">
                     Detail Pengaduan
                 </h5>
@@ -96,13 +68,18 @@
                     aria-label="Tutup"></button>
             </div>
             <div class="modal-body px-4 pt-4 pb-3">
-                <h4 class="fw-bold text-success mb-3">{{ $item->judul }}</h4>
+                <h4 class="fw-bold text-{{$item->status === 'sudah' ? 'success' : 'warning'}} mb-3">{{ $item->judul }}</h4>
 
                 <ul class="list-unstyled mb-3 small">
                     <li>
                         <strong>Tanggal:</strong>
-                        <span
-                            class="ms-1">{{ \Carbon\Carbon::parse($item->tanggal)->isoFormat('dddd, D MMMM Y') }}</span>
+                        @if ($item->status === 'sudah')
+                            <span
+                                class="ms-1">{{ \Carbon\Carbon::parse($item->updated_at)->isoFormat('dddd, D MMMM Y') }}</span>
+                        @else
+                            <span
+                                class="ms-1">{{ \Carbon\Carbon::parse($item->created_at)->isoFormat('dddd, D MMMM Y') }}</span>
+                        @endif
                     </li>
                     <li>
                         <strong>RT/RW:</strong>
@@ -117,10 +94,18 @@
                     <div class="border rounded bg-light p-3" style="line-height: 1.6;">
                         {{ $item->isi }}
                     </div>
+                    <div class="mt-2">
+                        <strong>Status:</strong>
+                        @if ($item->status === 'belum')
+                            <span class="badge bg-warning">Belum dibaca</span>
+                        @else
+                            <span class="badge bg-success">Sudah dibaca</span>
+                        @endif
+                    </div>
                 </div>
 
                 {{-- Tambahkan bagian ini untuk menampilkan dokumen --}}
-                @if ($item->dokumen_path)
+                {{-- @if ($item->file_path)
                     <div class="mb-3">
                         <strong class="d-block mb-1">Dokumen Terlampir:</strong>
                         <p class="mb-2">
@@ -134,7 +119,7 @@
                             Dokumen akan dibuka di tab baru.
                         </small>
                     </div>
-                @endif
+                @endif --}}
                 {{-- Akhir bagian dokumen --}}
                 <div class="file-section">
                     <div class="file-display">
