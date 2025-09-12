@@ -256,7 +256,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Total Transaksi
+                                Total Saldo Akhir RT
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
                                 Rp. {{ number_format($total_transaksi, 0, ',', '.') }}
@@ -270,4 +270,29 @@
             </a>
         </div>
     </div>
+    {{-- ==================================================================== --}}
+    {{-- CARD BARU: Saldo Akhir --}}
+    {{-- ==================================================================== --}}
+    <div class="col-6 col-md-4 col-xl-3 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2 card-clickable"> {{-- Anda bisa pilih warna border lain, misal border-left-info --}}
+            <a href="{{ route('warga.transaksi') }}" class="text-decoration-none"> {{-- Link ke halaman transaksi --}}
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Saldo Akhir RW
+                            </div>
+                            <div class="h4 mb-0 font-weight-bolder text-gray-800">
+                                Rp{{ number_format($total_saldo_akhir, 0, ',', '.') }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-wallet fa-3x text-gray-400"></i> {{-- Icon dompet atau sejenisnya --}}
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    
 </div>

@@ -95,7 +95,6 @@ class Admin_rwController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
         $request->validate([
             'nik' => [
                 'required',
@@ -103,23 +102,41 @@ class Admin_rwController extends Controller
             ],
             'nomor_rw' => 'required|string',
             'nama_ketua_rw' => 'required|string|max:255',
-            'mulai_menjabat'=> ' required',
+            'mulai_menjabat' => 'required',
             'akhir_jabatan' => 'required',
-        ],
-        [
+        ], [
             'nik.required' => 'NIK harus diisi.',
             'nik.unique' => 'NIK sudah terdaftar.',
             'nomor_rw.required' => 'Nomor Rukun Warga harus diisi.',
             'nama_ketua_rw.required' => 'Nama Ketua Rukun Warga harus diisi.',
             'mulai_menjabat.required' => 'Mulai Menjabat harus diisi.',
             'akhir_jabatan.required' => 'Akhir Menjabat harus diisi.',
-        ]
-        );
+        ]);
+
         $rw = Rw::findOrFail($id);
+
+        // Simpan NIK lama sebelum update
+        $oldNik = $rw->nik;
+
+        // Update data RW
         $rw->update($request->only([
             'nik','nomor_rw','nama_ketua_rw','mulai_menjabat','akhir_jabatan'
         ]));
-        
+
+        // Update user yang terhubung dengan RW ini
+        if ($rw->user) {
+            $rw->user->update([
+                'nik'  => $request->nik,
+                'nama' => $request->nama_ketua_rw,
+            ]);
+        } else {
+            // fallback kalau relasi belum ada (misal user lama hilang)
+            User::where('nik', $oldNik)->update([
+                'nik'  => $request->nik,
+                'nama' => $request->nama_ketua_rw,
+            ]);
+        }
+
         return redirect()->route('admin.rw.index')->with('success', 'Rukun Warga berhasil diperbarui.');
     }
 
