@@ -114,6 +114,13 @@
         </a>
     </li>
 
+    <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
+            <i class="fas fa-paper-plane"></i>
+            <span>Pengaduan</span>
+        </a>
+    </li>
+
     <li class="nav-item {{ Request::is('rw/pengumuman') || Request::is('rw/pengumuman/*') && !Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('rw.pengumuman.index') }}">
         <i class="fas fa-bullhorn"></i>
@@ -143,12 +150,6 @@
         <a class="nav-link" href="{{ route('rw.transaksi.index') }}">
             <i class="fas fa-money-bill-wave"></i>
             <span>Transaksi</span>
-        </a>
-    </li>
-    <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
-            <i class="fas fa-paper-plane"></i>
-            <span>Pengaduan</span>
         </a>
     </li>
         <hr class="sidebar-divider d-none d-md-block">
