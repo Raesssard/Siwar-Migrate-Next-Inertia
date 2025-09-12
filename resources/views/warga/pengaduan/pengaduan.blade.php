@@ -74,7 +74,7 @@
                                                 <th scope="row" class="text-center">
                                                     {{ $loop->iteration }}</th>
                                                 <td class="text-center">
-                                                    @if ($item->status === 'selesai')
+                                                    @if ($item->status === 'sudah')
                                                         {{ \Carbon\Carbon::parse($item->updated_at)->translatedFormat('d F Y H:i') }}
                                                     @else
                                                         {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y H:i') }}
@@ -85,10 +85,10 @@
                                                     {{ \Illuminate\Support\Str::limit($item->isi, 50, '...') }}
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($item->status === 'diproses')
-                                                        <span class="badge bg-warning">Diproses</span>
+                                                    @if ($item->status === 'belum')
+                                                        <span class="badge bg-warning">Belum dibaca</span>
                                                     @else
-                                                        <span class="badge bg-success">Selesai</span>
+                                                        <span class="badge bg-success">Sudah dibaca</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center align-item-center">

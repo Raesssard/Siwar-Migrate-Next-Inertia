@@ -3,6 +3,7 @@
 @section('title', $title)
 
 @section('content')
+
 <div id="content">
     @include('rt.layouts.topbar')
 

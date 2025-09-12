@@ -34,16 +34,6 @@ class PengaduanController extends Controller
 
         $pengaduanSaya = Pengaduan::where('nik_warga', $nik_warga);
 
-        // $tablePengaduan = (clone $pengaduan)->where('status', 'diproses')
-        //     ->when($request->filled('search'), function ($pengadu) use ($request) {
-        //         $search = $request->search;
-        //         $pengadu->where(function ($hasil) use ($search) {
-        //             $hasil->where('judul', 'like', "%$search%");
-        //         });
-        //     })
-        //     ->orderBy('updated_at', 'desc')
-        //     ->paginate(10);
-
         if ($request->filled('search')) {
             $hasil = $request->input('search');
             $pengaduanSaya->where(function ($item) use ($hasil) {
@@ -94,7 +84,7 @@ class PengaduanController extends Controller
             'isi' => $request->isi,
             'file_path' => $filePath,
             'file_name' => $fileName,
-            'status' => 'diproses',
+            'status' => 'belum',
         ]);
 
         return back()->with('success', 'Pengaduan berhasil dibuat.');
@@ -139,7 +129,6 @@ class PengaduanController extends Controller
         $dataYangDiUpdate = [
             'judul' => $request->judul,
             'isi' => $request->isi,
-            'updated_at' => today(),
         ];
 
         if ($request->hasFile('file')) {

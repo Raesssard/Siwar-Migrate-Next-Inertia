@@ -152,41 +152,46 @@
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('rt/rt.warga*') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('rt/warga*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.warga.index') }}">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-id-card"></i>
                                     <span>Manajemen Warga</span>
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('rt/rt.kartu_keluarga*') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('rt/kartu_keluarga*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.kartu_keluarga.index') }}">
                                     <i class="fas fa-users "></i>
                                     <span>Kartu Keluarga</span>
                                 </a>
                             </li>
-
-                            <li class="nav-item {{ Request::is('rt/rt.pengumuman*') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('rt/pengaduan*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rt.pengaduan.index') }}">
+                                    <i class="fas fa-comment-dots"></i>
+                                    <span>Pengaduan</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('rt/pengumuman*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.pengumuman.index') }}">
                                     <i class="fas fa-bullhorn"></i>
                                     <span>Pengumuman</span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('rt/rt.iuran*') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('rt/iuran*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.iuran.index') }}">
                                     <i class="fas fa-file-invoice-dollar"></i>
                                     <span>Iuran</span>
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('rt/rt.tagihan*') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('rt/tagihan*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.tagihan.index') }}">
                                     <i class="fas fa-hand-holding-usd"></i>
                                     <span>Tagihan</span>
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('rt/rt.transaksi*') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('rt/transaksi*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.transaksi.index') }}">
                                     <i class="fas fa-money-bill-wave"></i>
                                     <span>Transaksi</span>
@@ -198,6 +203,8 @@
                                     <span>Lihat Pengaduan</span>
                                 </a>
                             </li>
+
+
 
                             <hr class="sidebar-divider d-none d-md-block">
                         </ul>

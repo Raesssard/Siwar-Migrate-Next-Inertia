@@ -194,7 +194,7 @@
                         <ul class="navbar-nav sidebar sidebar-dark accordion">
                             <hr class="sidebar-divider my-0">
 
-                            <li class="nav-item {{ Route::is('dashboard-main') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('warga') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('warga.dashboard') }}">
                                     <i class="fas fa-fw fa-tachometer-alt"></i>
                                     <span>Dashboard</span>
@@ -202,15 +202,21 @@
                             </li>
 
                             {{-- ... semua item lainnya tetap seperti sebelumnya ... --}}
+                            <li class="nav-item {{ Request::is('warga/pengaduan*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('warga.pengaduan.index') }}">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Lihat Pengaduan</span>
+                                </a>
+                            </li>
 
-                            <li class="nav-item {{ Request::is('warga/warga_pengumuman*') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('warga/pengumuman*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('warga.pengumuman') }}">
                                     <i class="fas fa-bullhorn"></i>
                                     <span>Pengumuman</span>
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('warga/lihat_kk*') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('warga/kk*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('warga.kk') }}">
                                     <i class="fas fa-id-card"></i>
                                     <span>Lihat KK</span>
@@ -218,7 +224,7 @@
                             </li>
                             <li class="nav-item {{ Request::is('warga/tagihan*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('warga.tagihan') }}">
-                                    <i class="fas fa-id-card"></i>
+                                    <i class="fas fa-hand-holding-usd"></i>
                                     <span>Lihat Tagihan</span>
                                 </a>
                             </li>
@@ -236,7 +242,7 @@
                                     <span>Lihat Pengaduan</span>
                                 </a>
                             </li>
-
+                            
                             <hr class="sidebar-divider d-none d-md-block">
                         </ul>
                     </div>

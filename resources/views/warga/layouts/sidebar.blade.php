@@ -81,20 +81,27 @@
     <hr class="sidebar-divider my-0">
 
 
-    <li class="nav-item {{ Route::is('dashboard-main') ? 'active' : '' }}">
+    <li class="nav-item {{ Request::is('warga') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('warga.dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
         </a>
     </li>
 
+    <li class="nav-item {{ Request::is('warga/pengaduan*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('warga.pengaduan.index') }}">
+            <i class="fas fa-paper-plane"></i>
+            <span>Pengaduan</span>
+        </a>
+    </li>
 
-    <li class="nav-item {{ Request::is('warga/warga_pengumuman*') ? 'active' : '' }}">
+    <li class="nav-item {{ Request::is('warga/pengumuman*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('warga.pengumuman') }}">
             <i class="fas fa-bullhorn"></i>
             <span>Pengumuman</span>
         </a>
     </li>
+
 
     <li class="nav-item {{ Request::is('warga/pengaduan*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('warga.pengaduan.index') }}">
