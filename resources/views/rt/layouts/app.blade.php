@@ -177,14 +177,14 @@
                                     <span>Pengumuman</span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('rt/rt.iuran*') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('rt/iuran*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.iuran.index') }}">
                                     <i class="fas fa-file-invoice-dollar"></i>
                                     <span>Iuran</span>
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('rt/rt.tagihan*') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('rt/tagihan*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.tagihan.index') }}">
                                     <i class="fas fa-hand-holding-usd"></i>
                                     <span>Tagihan</span>
