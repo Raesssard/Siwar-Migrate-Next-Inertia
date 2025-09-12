@@ -128,7 +128,7 @@ Route::prefix('warga')->as('warga.')->middleware(['auth', 'role:warga'])->group(
     Route::get('kk', [LihatKKController::class, 'index'])->name('kk');
     Route::get('tagihan', [WargatagihanController::class, 'index'])->name('tagihan');
     Route::get('transaksi', [WargatransaksiController::class, 'index'])->name('transaksi');
-    Route::resource('/warga/pengaduan', PengaduanController::class);
+    Route::resource('pengaduan', PengaduanController::class);
 });
 
 /*

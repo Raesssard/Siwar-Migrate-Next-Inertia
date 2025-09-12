@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 sticky-top shadow">
 
     <button class="btn btn-link d-md-none rounded-circle mr-3" data-toggle="modal"
             data-target="#mobileSidebarModal" aria-label="Toggle sidebar">
@@ -14,7 +14,7 @@
         $judulHalaman = 'Dashboard';
     } else {
         $judulHalaman = match ($segment) {
-            'lihat_kk' => 'Data Kartu Keluarga',
+            'kk' => 'Data Kartu Keluarga',
             'warga' => 'Dashboard', // Ini untuk URL seperti /warga
             'warga_pengumuman' => 'Pengumuman',
             'tagihan' => 'Tagihan Saya',

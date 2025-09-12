@@ -66,7 +66,7 @@
                                             <th scope="col" class="text-center">Nama Warga</th>
                                             <th scope="col" class="text-center">Judul</th>
                                             <th scope="col" class="text-center">Isi</th>
-                                            <th scope="col" class="text-center">Aksi</th>
+                                            <th scope="col" class="text-center">Detail</th>
                                         </tr>
                                     </thead>
                                     <tbody>
