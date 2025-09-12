@@ -102,7 +102,15 @@
         </a>
     </li>
 
-    <li class="nav-item {{ Request::is('warga/kk*') ? 'active' : '' }}">
+
+    <li class="nav-item {{ Request::is('warga/pengaduan*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('warga.pengaduan.index') }}">
+            <i class="fas fa-paper-plane"></i>
+            <span>Pengaduan</span>
+        </a>
+    </li>
+
+    <li class="nav-item {{ Request::is('warga/lihat_kk*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('warga.kk') }}">
             <i class="fas fa-id-card"></i>
             <span>Lihat KK</span>
@@ -121,8 +129,6 @@
         </a>
     </li>
 
-
-
     <hr class="sidebar-divider d-none d-md-block">
 
     <div class="text-center">
@@ -130,8 +136,3 @@
     </div>
 
 </ul>
-
-
-
-
-<!-- End of Sidebar -->

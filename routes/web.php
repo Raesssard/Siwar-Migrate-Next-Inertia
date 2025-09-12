@@ -11,8 +11,8 @@ use App\Http\Controllers\Rt\{
     Rt_tagihanController,
     Rt_transaksiController,
     ExportController,
-    Rt_pengaduanController,
-    RtiuranController
+    RtiuranController,
+    Rt_PengaduanController
 };
 use App\Http\Controllers\Rw\{
     DashboardController,
@@ -26,7 +26,8 @@ use App\Http\Controllers\Rw\{
     PengumumanRtController,
     Rukun_tetanggaController,
     TagihanController,
-    WargaController
+    WargaController,
+    PengaduanRwController
 };
 use App\Http\Controllers\Warga\{
     DashboardWargaController,
@@ -68,6 +69,7 @@ Route::prefix('rw')->as('rw.')->middleware(['auth', 'role:rw'])->group(function 
     Route::resource('kategori_golongan', Kategori_golonganController::class);
     Route::resource('pengeluaran', PengeluaranController::class);
     Route::resource('transaksi', TransaksiController::class);
+    Route::resource('pengaduan', PengaduanRwController::class);
 
     // Export & laporan
     Route::get('laporan_pengeluaran_bulanan/{bulan}/{tahun}', [LaporanController::class, 'pengeluaran_bulanan'])->name('laporan.pengeluaran_bulanan');
@@ -99,10 +101,7 @@ Route::prefix('rt')->as('rt.')->middleware(['auth', 'role:rt'])->group(function 
     Route::resource('iuran', RtiuranController::class);
     Route::resource('tagihan', Rt_tagihanController::class);
     Route::resource('transaksi', Rt_transaksiController::class);
-    Route::resource('pengaduan', Rt_pengaduanController::class);
-
-    Route::patch('pengaduan/{id}/baca', [Rt_pengaduanController::class, 'baca'])
-        ->name('pengaduan.baca');
+    Route::resource('pengaduan', Rt_PengaduanController::class)->only(['index', 'show']);
 
     // Upload / delete foto KK RT
     Route::put('kartu_keluarga/{rt_kartu_keluarga}/upload-foto', [Rt_kartu_keluargaController::class, 'uploadFoto'])->name('kartu_keluarga.upload_foto');

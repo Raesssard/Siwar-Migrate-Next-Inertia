@@ -11,6 +11,7 @@ use App\Models\Transaksi;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Pengaduan;
 
 class Rt_dashboardController extends Controller
 {
@@ -68,6 +69,9 @@ class Rt_dashboardController extends Controller
         $total_pemasukan = (clone $rt)->where('jenis', 'pemasukan')->sum('nominal');
         $pengeluaran = (clone $rt)->where('jenis', 'pengeluaran')->sum('nominal');
         $total_saldo_akhir = $total_pemasukan - $pengeluaran;
+
+        $nik = Auth::user()->nik;
+        $pengaduan = Pengaduan::where('nik_warga', $nik)->count();
         // --- Mengirim Data ke View ---
         return view('rt.dashboard.dashboard', compact(
             'title',

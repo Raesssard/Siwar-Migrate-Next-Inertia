@@ -137,7 +137,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Hubungan dengan KK</label>
+                            <label class="form-label">Hubungan dalama Kartu Keluarga</label>
                             <select name="status_hubungan_dalam_keluarga"
                                 class="form-select @error('status_hubungan_dalam_keluarga') is-invalid @enderror"
                                 required>

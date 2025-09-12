@@ -197,6 +197,12 @@
                                     <span>Transaksi</span>
                                 </a>
                             </li>
+                            <li class="nav-item {{ Request::is('rt/pengaduan*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rt.pengaduan.index') }}">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Lihat Pengaduan</span>
+                                </a>
+                            </li>
 
 
 

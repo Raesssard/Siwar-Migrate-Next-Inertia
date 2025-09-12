@@ -66,7 +66,7 @@
 
             </div>
             <div class="modal-footer bg-light border-0 py-2">
-                <a href="{{ route('pengumuman.export.pdf', $data->id) }}" class="btn btn-danger justify-content-start">
+                <a href="{{ route('rt.pengumuman.export.pdf', $data->id) }}" class="btn btn-danger justify-content-start">
                     <i class="fas fa-file-pdf"></i> Export PDF
                 </a>
             </div>

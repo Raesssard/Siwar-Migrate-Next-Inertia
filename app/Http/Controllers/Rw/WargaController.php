@@ -325,6 +325,22 @@ class WargaController extends Controller
         }
 
         $warga = Warga::where('nik', $nik)->firstOrFail();
+        $kk = Kartu_keluarga::where('no_kk', $request->no_kk)->firstOrFail();
+
+        // ===== Cek logika kepala keluarga =====
+        if ($request->status_hubungan_dalam_keluarga === 'kepala keluarga') {
+            $existingKepala = Warga::where('no_kk', $request->no_kk)
+                ->where('status_hubungan_dalam_keluarga', 'kepala keluarga')
+                ->where('nik', '!=', $nik) // abaikan dirinya sendiri
+                ->exists();
+
+            if ($existingKepala) {
+                return redirect()->back()
+                    ->withErrors(['status_hubungan_dalam_keluarga' => 'Nomor KK ini sudah memiliki Kepala Keluarga.'])
+                    ->withInput()
+                    ->with('open_edit_modal', $nik);
+            }
+        }
 
         $warga->update([
             'nik' => $request->nik,
@@ -358,8 +374,26 @@ class WargaController extends Controller
             'tujuan_pindah' => $request->tujuan_pindah,
         ]);
 
-        return redirect()->to($request->redirect_to)->with('success', 'Data Warga Berhasil Diperbarui');
+    if ($request->status_hubungan_dalam_keluarga === 'kepala keluarga') {
+        // kalau belum ada user, buat
+        $user = User::firstOrNew(['nik' => $request->nik]);
+        $user->nama = $request->nama;
+        $user->id_rt = $kk->id_rt;
+        $user->id_rw = $kk->id_rw;
+        if (!$user->exists) {
+            $user->password = Hash::make('password');
+        }
+        $user->save();
+        $user->assignRole('warga');
+    } else {
+        // kalau sebelumnya kepala keluarga, hapus user
+        if ($warga->user) {
+            $warga->user->delete();
+        }
     }
+
+    return redirect()->to($request->redirect_to)->with('success', 'Data Warga Berhasil Diperbarui');
+}
 
     /**
      * Remove the specified resource from storage.

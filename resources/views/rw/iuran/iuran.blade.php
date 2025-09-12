@@ -189,8 +189,6 @@
                                                     @csrf @method('DELETE')
                                                     <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus data ini?')">Hapus</button>
                                                 </form>
-                                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                                    data-bs-target="#modalEditIuran{{ $item->id }}">Edit</button>
                                             </td>
                                         </tr>
                                     @empty

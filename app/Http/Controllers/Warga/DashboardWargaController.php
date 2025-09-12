@@ -78,6 +78,19 @@ class DashboardWargaController extends Controller
 
         $pengaduan = Pengaduan::where('nik_warga', $nik)->count();
 
-        return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman', 'total_tagihan', 'total_transaksi', 'jumlah_tagihan', 'jumlah_transaksi', 'pengaduan'));
+        $total_pemasukan_iuran = Tagihan::where('status_bayar', 'sudah_bayar')
+            ->sum('nominal');
+
+        // Total pemasukan & pengeluaran dari tabel transaksi
+        $total_pemasukan_transaksi = Transaksi::where('jenis', 'pemasukan')->sum('nominal');
+        $total_pengeluaran = Transaksi::where('jenis', 'pengeluaran')->sum('nominal');
+
+        // Total pemasukan keseluruhan
+        $total_pemasukan = $total_pemasukan_iuran + $total_pemasukan_transaksi;
+
+        // Saldo akhir
+        $total_saldo_akhir = $total_pemasukan - $total_pengeluaran;
+
+        return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman', 'total_tagihan', 'total_transaksi', 'jumlah_tagihan', 'jumlah_transaksi','total_saldo_akhir', 'pengaduan'));
     }
 }
