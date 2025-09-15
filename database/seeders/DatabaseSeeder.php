@@ -20,8 +20,11 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        $this->call(PermissionSeeder::class); 
-        $this->call(KategoriGolonganSeeder::class); // ini dulu
-        $this->call(UsersSeeder::class);            // baru bikin KK           // ini terakhir
+        $this->call([
+        PermissionSeeder::class,
+        JabatanSeeder::class,
+        KategoriGolonganSeeder::class,
+        UsersSeeder::class,
+        ]);
     }
 }
