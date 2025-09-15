@@ -11,14 +11,13 @@
 
         $judulHalaman = match ($segment) {
             'rt' => 'Dashboard',
-            'rt_warga' => 'Manajemen Warga',
-            'rt_pengumuman' => 'Pengumuman',
-            'rt_kartu_keluarga' => 'Kartu Keluarga',
-            'rt_tagihan' => 'Tagihan',
-            'rt_iuran' => 'Iuran',
-            'rt_transaksi' => 'Transaksi',
-            'rt_pengeluaran' => 'Pengeluaran',
-            'rt_laporan_pengeluaran_bulanan' => 'Laporan Pengeluaran Bulanan',
+            'warga' => 'Manajemen Warga',
+            'pengumuman' => 'Pengumuman',
+            'kartu_keluarga' => 'Kartu Keluarga',
+            'tagihan' => 'Tagihan',
+            'iuran' => 'Iuran',
+            'transaksi' => 'Transaksi',
+            'pengaduan' => 'Pengaduan Warga',
             default => ucwords(str_replace('-', ' ', $segment)),
         };
     @endphp

@@ -12,7 +12,7 @@ class PengaduanRwController extends Controller
 {
     public function index(Request $request)
     {
-        $title = 'Pengaduan RT Saya';
+        $title = ' Daftar Pengaduan Warga';
         $user = Auth::user();
 
         $pengaduan_rw = $user->rw->nomor_rw;

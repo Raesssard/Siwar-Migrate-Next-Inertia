@@ -116,7 +116,7 @@
     <li class="nav-item {{ Request::is('rt/iuran*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('rt.iuran.index') }}">
             <i class="fas fa-file-invoice-dollar"></i>
-            <span>iuran</span>
+            <span>Iuran</span>
         </a>
     </li>
     <li class="nav-item {{ Request::is('rt/tagihan*') ? 'active' : '' }}">

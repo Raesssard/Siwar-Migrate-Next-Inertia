@@ -126,7 +126,8 @@
     <div id="wrapper">
 
         <!-- Sidebar Desktop -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion d-none d-md-block" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion d-none d-md-block"
+            id="accordionSidebar">
             @include('rt.layouts.sidebar')
         </ul>
 
@@ -173,8 +174,8 @@
                             </li>
                             <li class="nav-item {{ Request::is('rt/pengaduan*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.pengaduan.index') }}">
-                                    <i class="fas fa-comment-dots"></i>
-                                    <span>Pengaduan</span>
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Pengaduan Warga</span>
                                 </a>
                             </li>
                             <li class="nav-item {{ Request::is('rt/iuran*') ? 'active' : '' }}">
@@ -197,14 +198,6 @@
                                     <span>Transaksi</span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('rt/pengaduan*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('rt.pengaduan.index') }}">
-                                    <i class="fas fa-paper-plane"></i>
-                                    <span>Lihat Pengaduan</span>
-                                </a>
-                            </li>
-
-
 
                             <hr class="sidebar-divider d-none d-md-block">
                         </ul>

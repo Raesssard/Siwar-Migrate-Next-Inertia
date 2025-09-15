@@ -231,6 +231,12 @@
                                     <span>Kartu Keluarga</span>
                                 </a>
                             </li>
+                            <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
+                                    <i class="fas fa-comment-dots"></i>
+                                    <span>Pengaduan Warga</span>
+                                </a>
+                            </li>
                             <li
                                 class="nav-item {{ Request::is('rw/pengumuman') || (Request::is('rw/pengumuman/*') && !Request::is('rw/pengumuman-rt*')) ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rw.pengumuman.index') }}">
@@ -243,13 +249,6 @@
                                 <a class="nav-link" href="{{ route('rw.pengumuman-rt.index') }}">
                                     <i class="fas fa-bullhorn"></i>
                                     <span>Pengumuman RT</span>
-                                </a>
-                            </li>
-
-                            <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
-                                    <i class="fas fa-comment-dots"></i>
-                                    <span>Pengaduan Warga</span>
                                 </a>
                             </li>
 
@@ -273,13 +272,6 @@
                                     <span>Transaksi</span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
-                                    <i class="fas fa-paper-plane"></i>
-                                    <span>Lihat Pengaduan</span>
-                                </a>
-                            </li>
-
                             <hr class="sidebar-divider d-none d-md-block">
 
                             <hr class="sidebar-divider d-none d-md-block">

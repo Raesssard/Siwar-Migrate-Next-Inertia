@@ -127,7 +127,7 @@
                             <a href="{{ Storage::url($item->file_path) }}" target="_blank"
                                 class="btn btn-sm btn-info text-white">
                                 <i class="fas fa-file-download me-1"></i> Lihat/Unduh File
-                                ({{ $item->file_name ?? 'Dokumen' }})
+                                ({{ $item->original_file_name ?? 'Dokumen' }})
                             </a>
                         </p>
                         <small class="text-muted">

@@ -11,7 +11,6 @@ use App\Models\Transaksi;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Pengaduan;
 
 class Rt_dashboardController extends Controller
 {
