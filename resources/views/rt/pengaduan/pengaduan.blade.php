@@ -22,7 +22,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-                <form action="{{ route('rt.pengaduan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('rt.pengaduan.index') }}" method="GET"
+                    class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -47,7 +48,7 @@
                                 {{-- Total Pengumuman (kiri) --}}
                                 <div class="d-flex align-items-center gap-1 mb-1 mb-sm-0">
                                     <i class="fas fa-paper-plane me-2 text-primary"></i>
-                                    <span class="fw-semibold text-dark">{{ $total_pengaduan ?? 0 }} Pengaduan</span>
+                                    <span class="fw-semibold text-dark">{{ $total_pengaduan_rt ?? 0 }} Pengaduan</span>
                                 </div>
                             </div>
                             <div class="table-responsive table-container">
@@ -64,7 +65,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($pengaduan as $item)
+                                        @forelse ($rt_pengaduan as $item)
                                             <tr>
                                                 <th scope="row" class="text-center">
                                                     {{ $loop->iteration }}</th>
@@ -83,7 +84,7 @@
                                                 </td>
                                                 <td class="text-center align-item-center">
                                                     <button type="button" class="btn btn-success btn-sm"
-                                                        data-bs-toggle="modal"
+                                                        onclick="markAsRead({{ $item->id }})" data-bs-toggle="modal"
                                                         data-bs-target="#modalDetailPengaduan{{ $item->id }}">
                                                         <i class="fas fa-info"></i>
                                                     </button>
@@ -101,13 +102,13 @@
 
                             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
                                 <div class="text-muted mb-2">
-                                    Menampilkan {{ $pengaduan->firstItem() ?? '0' }}-{{ $pengaduan->lastItem() }}
+                                    Menampilkan {{ $rt_pengaduan->firstItem() ?? '0' }}-{{ $rt_pengaduan->lastItem() }}
                                     dari total
-                                    {{ $pengaduan->total() }} data
+                                    {{ $rt_pengaduan->total() }} data
                                 </div>
 
                                 <div>
-                                    {{ $pengaduan->links('pagination::bootstrap-5') }}
+                                    {{ $rt_pengaduan->links('pagination::bootstrap-5') }}
                                 </div>
                             </div>
                         </div>
@@ -116,4 +117,19 @@
             </div>
         </div>
     </div>
+    <script>
+        function markAsRead(id) {
+            fetch("{{ url('/rt/pengaduan') }}/" + id + "/baca", {
+                    method: "PATCH",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(res => res.json())
+                .then(data => console.log("Status updated:", data))
+                .catch(err => console.error(err));
+        }
+    </script>
 @endsection

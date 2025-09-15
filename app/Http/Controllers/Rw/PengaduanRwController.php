@@ -28,7 +28,7 @@ class PengaduanRwController extends Controller
             });
         }
 
-        $rw_pengaduan = $pengaduan_rw_saya->orderBy('updated_at', 'desc')
+        $rw_pengaduan = $pengaduan_rw_saya->orderBy('created_at', 'desc')
             ->paginate(10);
 
         $total_pengaduan_rw = $rw_pengaduan->count();
@@ -38,14 +38,16 @@ class PengaduanRwController extends Controller
 
     public function baca($id)
     {
-        $rw_user = Auth::user()->warga->kartuKeluarga->rw->nomor_rw;
+        $rw_user = Auth::user()->rw->nomor_rw;
 
-        $pengaduan = Pengaduan::whereHas('warga.kartuKeluarga.rw', function ($q) use ($rw_user) {
-            $q->where('nomor_rw', $rw_user);
-        })->where('id', $id)->firstOrFail();
+        $pengaduan_rw_saya = Pengaduan::whereHas('warga.kartuKeluarga.rw', function ($aduan) use ($rw_user) {
+            $aduan->where('nomor_rw', $rw_user);
+        })->findOrFail($id);
 
-        if ($pengaduan->status === 'belum') {
-            $pengaduan->update(['status' => 'sudah']);
+        if ($pengaduan_rw_saya->status === 'belum') {
+            $pengaduan_rw_saya->update([
+                'status' => 'sudah'
+            ]);
         }
 
         return response()->json(['success' => true]);

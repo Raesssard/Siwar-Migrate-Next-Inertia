@@ -41,7 +41,7 @@ class PengaduanController extends Controller
             });
         }
 
-        $pengaduan = $pengaduanSaya->orderBy('updated_at', 'desc')->paginate(10);
+        $pengaduan = $pengaduanSaya->orderBy('created_at', 'desc')->paginate(10);
 
         $total_pengaduan = $pengaduan->count();
 

@@ -106,6 +106,9 @@ Route::prefix('rt')->as('rt.')->middleware(['auth', 'role:rt'])->group(function 
     Route::resource('transaksi', Rt_transaksiController::class);
     Route::resource('pengaduan', Rt_PengaduanController::class)->only(['index', 'show']);
 
+    Route::patch('pengaduan/{id}/baca', [Rt_PengaduanController::class, 'baca'])
+        ->name('pengaduan.baca');
+
     // Upload / delete foto KK RT
     Route::put('kartu_keluarga/{rt_kartu_keluarga}/upload-foto', [Rt_kartu_keluargaController::class, 'uploadFoto'])->name('kartu_keluarga.upload_foto');
     Route::delete('kartu_keluarga/{rt_kartu_keluarga}/delete-foto', [Rt_kartu_keluargaController::class, 'deleteFoto'])->name('kartu_keluarga.delete_foto');
