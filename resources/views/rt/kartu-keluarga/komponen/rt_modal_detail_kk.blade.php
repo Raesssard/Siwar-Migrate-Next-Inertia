@@ -449,7 +449,7 @@
                                 @enderror
                             </form>
                             @if ($kk->foto_kk)
-                                <form action="{{ route('rt_kartu_keluarga.delete_foto', $kk->no_kk) }}" method="POST"
+                                <form action="{{ route('rt.kartu_keluarga.delete_foto', $kk->no_kk) }}" method="POST"
                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus dokumen ini?')">
                                     @csrf
                                     @method('DELETE')

@@ -38,6 +38,7 @@ class PengaduanRwController extends Controller
 
     public function baca($id)
     {
+
         $rw_user = Auth::user()->rw->nomor_rw;
 
         $pengaduan_rw_saya = Pengaduan::whereHas('warga.kartuKeluarga.rw', function ($aduan) use ($rw_user) {

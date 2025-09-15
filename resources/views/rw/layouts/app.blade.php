@@ -251,7 +251,6 @@
                                     <span>Pengumuman RT</span>
                                 </a>
                             </li>
-
                             <li class="nav-item {{ Request::is('rw/iuran*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rw.iuran.index') }}">
                                     <i class="fas fa-coins"></i>
@@ -263,8 +262,6 @@
                                 <a class="nav-link" href="{{ route('rw.tagihan.index') }}">
                                     <i class="fas fa-dollar-sign"></i>
                                     <span>Tagihan</span>
-                                </a>
-                            </li>
 
                             <li class="nav-item {{ Request::is('rw/transaksi*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rw.transaksi.index') }}">
