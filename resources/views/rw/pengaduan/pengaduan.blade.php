@@ -48,7 +48,7 @@
                                 {{-- Total Pengumuman (kiri) --}}
                                 <div class="d-flex align-items-center gap-1 mb-1 mb-sm-0">
                                     <i class="fas fa-paper-plane me-2 text-primary"></i>
-                                    <span class="fw-semibold text-dark">{{ $total_pengaduan_rt ?? 0 }} Pengaduan</span>
+                                    <span class="fw-semibold text-dark">{{ $total_pengaduan_rw ?? 0 }} Pengaduan</span>
                                 </div>
                             </div>
                             <div class="table-responsive table-container">
