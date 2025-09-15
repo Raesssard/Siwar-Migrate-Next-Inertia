@@ -121,8 +121,6 @@
         </a>
     </li>
 
-
-
     <hr class="sidebar-divider d-none d-md-block">
 
     <div class="text-center">
@@ -130,8 +128,3 @@
     </div>
 
 </ul>
-
-
-
-
-<!-- End of Sidebar -->

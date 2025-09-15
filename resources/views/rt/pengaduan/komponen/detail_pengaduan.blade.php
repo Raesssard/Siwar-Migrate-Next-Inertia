@@ -1,99 +1,13 @@
-<style>
-    .file-section {
-        margin-top: 2rem;
-        /* Added margin for separation */
-    }
-
-    .file-display {
-        position: relative;
-        width: 200px;
-        height: 150px;
-        border: 1px solid #ddd;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        background-color: #f8f9fa;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-
-    .file-display img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
-
-    /* Gaya khusus untuk thumbnail PDF */
-    .pdf-thumbnail-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        background-color: #e9ecef;
-        /* Warna latar belakang untuk thumbnail PDF */
-    }
-
-    .pdf-icon {
-        font-size: 3rem;
-        /* Ukuran ikon PDF */
-        color: #dc3545;
-        /* Warna ikon PDF */
-        margin-bottom: 5px;
-    }
-
-    .pdf-filename {
-        font-size: 0.8rem;
-        color: #6c757d;
-        text-align: center;
-        padding: 0 5px;
-        word-break: break-all;
-    }
-
-    /* Overlay dan teks tanpa dokumen */
-    .file-display .view-file-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        cursor: pointer;
-    }
-
-    .file-display:hover .view-file-overlay {
-        opacity: 1;
-    }
-
-    .file-display .view-file-overlay i {
-        color: white;
-        font-size: 2rem;
-    }
-
-    .no-file-text {
-        color: #6c757d;
-        font-style: italic;
-    }
-</style>
-
-<div class="modal fade" id="modalDetailPengaduan{{ $item->id }}" tabindex="-1"
-    aria-labelledby="modalDetailPengaduanLabel{{ $item->id }}" aria-hidden="true">
+<div class="modal fade" id="modalDetail{{ $item->id }}" tabindex="-1"
+     aria-labelledby="modalDetailLabel{{ $item->id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content shadow-lg border-0">
             <div class="modal-header bg-success text-white">
-                <h5 class="modal-title mb-0" id="modalDetailPengaduanLabel{{ $item->id }}">
-                    Detail Pengaduan
+                <h5 class="modal-title mb-0" id="modalDetailLabel{{ $item->id }}">
+                    Detail Pengaduan Warga
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Tutup"></button>
+                <button type="button" class="btn-close btn-close-white"
+                        data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body px-4 pt-4 pb-3">
                 <h4 class="fw-bold text-success mb-3">{{ $item->judul }}</h4>
@@ -181,10 +95,14 @@
                                 <i class="fas fa-eye"></i>
                             </div>
                         @else
-                            <p class="no-file-text">Tidak ada foto/video</p>
+                            <a href="{{ $filePath }}" target="_blank" class="btn btn-primary btn-sm">
+                                <i class="fas fa-file-download"></i> Unduh Lampiran
+                            </a>
                         @endif
                     </div>
-                </div>
+                @else
+                    <p class="text-muted"><em>Tidak ada lampiran</em></p>
+                @endif
             </div>
         </div>
     </div>

@@ -115,7 +115,7 @@
                                                     </button>
 
                                                     <!-- Tombol Hapus -->
-                                                    <form action="{{ route('tagihan.destroy', $item->id) }}" method="POST"
+                                                    <form action="{{ route('rt.tagihan.destroy', $item->id) }}" method="POST"
                                                         class="d-inline"
                                                         onsubmit="return confirm('Yakin ingin menghapus tagihan ini?');">
                                                         @csrf

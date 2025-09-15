@@ -66,6 +66,10 @@ class DashboardController extends Controller
         $jumlah_warga_penduduk = Warga::where('status_warga', 'penduduk')->count();
         $jumlah_warga_pendatang = Warga::where('status_warga', 'pendatang')->count();
 
+        $nik = Auth::user()->nik;
+        $pengaduan = Pengaduan::count(); // kalau semua pengaduan
+
+
         return view('rw.dashboard.dashboard', compact(
             'title',
             'jumlah_warga',
@@ -78,8 +82,8 @@ class DashboardController extends Controller
             'total_pemasukan',
             'total_pengeluaran',
             'total_saldo_akhir',
-            'pengaduan_rw_saya',
-            'total_iuran_bulan_ini'
+            'total_iuran_bulan_ini',
+            'pengaduan'
         ));
     }
 }
