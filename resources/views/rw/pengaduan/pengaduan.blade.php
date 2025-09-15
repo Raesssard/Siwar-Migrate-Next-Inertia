@@ -58,6 +58,7 @@
                                             <th scope="col" class="text-center">No.</th>
                                             <th scope="col" class="text-center">NIK Warga</th>
                                             <th scope="col" class="text-center">Nama Warga</th>
+                                            <th scope="col" class="text-center">No. RT</th>
                                             <th scope="col" class="text-center">Judul</th>
                                             <th scope="col" class="text-center">Isi</th>
                                             <th scope="col" class="text-center">Tanggal</th>
@@ -71,6 +72,7 @@
                                                     {{ $loop->iteration }}</th>
                                                 <th scope="col" class="text-center">{{ $item->warga->nik }}</th>
                                                 <td class="text-center">{{ $item->warga->nama }}</td>
+                                                <td class="text-center">{{ $item->warga->kartuKeluarga->rukunTetangga->rt }}</td>
                                                 <td class="text-center">{{ $item->judul }}</td>
                                                 <td class="text-center">
                                                     {{ \Illuminate\Support\Str::limit($item->isi, 50, '...') }}
