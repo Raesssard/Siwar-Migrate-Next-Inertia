@@ -70,7 +70,7 @@
                                             <tr>
                                                 <th scope="row" class="text-center">
                                                     {{ $loop->iteration }}</th>
-                                                <th scope="col" class="text-center">{{ $item->warga->nik }}</th>
+                                                <th scope="row" class="text-center">{{ $item->warga->nik }}</th>
                                                 <td class="text-center">{{ $item->warga->nama }}</td>
                                                 <td class="text-center">{{ $item->warga->kartuKeluarga->rukunTetangga->rt }}</td>
                                                 <td class="text-center">{{ $item->judul }}</td>
