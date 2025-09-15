@@ -68,8 +68,9 @@ class Rt_transaksiController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'rt' => 'required|string',
+        $user = Auth::user();
+        $noRt = $user->rukunTetangga->rt;
+        $request->validate([
             'tanggal' => 'required|date',
             'nama_transaksi' => 'required|string|max:255',
             'jenis' => 'required|in:pemasukan,pengeluaran',
@@ -77,7 +78,16 @@ class Rt_transaksiController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        Transaksi::create($validated);
+        $dataYangDimasukin = [
+            'rt' => $noRt,
+            'tanggal' => $request->tanggal,
+            'nama_transaksi' => $request->nama_transaksi,
+            'jenis' => $request->jenis,
+            'nominal' => $request->nominal,
+            'keterangan' => $request->keterangan,
+        ];
+
+        Transaksi::create($dataYangDimasukin);
 
         return redirect()->route('rt.transaksi.index')->with('success', 'Transaksi berhasil ditambahkan!');
     }
@@ -85,7 +95,6 @@ class Rt_transaksiController extends Controller
     public function update(Request $request, Transaksi $rt_transaksi)
     {
         $validated = $request->validate([
-            'rt' => 'required|string',
             'tanggal' => 'required|date',
             'nama_transaksi' => 'required|string|max:255',
             'jenis' => 'required|in:pemasukan,pengeluaran',

@@ -40,15 +40,6 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 d-flex gap-2">
-                        <select name="rt" class="form-select form-select-sm">
-                            <option value="">Semua RT</option>
-                            @foreach ($rt as $item)
-                                <option value="{{ $item->nomor_rt }}"
-                                    {{ request('rt') == $item->nomor_rt ? 'selected' : '' }}>
-                                    RT {{ $item->nomor_rt }}
-                                </option>
-                            @endforeach
-                        </select>
                         <button type="submit" class="btn btn-sm btn-primary">Filter</button>
                         <a href="{{ route('rt.iuran.index') }}" class="btn btn-secondary btn-sm">Reset</a>
                     </div>
@@ -124,10 +115,6 @@
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between">
                             <h6 class="m-0 font-weight-bold text-primary">Daftar Iuran Otomatis</h6>
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#modalTambahIuran">
-                                <i class="fas fa-plus"></i> Tambah
-                            </button>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive table-container">

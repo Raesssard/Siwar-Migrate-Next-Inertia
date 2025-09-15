@@ -116,30 +116,31 @@
 
     <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
-            <i class="fas fa-paper-plane"></i>
-            <span>Pengaduan</span>
+            <i class="fas fa-comment-dots"></i>
+            <span>Pengaduan Warga</span>
         </a>
     </li>
 
-    <li class="nav-item {{ Request::is('rw/pengumuman') || Request::is('rw/pengumuman/*') && !Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
-    <a class="nav-link" href="{{ route('rw.pengumuman.index') }}">
-        <i class="fas fa-bullhorn"></i>
-        <span>Pengumuman RW</span>
-    </a>
-</li>
+    <li
+        class="nav-item {{ Request::is('rw/pengumuman') || (Request::is('rw/pengumuman/*') && !Request::is('rw/pengumuman-rt*')) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('rw.pengumuman.index') }}">
+            <i class="fas fa-bullhorn"></i>
+            <span>Pengumuman RW</span>
+        </a>
+    </li>
 
-<li class="nav-item {{ Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
-    <a class="nav-link" href="{{ route('rw.pengumuman-rt.index') }}">
-        <i class="fas fa-bullhorn"></i>
-        <span>Pengumuman RT</span>
-    </a>
-</li>
-<li class="nav-item {{ Request::is('rw/iuran*') ? 'active' : '' }}">
-    <a class="nav-link" href="{{ route('rw.iuran.index') }}">
-        <i class="fas fa-coins"></i>
-        <span>Iuran</span>
-    </a>
-</li>
+    <li class="nav-item {{ Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('rw.pengumuman-rt.index') }}">
+            <i class="fas fa-bullhorn"></i>
+            <span>Pengumuman RT</span>
+        </a>
+    </li>
+    <li class="nav-item {{ Request::is('rw/iuran*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('rw.iuran.index') }}">
+            <i class="fas fa-coins"></i>
+            <span>Iuran</span>
+        </a>
+    </li>
     <li class="nav-item {{ Request::is('rw/tagihan*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('rw.tagihan.index') }}">
             <i class="fas fa-dollar-sign"></i>
@@ -152,7 +153,7 @@
             <span>Transaksi</span>
         </a>
     </li>
-        <hr class="sidebar-divider d-none d-md-block">
+    <hr class="sidebar-divider d-none d-md-block">
 
     <div class="text-center">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>

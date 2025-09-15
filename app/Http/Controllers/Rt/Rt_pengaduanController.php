@@ -11,29 +11,50 @@ class Rt_PengaduanController extends Controller
 {
     public function index(Request $request)
     {
-        $title = 'Daftar Pengaduan Warga';
 
-        $nik = Auth::user()->nik;
-        $total_pengaduan = Pengaduan::where('nik_warga', $nik)->count();
+        $title = ' Daftar Pengaduan Warga';
+        $user = Auth::user();
 
-        $pengaduan = Pengaduan::with('warga')
-            ->when($request->filled('search'), function ($q) use ($request) {
-                $search = $request->input('search');
-                $q->where('judul', 'like', "%$search%")
-                  ->orWhereHas('warga', function ($sub) use ($search) {
-                      $sub->where('nama', 'like', "%$search%");
-                  });
-            })
-            ->orderBy('updated_at', 'desc')
+        $pengaduan_rt = $user->rukunTetangga->rt;
+
+        $pengaduan_rt_saya = Pengaduan::WhereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($pengaduan_rt) {
+            $aduan->where('rt', $pengaduan_rt);
+        });
+
+        if ($request->filled('search')) {
+            $hasil = $request->input('search');
+            $pengaduan_rt_saya->where(function ($item) use ($hasil) {
+                $item->where('judul', 'like', "%$hasil%");
+            });
+        }
+
+        $rt_pengaduan = $pengaduan_rt_saya->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('rt.pengaduan.pengaduan', compact('title', 'pengaduan', 'total_pengaduan'));
+        $total_pengaduan_rt = $rt_pengaduan->count();
+
+        return view('rt.pengaduan.pengaduan', compact('title', 'rt_pengaduan', 'total_pengaduan_rt'));
+      
     }
 
     public function show($id)
     {
+
+        $rt_user = Auth::user()->rukunTetangga->rt;
+
+        $pengaduan_rw_saya = Pengaduan::whereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($rt_user) {
+            $aduan->where('rt', $rt_user);
+        })->findOrFail($id);
+
+        if ($pengaduan_rw_saya->status === 'belum') {
+            $pengaduan_rw_saya->update([
+                'status' => 'sudah'
+            ]);
+        }
+
         $title = 'Detail Pengaduan';
         $pengaduan = Pengaduan::with('warga')->findOrFail($id);
+
 
         return view('rt.pengaduan.komponen.detail_pengaduan', compact('title', 'pengaduan'));
     }

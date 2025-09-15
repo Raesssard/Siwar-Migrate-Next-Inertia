@@ -168,11 +168,14 @@
 </head>
 
 @php
+    use Illuminate\Support\Facades\Auth;
+
     function isActive($pattern, $output = 'active')
     {
         return Request::is($pattern) ? $output : '';
     }
 
+    $nomor_rw = Auth::user()->rw->nomor_rw;
 @endphp
 
 <body id="page-top">
@@ -217,7 +220,7 @@
 
                             <li class="nav-item {{ Request::is('rw/warga*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rw.warga.index') }}">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-id-card"></i>
                                     <span>Manajemen Warga</span>
                                 </a>
                             </li>
@@ -226,6 +229,12 @@
                                 <a class="nav-link" href="{{ route('rw.kartu_keluarga.index') }}">
                                     <i class="fas fa-users "></i>
                                     <span>Kartu Keluarga</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
+                                    <i class="fas fa-comment-dots"></i>
+                                    <span>Pengaduan Warga</span>
                                 </a>
                             </li>
                             <li
@@ -248,25 +257,18 @@
                                     <span>Iuran</span>
                                 </a>
                             </li>
+
                             <li class="nav-item {{ Request::is('rw/tagihan*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rw.tagihan.index') }}">
-                                    <i class="fas fa-file-invoice-dollar"></i>
+                                    <i class="fas fa-dollar-sign"></i>
                                     <span>Tagihan</span>
-                                </a>
-                            </li>
+
                             <li class="nav-item {{ Request::is('rw/transaksi*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rw.transaksi.index') }}">
                                     <i class="fas fa-money-bill-wave"></i>
-                                    <span>transaksi</span>
+                                    <span>Transaksi</span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
-                                    <i class="fas fa-paper-plane"></i>
-                                    <span>Lihat Pengaduan</span>
-                                </a>
-                            </li>
-
                             <hr class="sidebar-divider d-none d-md-block">
 
                             <hr class="sidebar-divider d-none d-md-block">

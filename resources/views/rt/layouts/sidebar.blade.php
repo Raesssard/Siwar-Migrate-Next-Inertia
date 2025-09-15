@@ -101,22 +101,22 @@
         </a>
     </li>
 
-    <li class="nav-item {{ Request::is('rt/pengaduan*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rt.pengaduan.index') }}">
-            <i class="fas fa-comment-dots"></i>
-            <span>Pengaduan Warga</span>
-        </a>
-    </li>
     <li class="nav-item {{ Request::is('rt/pengumuman*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('rt.pengumuman.index') }}">
             <i class="fas fa-comments"></i>
             <span>Pengumuman</span>
         </a>
     </li>
+    <li class="nav-item {{ Request::is('rt/pengaduan*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('rt.pengaduan.index') }}">
+            <i class="fas fa-comment-dots"></i>
+            <span>Pengaduan Warga</span>
+        </a>
+    </li>
     <li class="nav-item {{ Request::is('rt/iuran*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('rt.iuran.index') }}">
             <i class="fas fa-file-invoice-dollar"></i>
-            <span>iuran</span>
+            <span>Iuran</span>
         </a>
     </li>
     <li class="nav-item {{ Request::is('rt/tagihan*') ? 'active' : '' }}">
