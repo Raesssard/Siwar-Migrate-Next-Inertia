@@ -10,10 +10,25 @@
                     aria-label="Tutup"></button>
             </div>
             {{-- Tambahkan enctype="multipart/form-data" pada form --}}
-            <form action="{{ route('warga.pengaduan.update', $item->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('warga.pengaduan.update', $item->id) }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-body modal-body-scroll px-4">
+                    <div class="mb-3">
+                        <label for="level{{ $item->id }}" class="form-label">Tujuan</label>
+                        <select name="level" id="level{{ $item->id }}" required
+                            value="{{ old('level', $item->level) }}"
+                            class="form-control @error('level') is-invalid @enderror">
+                            <option value="" disabled>Pilih Tujuan Pengaduan</option>
+                            <option value="rt" {{ old('level', $item->level) === 'rt' ? 'selected' : '' }}>RT</option>
+                            <option value="rw" {{ old('level', $item->level) === 'rw' ? 'selected' : '' }}>RW</option>
+                        </select>
+                        @error('level')
+                            <div class="invalid-feedback">{{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                     <div class="mb-3">
                         <label for="judul{{ $item->id }}" class="form-label">Judul</label>
                         <input type="text" name="judul" id="judul{{ $item->id }}" required

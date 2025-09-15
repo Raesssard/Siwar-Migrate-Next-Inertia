@@ -22,7 +22,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-                <form action="{{ route('warga.pengaduan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
+                <form action="{{ route('warga.pengaduan.index') }}" method="GET"
+                    class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
@@ -74,7 +75,7 @@
                                                 <th scope="row" class="text-center">
                                                     {{ $loop->iteration }}</th>
                                                 <td class="text-center">
-                                                    @if ($item->status === 'sudah')
+                                                    @if ($item->status === 'sudah' || $item->status === 'selesai')
                                                         {{ \Carbon\Carbon::parse($item->updated_at)->translatedFormat('d F Y H:i') }}
                                                     @else
                                                         {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y H:i') }}
@@ -87,8 +88,10 @@
                                                 <td class="text-center">
                                                     @if ($item->status === 'belum')
                                                         <span class="badge bg-warning">Belum dibaca</span>
+                                                    @elseif ($item->status === 'sudah')
+                                                        <span class="badge bg-primary">Sudah dibaca</span>
                                                     @else
-                                                        <span class="badge bg-success">Sudah dibaca</span>
+                                                        <span class="badge bg-success">Selesai</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center align-item-center">
@@ -99,7 +102,7 @@
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger btn-sm"><i
                                                                 class="fas fa-trash-alt"></i>
-                                                            <!-- Ikon hapus --></button>
+                                                        </button>
                                                     </form>
                                                     <button type="button" class="btn btn-warning btn-sm"
                                                         data-bs-toggle="modal"

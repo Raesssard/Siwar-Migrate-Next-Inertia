@@ -56,11 +56,21 @@
     }
 </style>
 
+@php
+    if ($item->status === 'belum') {
+        $color = 'warning';
+    } elseif ($item->status === 'sudah') {
+        $color = 'primary';
+    } else {
+        $color = 'success';
+    }
+@endphp
+
 <div class="modal fade" id="modalDetailPengaduan{{ $item->id }}" tabindex="-1"
     aria-labelledby="modalDetailPengaduanLabel{{ $item->id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content shadow-lg border-0">
-            <div class="modal-header bg-{{ $item->status === 'sudah' ? 'success' : 'warning' }} text-white">
+            <div class="modal-header bg-{{ $color }} text-white">
                 <h5 class="modal-title mb-0" id="modalDetailPengaduanLabel{{ $item->id }}">
                     Detail Pengaduan
                 </h5>
@@ -68,13 +78,13 @@
                     aria-label="Tutup"></button>
             </div>
             <div class="modal-body px-4 pt-4 pb-3">
-                <h4 class="fw-bold text-{{ $item->status === 'sudah' ? 'success' : 'warning' }} mb-3">
+                <h4 class="fw-bold text-{{ $color }} mb-3">
                     {{ $item->judul }}</h4>
 
                 <ul class="list-unstyled mb-3 small">
                     <li>
                         <strong>Tanggal:</strong>
-                        @if ($item->status === 'sudah')
+                        @if ($item->status === 'sudah' || $item->status === 'selesai')
                             <span
                                 class="ms-1">{{ \Carbon\Carbon::parse($item->updated_at)->isoFormat('dddd, D MMMM Y') }}</span>
                         @else
@@ -91,14 +101,6 @@
                 <hr class="my-2">
 
                 <div class="mb-2">
-                    <div class="mb-2">
-                        <strong>Status:</strong>
-                        @if ($item->status === 'belum')
-                            <span class="badge bg-warning">Belum dibaca</span>
-                        @else
-                            <span class="badge bg-success">Sudah dibaca</span>
-                        @endif
-                    </div>
                     <strong class="d-block mb-1">Isi Pengaduan:</strong>
                     <div class="border rounded bg-light p-3" style="line-height: 1.6;">
                         {{ $item->isi }}
@@ -116,58 +118,64 @@
                                 ({{ $item->original_file_name ?? 'Dokumen' }})
                             </a>
                         </p>
-                        <small class="text-muted">
-                            Dokumen akan dibuka di tab baru.
-                        </small>
                     </div>
                 @endif
                 {{-- Akhir bagian dokumen --}}
                 <div class="file-section">
                     <div class="file-display">
-                        @if ($item->file_path && $item->file_name)
-                            @php
-                                $fileExtension = pathinfo($item->file_path, PATHINFO_EXTENSION);
-                                $isPdf = in_array(strtolower($fileExtension), ['pdf']);
-                                $filePath = asset('storage/' . $item->file_path);
-                                $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
-                            @endphp
+                        {{-- File utama --}}
+                        @if ($item->file_path)
+                            @include('warga.pengaduan.komponen.file_display', [
+                                'filePath' => asset('storage/' . $item->file_path),
+                                'judul' => $item->judul,
+                            ])
+                        @else
+                            <p class="no-file-text">Tidak ada file utama</p>
+                        @endif
 
-                            @if (in_array($extension, ['pdf']))
-                                {{-- Tampilkan PDF --}}
-                                <div class="pdf-thumbnail-container"
-                                    onclick="openDocumentModal('{{ $filePath }}', true)">
-                                    <i class="far fa-file-pdf pdf-icon"></i>
-                                    <p class="pdf-filename">Lihat PDF</p>
-                                </div>
-                            @elseif (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-                                {{-- Tampilkan Gambar --}}
-                                <img src="{{ $filePath }}" alt="Bukti foto {{ $item->judul }}"
-                                    onclick="openDocumentModal('{{ $filePath }}', false)"
-                                    style="max-width:150px;cursor:pointer">
-                            @elseif (in_array($extension, ['mp4', 'mov', 'avi', 'mkv', 'webm']))
-                                {{-- Tampilkan Video --}}
-                                <video controls style="max-width:200px;cursor:pointer">
-                                    <source src="{{ $filePath }}" type="video/{{ $extension }}">
-                                    Browser tidak mendukung video ini.
-                                </video>
-                            @elseif (in_array($extension, ['doc', 'docx']))
-                                {{-- Tampilkan Dokumen Word --}}
-                                <div class="doc-thumbnail-container"
-                                    onclick="window.open('{{ asset('storage/' . $filePath) }}', '_blank')">
-                                    <i class="far fa-file-word text-primary fa-3x"></i>
-                                    <p class="doc-filename">Lihat Dokumen Word</p>
-                                </div>
-                            @else
-                                {{-- File tidak dikenal --}}
-                                <p><i class="fas fa-file"></i> File tidak didukung</p>
-                            @endif
+                        {{-- File bukti kalau selesai --}}
+                    </div>
+                    <div class="d-flex gap-3">
+                        @if ($item->status === 'selesai' && $item->foto_bukti)
+                            <div class="file-display">
+                                @include('warga.pengaduan.komponen.file_display', [
+                                    'filePath' => asset('storage/' . $item->foto_bukti),
+                                    'judul' => 'Bukti Selesai',
+                                ])
 
-                            <div class="view-file-overlay"
-                                onclick="openDocumentModal('{{ $filePath }}', {{ $isPdf ? 'true' : 'false' }})">
-                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="d-block mb-1">
+                                <div class="mt-3">
+                                    <strong>Status:</strong>
+                                    @if ($item->status === 'belum')
+                                        <span class="badge bg-warning">Belum dibaca</span>
+                                    @elseif ($item->status === 'sudah')
+                                        <span class="badge bg-primary">Sudah dibaca</span>
+                                    @else
+                                        <span class="badge bg-success">Selesai</span>
+                                    @endif
+                                </div>
+                                <div class="mt-3">
+                                    <strong class="d-block mb-1">Foto/Video Bukti:</strong>
+                                    <p class="mb-2">
+                                        <a href="{{ Storage::url($item->foto_bukti) }}" target="_blank"
+                                            class="btn btn-sm btn-info text-white">
+                                            <i class="fas fa-file-download me-1"></i> Lihat/Unduh File
+                                        </a>
+                                    </p>
+                                </div>
                             </div>
                         @else
-                            <p class="no-file-text">Tidak ada foto/video</p>
+                            <div class="mt-3">
+                                <strong>Status:</strong>
+                                @if ($item->status === 'belum')
+                                    <span class="badge bg-warning">Belum dibaca</span>
+                                @elseif ($item->status === 'sudah')
+                                    <span class="badge bg-primary">Sudah dibaca</span>
+                                @else
+                                    <span class="badge bg-success">Selesai</span>
+                                @endif
+                            </div>
                         @endif
                     </div>
                 </div>

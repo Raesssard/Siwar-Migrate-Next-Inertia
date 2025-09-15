@@ -11,13 +11,14 @@ class Rt_PengaduanController extends Controller
 {
     public function index(Request $request)
     {
+
         $title = ' Daftar Pengaduan Warga';
         $user = Auth::user();
 
         $pengaduan_rt = $user->rukunTetangga->rt;
 
         $pengaduan_rt_saya = Pengaduan::WhereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($pengaduan_rt) {
-            $aduan->where('rt', $pengaduan_rt);
+            $aduan->where('level', 'rt')->where('rt', $pengaduan_rt);
         });
 
         if ($request->filled('search')) {
@@ -35,12 +36,13 @@ class Rt_PengaduanController extends Controller
         return view('rt.pengaduan.pengaduan', compact('title', 'rt_pengaduan', 'total_pengaduan_rt'));
     }
 
-    public function baca($id)
+    public function show(Request $request, $id)
     {
+
         $rt_user = Auth::user()->rukunTetangga->rt;
 
         $pengaduan_rw_saya = Pengaduan::whereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($rt_user) {
-            $aduan->where('rt', $rt_user);
+            $aduan->where('level', 'rt')->where('rt', $rt_user);
         })->findOrFail($id);
 
         if ($pengaduan_rw_saya->status === 'belum') {
@@ -49,6 +51,45 @@ class Rt_PengaduanController extends Controller
             ]);
         }
 
-        return response()->json(['success' => true]);
+        if ($request->boolean('selesai')) {
+            $request->validate([
+                'file' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480',
+            ]);
+
+            $filePath = null;
+            $fileName = null;
+
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('bukti_selesai', $fileName, 'public');
+            }
+
+            $dataUpdate = [
+                'status' => 'selesai',
+                'foto_bukti' => $filePath,
+            ];
+
+            $pengaduan_rw_saya->update($dataUpdate);
+        }
+
+        return back()->with('success', 'Pengaduan telah selesai.');
+
+        // NOTE:
+        // gk perlu return detail_pengaduannya soalnya pake modal
+        // function baca/show cuma buat ngubah status 
+        // doang bukan buat buka detail, kan detail itu modal 
+        // jadi bakal ngabuka sesuai id si modalnya, gk perlu function dari controller.
+        // kan di elementnya itu ada data-bs-toggle sama data-bs-target, 
+        // nah data-bs-target itu id si modal, modalnnya juga 
+        // udah dimasukkin di @include('rt.pengaduan.komponen.detail_pengaduan'), 
+        // jadi gk usah di return lagi di functionnya. 👍👍👍
+
+
+        // $title = 'Detail Pengaduan';
+        // $pengaduan = Pengaduan::with('warga')->findOrFail($id);
+
+
+        // return view('rt.pengaduan.komponen.detail_pengaduan', compact('title', 'pengaduan'));
     }
 }

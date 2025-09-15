@@ -16,7 +16,9 @@ class Pengaduan extends Model
         'isi',
         'file_path',
         'file_name',
+        'foto_bukti',
         'status',
+        'level',
         'created_at',
         'updated_at',
     ];

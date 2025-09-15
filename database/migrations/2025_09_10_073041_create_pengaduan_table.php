@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('isi');
             $table->string('file_path')->nullable();
             $table->string('file_name')->nullable();
-            $table->enum('status', ['belum', 'sudah']);
+            $table->string('foto_bukti')->nullable();
+            $table->enum('status', ['belum', 'sudah', 'selesai']);
+            $table->enum('level', ['rt', 'rw']);
             $table->timestamps();
 
             $table->foreign('nik_warga')->references('nik')->on('warga')->onDelete('no action');

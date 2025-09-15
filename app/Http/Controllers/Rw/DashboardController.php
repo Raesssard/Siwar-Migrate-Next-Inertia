@@ -26,7 +26,7 @@ class DashboardController extends Controller
         $pengaduan_rw = $user->rw->nomor_rw;
 
         $pengaduan_rw_saya = Pengaduan::WhereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($pengaduan_rw) {
-            $aduan->where('rt', $pengaduan_rw);
+            $aduan->where('level', 'rw')->where('rt', $pengaduan_rw);
         })->count();
 
         $jumlah_warga = Warga::count();
@@ -67,7 +67,7 @@ class DashboardController extends Controller
         $jumlah_warga_pendatang = Warga::where('status_warga', 'pendatang')->count();
 
         $nik = Auth::user()->nik;
-        $pengaduan = Pengaduan::count(); // kalau semua pengaduan
+        $pengaduan = $pengaduan_rw_saya; // kalau semua pengaduan
 
 
         return view('rw.dashboard.dashboard', compact(
