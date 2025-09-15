@@ -47,7 +47,7 @@
                             @foreach ($kartuKeluargaForFilter as $item)
                                 <option value="{{ $item->no_kk }}"
                                     {{ request('no_kk_filter') == $item->no_kk ? 'selected' : '' }}>
-                                    KK {{ $item->no_kk }}
+                                    {{ $item->no_kk }}
                                 </option>
                             @endforeach
                         </select>
