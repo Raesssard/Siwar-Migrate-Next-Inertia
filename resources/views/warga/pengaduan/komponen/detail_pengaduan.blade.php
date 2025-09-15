@@ -60,7 +60,7 @@
     aria-labelledby="modalDetailPengaduanLabel{{ $item->id }}" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content shadow-lg border-0">
-            <div class="modal-header bg-{{$item->status === 'sudah' ? 'success' : 'warning'}} text-white">
+            <div class="modal-header bg-{{ $item->status === 'sudah' ? 'success' : 'warning' }} text-white">
                 <h5 class="modal-title mb-0" id="modalDetailPengaduanLabel{{ $item->id }}">
                     Detail Pengaduan
                 </h5>
@@ -68,7 +68,8 @@
                     aria-label="Tutup"></button>
             </div>
             <div class="modal-body px-4 pt-4 pb-3">
-                <h4 class="fw-bold text-{{$item->status === 'sudah' ? 'success' : 'warning'}} mb-3">{{ $item->judul }}</h4>
+                <h4 class="fw-bold text-{{ $item->status === 'sudah' ? 'success' : 'warning' }} mb-3">
+                    {{ $item->judul }}</h4>
 
                 <ul class="list-unstyled mb-3 small">
                     <li>
@@ -82,19 +83,15 @@
                         @endif
                     </li>
                     <li>
-                        <strong>RT/RW:</strong>
-                        {{ $item->warga->kartuKeluarga->rukunTetangga->rt ?? '-' }}/{{ $item->warga->kartuKeluarga->rw->nomor_rw ?? '-' }}
+                        <strong>RT {{ $item->warga->kartuKeluarga->rukunTetangga->rt ?? '-' }}/RW
+                            {{ $item->warga->kartuKeluarga->rw->nomor_rw ?? '-' }}</strong>
                     </li>
                 </ul>
 
                 <hr class="my-2">
 
                 <div class="mb-2">
-                    <strong class="d-block mb-1">Isi Pengaduan:</strong>
-                    <div class="border rounded bg-light p-3" style="line-height: 1.6;">
-                        {{ $item->isi }}
-                    </div>
-                    <div class="mt-2">
+                    <div class="mb-2">
                         <strong>Status:</strong>
                         @if ($item->status === 'belum')
                             <span class="badge bg-warning">Belum dibaca</span>
@@ -102,24 +99,28 @@
                             <span class="badge bg-success">Sudah dibaca</span>
                         @endif
                     </div>
+                    <strong class="d-block mb-1">Isi Pengaduan:</strong>
+                    <div class="border rounded bg-light p-3" style="line-height: 1.6;">
+                        {{ $item->isi }}
+                    </div>
                 </div>
 
                 {{-- Tambahkan bagian ini untuk menampilkan dokumen --}}
-                {{-- @if ($item->file_path)
+                @if ($item->file_path)
                     <div class="mb-3">
-                        <strong class="d-block mb-1">Dokumen Terlampir:</strong>
+                        <strong class="d-block mb-1">Foto/Video:</strong>
                         <p class="mb-2">
-                            <a href="{{ Storage::url($item->dokumen_path) }}" target="_blank"
+                            <a href="{{ Storage::url($item->file_path) }}" target="_blank"
                                 class="btn btn-sm btn-info text-white">
-                                <i class="fas fa-file-download me-1"></i> Unduh Dokumen
-                                ({{ $item->dokumen_name ?? 'Dokumen' }})
+                                <i class="fas fa-file-download me-1"></i> Lihat/Unduh File
+                                ({{ $item->file_name ?? 'Dokumen' }})
                             </a>
                         </p>
                         <small class="text-muted">
                             Dokumen akan dibuka di tab baru.
                         </small>
                     </div>
-                @endif --}}
+                @endif
                 {{-- Akhir bagian dokumen --}}
                 <div class="file-section">
                     <div class="file-display">

@@ -127,6 +127,12 @@
         <span>Pengumuman RT</span>
     </a>
 </li>
+<li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
+        <i class="fas fa-comment-dots"></i>
+        <span>Pengaduan Warga</span>
+    </a>
+</li>
 <li class="nav-item {{ Request::is('rw/iuran*') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('rw.iuran.index') }}">
         <i class="fas fa-coins"></i>

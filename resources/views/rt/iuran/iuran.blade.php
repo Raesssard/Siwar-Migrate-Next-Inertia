@@ -124,10 +124,6 @@
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between">
                             <h6 class="m-0 font-weight-bold text-primary">Daftar Iuran Otomatis</h6>
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#modalTambahIuran">
-                                <i class="fas fa-plus"></i> Tambah
-                            </button>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive table-container">

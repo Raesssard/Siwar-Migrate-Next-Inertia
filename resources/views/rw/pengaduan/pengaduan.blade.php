@@ -1,10 +1,10 @@
-@extends('rt.layouts.app')
+@extends('rw.layouts.app')
 
 @section('title', $title)
 
 @section('content')
     <div id="content">
-        @include('rt.layouts.topbar')
+        @include('rw.layouts.topbar')
         <div class="container-fluid">
             <div class="row">
                 @if (session('success'))
@@ -22,7 +22,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-                <form action="{{ route('rt.pengaduan.index') }}" method="GET"
+                <form action="{{ route('rw.pengaduan.index') }}" method="GET"
                     class="row g-2 align-items-center px-3 pb-2">
                     <div class="col-md-5 col-sm-12">
                         <div class="input-group input-group-sm">
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 d-flex gap-2">
-                        <a href="{{ route('rt.pengaduan.index') }}" class="btn btn-secondary btn-sm">Reset Pencarian</a>
+                        <a href="{{ route('rw.pengaduan.index') }}" class="btn btn-secondary btn-sm">Reset Pencarian</a>
                     </div>
                 </form>
                 <div class="col-xl-12 col-lg-7">
@@ -65,7 +65,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($rt_pengaduan as $item)
+                                        @forelse ($rw_pengaduan as $item)
                                             <tr>
                                                 <th scope="row" class="text-center">
                                                     {{ $loop->iteration }}</th>
@@ -86,7 +86,7 @@
                                                     </button>
                                                 </td>
                                             </tr>
-                                            @include('rt.pengaduan.komponen.detail_pengaduan')
+                                            @include('rw.pengaduan.komponen.detail_pengaduan')
                                         @empty
                                             <tr>
                                                 <td colspan="7" class="text-center">Tidak ada pengaduan</td>
@@ -99,13 +99,13 @@
 
                             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
                                 <div class="text-muted mb-2">
-                                    Menampilkan {{ $rt_pengaduan->firstItem() ?? '0' }}-{{ $rt_pengaduan->lastItem() }}
+                                    Menampilkan {{ $rw_pengaduan->firstItem() ?? '0' }}-{{ $rw_pengaduan->lastItem() }}
                                     dari total
-                                    {{ $rt_pengaduan->total() }} data
+                                    {{ $rw_pengaduan->total() }} data
                                 </div>
 
                                 <div>
-                                    {{ $rt_pengaduan->links('pagination::bootstrap-5') }}
+                                    {{ $rw_pengaduan->links('pagination::bootstrap-5') }}
                                 </div>
                             </div>
                         </div>
@@ -116,7 +116,7 @@
     </div>
     <script>
         function markAsRead(id) {
-            fetch("{{ url('/rt/pengaduan') }}/" + id + "/baca", {
+            fetch("{{ url('/rw/pengaduan') }}/" + id + "/baca", {
                     method: "PATCH",
                     headers: {
                         "X-CSRF-TOKEN": "{{ csrf_token() }}",

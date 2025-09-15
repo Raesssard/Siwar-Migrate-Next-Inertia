@@ -202,17 +202,17 @@
                             </li>
 
                             {{-- ... semua item lainnya tetap seperti sebelumnya ... --}}
-                            <li class="nav-item {{ Request::is('warga/pengaduan*') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('warga.pengaduan.index') }}">
-                                    <i class="fas fa-paper-plane"></i>
-                                    <span>Lihat Pengaduan</span>
-                                </a>
-                            </li>
 
                             <li class="nav-item {{ Request::is('warga/pengumuman*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('warga.pengumuman') }}">
                                     <i class="fas fa-bullhorn"></i>
                                     <span>Pengumuman</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('warga/pengaduan*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('warga.pengaduan.index') }}">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Pengaduan</span>
                                 </a>
                             </li>
 

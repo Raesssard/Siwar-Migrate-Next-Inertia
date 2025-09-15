@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Rw;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kartu_keluarga;
+use App\Models\Pengaduan;
 use App\Models\Pengumuman;
 use App\Models\Rukun_tetangga;
 use App\Models\Tagihan;
@@ -20,6 +21,13 @@ class DashboardController extends Controller
     {
         $id_rw = Auth::user()->id_rw;
         $id_rt = Auth::user()->id_rt;
+        $user = Auth::user();
+
+        $pengaduan_rw = $user->rw->nomor_rw;
+
+        $pengaduan_rw_saya = Pengaduan::WhereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($pengaduan_rw) {
+            $aduan->where('rt', $pengaduan_rw);
+        })->count();
 
         $jumlah_warga = Warga::count();
         $jumlah_kk = Kartu_keluarga::count();
@@ -70,6 +78,7 @@ class DashboardController extends Controller
             'total_pemasukan',
             'total_pengeluaran',
             'total_saldo_akhir',
+            'pengaduan_rw_saya',
             'total_iuran_bulan_ini'
         ));
     }

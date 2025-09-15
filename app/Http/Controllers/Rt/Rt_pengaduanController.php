@@ -32,7 +32,7 @@ class Rt_pengaduanController extends Controller
 
         $total_pengaduan_rt = $rt_pengaduan->count();
 
-        return view('rt.pengaduan.pengaduan', compact('title', 'rt_pengaduan',));
+        return view('rt.pengaduan.pengaduan', compact('title', 'rt_pengaduan', 'total_pengaduan_rt'));
     }
 
     public function baca($id)
@@ -43,7 +43,9 @@ class Rt_pengaduanController extends Controller
             $q->where('rt', $rt_user);
         })->where('id', $id)->firstOrFail();
 
-        $pengaduan->update(['status' => 'sudah']);
+        if ($pengaduan->status === 'belum') {
+            $pengaduan->update(['status' => 'sudah']);
+        }
 
         return response()->json(['success' => true]);
     }

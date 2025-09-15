@@ -20,6 +20,7 @@ use App\Http\Controllers\Rw\{
     Kartu_keluargaController,
     Kategori_golonganController,
     LaporanController,
+    PengaduanRwController,
     PengeluaranController,
     TransaksiController,
     PengumumanController,
@@ -68,6 +69,10 @@ Route::prefix('rw')->as('rw.')->middleware(['auth', 'role:rw'])->group(function 
     Route::resource('kategori_golongan', Kategori_golonganController::class);
     Route::resource('pengeluaran', PengeluaranController::class);
     Route::resource('transaksi', TransaksiController::class);
+    Route::resource('pengaduan', PengaduanRwController::class);
+
+    Route::patch('pengaduan/{id}/baca', [PengaduanRwController::class, 'baca'])
+        ->name('pengaduan.baca');
 
     // Export & laporan
     Route::get('laporan_pengeluaran_bulanan/{bulan}/{tahun}', [LaporanController::class, 'pengeluaran_bulanan'])->name('laporan.pengeluaran_bulanan');
