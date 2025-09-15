@@ -11,7 +11,6 @@ class Rt_PengaduanController extends Controller
 {
     public function index(Request $request)
     {
-
         $title = ' Daftar Pengaduan Warga';
         $user = Auth::user();
 
@@ -34,12 +33,10 @@ class Rt_PengaduanController extends Controller
         $total_pengaduan_rt = $rt_pengaduan->count();
 
         return view('rt.pengaduan.pengaduan', compact('title', 'rt_pengaduan', 'total_pengaduan_rt'));
-      
     }
 
-    public function show($id)
+    public function baca($id)
     {
-
         $rt_user = Auth::user()->rukunTetangga->rt;
 
         $pengaduan_rw_saya = Pengaduan::whereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($rt_user) {
@@ -52,10 +49,6 @@ class Rt_PengaduanController extends Controller
             ]);
         }
 
-        $title = 'Detail Pengaduan';
-        $pengaduan = Pengaduan::with('warga')->findOrFail($id);
-
-
-        return view('rt.pengaduan.komponen.detail_pengaduan', compact('title', 'pengaduan'));
+        return response()->json(['success' => true]);
     }
 }
