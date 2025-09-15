@@ -76,11 +76,7 @@
                                                     {{ \Illuminate\Support\Str::limit($item->isi, 50, '...') }}
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($item->status === 'sudah')
-                                                        {{ \Carbon\Carbon::parse($item->updated_at)->translatedFormat('d F Y H:i') }}
-                                                    @else
-                                                        {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y H:i') }}
-                                                    @endif
+                                                    {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y H:i') }}
                                                 </td>
                                                 <td class="text-center align-item-center">
                                                     <button type="button" class="btn btn-success btn-sm"
