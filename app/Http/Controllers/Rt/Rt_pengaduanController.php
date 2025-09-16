@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Rt;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengaduan;
+use App\Models\PengaduanKomentar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,19 +42,30 @@ class Rt_PengaduanController extends Controller
 
         $rt_user = Auth::user()->rukunTetangga->rt;
 
-        $pengaduan_rw_saya = Pengaduan::whereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($rt_user) {
+        $pengaduan_rt_saya = Pengaduan::whereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($rt_user) {
             $aduan->where('level', 'rt')->where('rt', $rt_user);
         })->findOrFail($id);
 
-        if ($pengaduan_rw_saya->status === 'belum') {
-            $pengaduan_rw_saya->update([
+        if (
+            $pengaduan_rt_saya->status === 'belum' &&
+            $pengaduan_rt_saya->status !== 'sudah' &&
+            $pengaduan_rt_saya->status !== 'selesai'
+        ) {
+            $pengaduan_rt_saya->update([
                 'status' => 'sudah'
+            ]);
+
+            PengaduanKomentar::create([
+                'pengaduan_id' => $pengaduan_rt_saya->id,
+                'user_id' => Auth::id(),
+                'isi_komentar' => 'Sudah diteruskan ke RW untuk ditindaklanjuti',
             ]);
         }
 
         if ($request->boolean('selesai')) {
             $request->validate([
                 'file' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480',
+                'komentar' => 'required',
             ]);
 
             $filePath = null;
@@ -70,7 +82,13 @@ class Rt_PengaduanController extends Controller
                 'foto_bukti' => $filePath,
             ];
 
-            $pengaduan_rw_saya->update($dataUpdate);
+            PengaduanKomentar::create([
+                'pengaduan_id' => $pengaduan_rt_saya->id,
+                'user_id' => Auth::id(),
+                'isi_komentar' => $request->input('komentar'),
+            ]);
+
+            $pengaduan_rt_saya->update($dataUpdate);
         }
 
         return back()->with('success', 'Pengaduan telah selesai.');

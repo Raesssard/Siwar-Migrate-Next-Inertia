@@ -41,10 +41,6 @@
         cursor: pointer;
     }
 
-    .file-display:hover .view-file-overlay {
-        opacity: 1;
-    }
-
     .file-display .view-file-overlay i {
         color: white;
         font-size: 2rem;
@@ -53,6 +49,14 @@
     .no-file-text {
         color: #6c757d;
         font-style: italic;
+    }
+
+    .video-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        /* jangan crop, tetap proporsional */
+        border-radius: 5px;
     }
 </style>
 
@@ -130,19 +134,17 @@
 
                             @if (in_array($extension, ['pdf']))
                                 {{-- Tampilkan PDF --}}
-                                <div class="pdf-thumbnail-container"
-                                    onclick="openDocumentModal('{{ $filePath }}', true)">
+                                <div class="pdf-thumbnail-container">
                                     <i class="far fa-file-pdf pdf-icon"></i>
                                     <p class="pdf-filename">Lihat PDF</p>
                                 </div>
                             @elseif (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
                                 {{-- Tampilkan Gambar --}}
                                 <img src="{{ $filePath }}" alt="Bukti foto {{ $item->judul }}"
-                                    onclick="openDocumentModal('{{ $filePath }}', false)"
-                                    style="max-width:150px;cursor:pointer">
+                                    style="max-width:150px;">
                             @elseif (in_array($extension, ['mp4', 'mov', 'avi', 'mkv', 'webm']))
                                 {{-- Tampilkan Video --}}
-                                <video controls style="max-width:200px;cursor:pointer">
+                                <video controls class="video-preview">
                                     <source src="{{ $filePath }}" type="video/{{ $extension }}">
                                     Browser tidak mendukung video ini.
                                 </video>
@@ -157,16 +159,11 @@
                                 {{-- File tidak dikenal --}}
                                 <p><i class="fas fa-file"></i> File tidak didukung</p>
                             @endif
-
-                            <div class="view-file-overlay"
-                                onclick="openDocumentModal('{{ $filePath }}', {{ $isPdf ? 'true' : 'false' }})">
-                                <i class="fas fa-eye"></i>
-                            </div>
                         @else
                             <p class="no-file-text">Tidak ada foto/video</p>
                         @endif
                     </div>
-                    @if ($item->foto_bukti)
+                    @if ($item->status === 'selesai' && $item->foto_bukti)
                         <div class="d-flex gap-3 mt-3">
                             <div class="file-display mt-3">
                                 @php
@@ -178,19 +175,17 @@
 
                                 @if (in_array($extension, ['pdf']))
                                     {{-- Tampilkan PDF --}}
-                                    <div class="pdf-thumbnail-container"
-                                        onclick="openDocumentModal('{{ $filePath }}', true)">
+                                    <div class="pdf-thumbnail-container">
                                         <i class="far fa-file-pdf pdf-icon"></i>
                                         <p class="pdf-filename">Lihat PDF</p>
                                     </div>
                                 @elseif (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
                                     {{-- Tampilkan Gambar --}}
                                     <img src="{{ $filePath }}" alt="Bukti foto {{ $item->judul }}"
-                                        onclick="openDocumentModal('{{ $filePath }}', false)"
-                                        style="max-width:150px;cursor:pointer">
+                                        style="max-width:150px;">
                                 @elseif (in_array($extension, ['mp4', 'mov', 'avi', 'mkv', 'webm']))
                                     {{-- Tampilkan Video --}}
-                                    <video controls style="max-width:200px;cursor:pointer">
+                                    <video controls class="video-preview">
                                         <source src="{{ $filePath }}" type="video/{{ $extension }}">
                                         Browser tidak mendukung video ini.
                                     </video>
@@ -205,31 +200,49 @@
                                     {{-- File tidak dikenal --}}
                                     <p><i class="fas fa-file"></i> File tidak didukung</p>
                                 @endif
-
-                                <div class="view-file-overlay"
-                                    onclick="openDocumentModal('{{ $filePath }}', {{ $isPdf ? 'true' : 'false' }})">
-                                    <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="d-block mb-1">
+                                <div class="mt-3">
+                                    <strong>Status:</strong>
+                                    @if ($item->status === 'belum')
+                                        <span class="badge bg-warning">Belum dibaca</span>
+                                    @elseif ($item->status === 'sudah')
+                                        <span class="badge bg-primary">Sudah dibaca</span>
+                                    @else
+                                        <span class="badge bg-success">Selesai</span>
+                                    @endif
+                                </div>
+                                <div class="mt-3">
+                                    <a href="{{ Storage::url($item->foto_bukti) }}" target="_blank"
+                                        class="btn btn-sm btn-info text-white">
+                                        @if ($item->foto_bukti && Str::endsWith(strtolower($item->foto_bukti), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                                            <i class="fas fa-image me-1"></i>
+                                            Bukti foto
+                                        @elseif($item->foto_bukti && Str::endsWith(strtolower($item->foto_bukti), ['mp4', 'mov', 'avi', 'mkv', 'webm']))
+                                            <i class="fas fa-video me-1"></i>
+                                            Bukti video
+                                        @elseif($item->foto_bukti && Str::endsWith(strtolower($item->foto_bukti), ['doc', 'docx', 'pdf', 'pptx', 'xlsx']))
+                                            <i class="fas fa-file-alt me-1"></i>
+                                            Bukti dokumen
+                                        @else
+                                            File tidak ada/diketahui
+                                        @endif
+                                    </a>
                                 </div>
                             </div>
-                            <div class="mt-3">
-                                <a href="{{ Storage::url($item->file_path) }}" target="_blank"
-                                    class="btn btn-sm btn-info text-white">
-                                    @if ($item->foto_bukti && Str::endsWith(strtolower($item->foto_bukti), ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-                                        <i class="fas fa-image me-1"></i>
-                                        Bukti foto
-                                    @elseif($item->foto_bukti && Str::endsWith(strtolower($item->foto_bukti), ['mp4', 'mov', 'avi', 'mkv', 'webm']))
-                                        <i class="fas fa-video me-1"></i>
-                                        Bukti video
-                                    @elseif($item->foto_bukti && Str::endsWith(strtolower($item->foto_bukti), ['doc', 'docx', 'pdf', 'pptx', 'xlsx']))
-                                        <i class="fas fa-file-alt me-1"></i>
-                                        Bukti dokumen
-                                    @else
-                                        File tidak ada/diketahui
-                                    @endif
-                                </a>
-                            </div>
                         </div>
-                    @else
+                    @elseif ($item->status === 'selesai' && !$item->foto_bukti)
+                        <div class="mt-3">
+                            <strong>Status:</strong>
+                            @if ($item->status === 'belum')
+                                <span class="badge bg-warning">Belum dibaca</span>
+                            @elseif ($item->status === 'sudah')
+                                <span class="badge bg-primary">Sudah dibaca</span>
+                            @else
+                                <span class="badge bg-success">Selesai</span>
+                            @endif
+                        </div>
+                    @elseif ($item->status !== 'selesai')
                         <form action="{{ route('rt.pengaduan.baca', $item->id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
@@ -250,10 +263,15 @@
                                 @error('file')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                            </div>
-                            <div class="modal-footer sticky-footer mt-3">
-                                <button type="submit" class="btn btn-{{ $color }}">Simpan
-                                    Perubahan</button>
+                                <textarea name="komentar" class="form-control mt-3" rows="2" placeholder="Tambahkan komentar..." required></textarea>
+                                <small class="form-text text-muted">
+                                    Kosongkan jika tidak perlu menambahkan komentar.
+                                </small>
+                                <div class="modal-footer d-flex justify-content-end mt-3">
+                                    <button type="submit" class="btn btn-{{ $color }}">
+                                        Simpan
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     @endif
@@ -269,7 +287,11 @@
 
         if (!selesaiCheckbox || !buktiSelesai) return;
 
-        buktiSelesai.style.display = selesaiCheckbox.checked ? 'block' : 'none';
+        if (selesaiCheckbox.checked) {
+            buktiSelesai.style.display = 'block';
+        } else {
+            buktiSelesai.style.display = 'none';
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {

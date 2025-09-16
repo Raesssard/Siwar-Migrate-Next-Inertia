@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Rw;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengaduan;
+use App\Models\PengaduanKomentar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +19,7 @@ class PengaduanRwController extends Controller
         $pengaduan_rw = $user->rw->nomor_rw;
 
         $pengaduan_rw_saya = Pengaduan::WhereHas('warga.kartuKeluarga.rw', function ($aduan) use ($pengaduan_rw) {
-            $aduan->where('level', 'rw')->where('nomor_rw', $pengaduan_rw);
+            $aduan->where('nomor_rw', $pengaduan_rw);
         });
 
         if ($request->filled('search')) {
@@ -42,18 +43,29 @@ class PengaduanRwController extends Controller
         $rw_user = Auth::user()->rw->nomor_rw;
 
         $pengaduan_rw_saya = Pengaduan::whereHas('warga.kartuKeluarga.rw', function ($aduan) use ($rw_user) {
-            $aduan->where('level', 'rw')->where('nomor_rw', $rw_user);
+            $aduan->where('nomor_rw', $rw_user);
         })->findOrFail($id);
 
-        if ($pengaduan_rw_saya->status === 'belum') {
+        if (
+            $pengaduan_rw_saya->status === 'belum' &&
+            $pengaduan_rw_saya->status !== 'sudah' &&
+            $pengaduan_rw_saya->status !== 'selesai'
+        ) {
             $pengaduan_rw_saya->update([
                 'status' => 'sudah'
+            ]);
+
+            PengaduanKomentar::create([
+                'pengaduan_id' => $pengaduan_rw_saya->id,
+                'user_id' => Auth::id(),
+                'isi_komentar' => 'Terimakasih, akan kami tindaklanjuti pengaduan tentang ' . $pengaduan_rw_saya->judul,
             ]);
         }
 
         if ($request->boolean('selesai')) {
             $request->validate([
                 'file' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480',
+                'komentar' => 'required',
             ]);
 
             $filePath = null;
@@ -69,6 +81,12 @@ class PengaduanRwController extends Controller
                 'status' => 'selesai',
                 'foto_bukti' => $filePath,
             ];
+
+            PengaduanKomentar::create([
+                'pengaduan_id' => $pengaduan_rw_saya->id,
+                'user_id' => Auth::id(),
+                'isi_komentar' => $request->input('komentar'),
+            ]);
 
             $pengaduan_rw_saya->update($dataUpdate);
         }

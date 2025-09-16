@@ -54,6 +54,14 @@
         color: #6c757d;
         font-style: italic;
     }
+
+    .video-preview {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        /* jangan crop, tetap proporsional */
+        border-radius: 5px;
+    }
 </style>
 
 @php
@@ -177,6 +185,20 @@
                                 @endif
                             </div>
                         @endif
+                    </div>
+                    <hr class="mt-3 mb-3">
+                    <h6>Komentar:</h6>
+                    <div class="mt-2">
+                        @forelse($item->komentar as $komen)
+                            <div class="border rounded p-2 mb-2 bg-light">
+                                <small class="text-muted">
+                                    {{ $komen->user->nama }} • {{ $komen->created_at->diffForHumans() }}
+                                </small>
+                                <p class="mb-0">{{ $komen->isi_komentar }}</p>
+                            </div>
+                        @empty
+                            <p class="text-muted">Belum ada komentar.</p>
+                        @endforelse
                     </div>
                 </div>
             </div>

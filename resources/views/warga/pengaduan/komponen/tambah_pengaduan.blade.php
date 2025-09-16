@@ -14,7 +14,7 @@
                     <div class="mb-3">
                         <label for="level" class="form-label">Tujuan</label>
                         <select name="level" id="level" required value="{{ old('level') }}"
-                            class="form-control @error('level')
+                            class="form-control text-muted @error('level')
                             is-invalid
                         @enderror">
                             <option value="" selected disabled>Pilih Tujuan Pengaduan</option>
@@ -53,6 +53,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+                    <div id="preview" class="mt-3"></div>
                     <div class="d-grid mt-4">
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
@@ -61,3 +62,50 @@
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('file').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('preview');
+        preview.innerHTML = ''; // clear preview lama
+
+        if (!file) return;
+
+        const fileType = file.type;
+        const reader = new FileReader();
+
+        if (fileType.startsWith('image/')) {
+            // 📷 Preview gambar
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '200px';
+                img.style.marginTop = '10px';
+                preview.appendChild(img);
+            }
+            reader.readAsDataURL(file);
+
+        } else if (fileType.startsWith('video/')) {
+            // 🎥 Preview video
+            const video = document.createElement('video');
+            video.src = URL.createObjectURL(file);
+            video.controls = true;
+            video.style.maxWidth = '300px';
+            preview.appendChild(video);
+
+        } else if (fileType === 'application/pdf') {
+            // 📄 Preview PDF (inline)
+            const embed = document.createElement('embed');
+            embed.src = URL.createObjectURL(file);
+            embed.type = 'application/pdf';
+            embed.width = '100%';
+            embed.height = '400px';
+            preview.appendChild(embed);
+
+        } else {
+            // 📑 File lain (docx, xlsx, dll) → tampilkan nama aja
+            const p = document.createElement('p');
+            p.textContent = "File dipilih: " + file.name;
+            preview.appendChild(p);
+        }
+    });
+</script>

@@ -14,7 +14,7 @@
         onclick="openDocumentModal('{{ $filePath }}', false)"
         style="max-width:150px;cursor:pointer">
 @elseif (in_array($extension, ['mp4', 'mov', 'avi', 'mkv', 'webm']))
-    <video controls style="max-width:200px;cursor:pointer">
+    <video controls class="video-preview">
         <source src="{{ $filePath }}" type="video/{{ $extension }}">
         Browser tidak mendukung video ini.
     </video>
