@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\View\ViewName;
+use App\Models\Jabatan;
 
 class Admin_rwController extends Controller
 {
@@ -17,11 +18,13 @@ class Admin_rwController extends Controller
      */
     public function index()
     {
-        //
-        $rw = Rw::paginate(10);
-        $title = 'RW';
-        return View('admin.data-rw.rw', compact('rw', 'title'));
+        $title = 'Data RW';
+        $rw = Rw::with('jabatan')->paginate(10);
+        $jabatan = Jabatan::where('level', 'rw')->get();
+
+        return view('admin.data-rw.rw', compact('title', 'rw', 'jabatan'));
     }
+
 
     /**
      * Show the form for creating a new resource.
