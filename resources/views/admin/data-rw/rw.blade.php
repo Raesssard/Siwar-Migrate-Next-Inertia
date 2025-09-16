@@ -93,44 +93,67 @@
                                                     <form action="{{ route('admin.rw.update', $data->id) }}"
                                                         method="POST">
                                                         @csrf @method('PUT')
+                                                        <input type="hidden" name="id" value="{{ $data->id }}">
                                                         <div class="modal-body">
                                                             <div class="mb-3">
                                                                 <label class="form-label">NIK</label>
-                                                                <input type="text" class="form-control"
-                                                                    name="nik" value="{{ $data->nik }}" readonly>
+                                                                <input type="text"
+                                                                    name="nik"
+                                                                    value="{{ old('nik', $data->nik) }}"
+                                                                    class="form-control @error('nik') is-invalid @enderror"
+                                                                    readonly>
+                                                                @error('nik') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label class="form-label">Nomor RW</label>
-                                                                <input type="text" class="form-control"
-                                                                    name="nomor_rw" value="{{ $data->nomor_rw }}" required>
+                                                                <input type="text"
+                                                                    name="nomor_rw"
+                                                                    value="{{ old('nomor_rw', $data->nomor_rw) }}"
+                                                                    class="form-control @error('nomor_rw') is-invalid @enderror"
+                                                                    required>
+                                                                @error('nomor_rw') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label class="form-label">Nama Ketua RW</label>
-                                                                <input type="text" class="form-control"
+                                                                <input type="text"
                                                                     name="nama_ketua_rw"
-                                                                    value="{{ $data->nama_ketua_rw }}" required>
+                                                                    value="{{ old('nama_ketua_rw', $data->nama_ketua_rw) }}"
+                                                                    class="form-control @error('nama_ketua_rw') is-invalid @enderror"
+                                                                    required>
+                                                                @error('nama_ketua_rw') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label class="form-label">Jabatan</label>
-                                                                <select name="jabatan_id" class="form-control" required>
+                                                                <select name="jabatan_id"
+                                                                    class="form-control @error('jabatan_id') is-invalid @enderror"
+                                                                    required>
                                                                     <option value="">-- Pilih Jabatan --</option>
                                                                     @foreach ($jabatan as $j)
                                                                         <option value="{{ $j->id }}"
-                                                                            {{ $data->jabatan_id == $j->id ? 'selected' : '' }}>
+                                                                            {{ old('jabatan_id', $data->jabatan_id) == $j->id ? 'selected' : '' }}>
                                                                             {{ $j->nama_jabatan }}
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
+                                                                @error('jabatan_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label class="form-label">Mulai Menjabat</label>
-                                                                <input type="date" name="mulai_menjabat"
-                                                                    value="{{ $data->mulai_menjabat }}" class="form-control" required>
+                                                                <input type="date"
+                                                                    name="mulai_menjabat"
+                                                                    value="{{ old('mulai_menjabat', $data->mulai_menjabat) }}"
+                                                                    class="form-control @error('mulai_menjabat') is-invalid @enderror"
+                                                                    required>
+                                                                @error('mulai_menjabat') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label class="form-label">Akhir Jabatan</label>
-                                                                <input type="date" name="akhir_jabatan"
-                                                                    value="{{ $data->akhir_jabatan }}" class="form-control" required>
+                                                                <input type="date"
+                                                                    name="akhir_jabatan"
+                                                                    value="{{ old('akhir_jabatan', $data->akhir_jabatan) }}"
+                                                                    class="form-control @error('akhir_jabatan') is-invalid @enderror"
+                                                                    required>
+                                                                @error('akhir_jabatan') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -190,7 +213,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Jabatan</label>
-                                            <select name="jabatan_id" class="form-control" required>
+                                            <select name="jabatan_id" class="form-control @error('jabatan_id') is-invalid @enderror" required>
                                                 <option value="">-- Pilih Jabatan --</option>
                                                 @foreach ($jabatan as $j)
                                                     <option value="{{ $j->id }}" {{ old('jabatan_id') == $j->id ? 'selected' : '' }}>
@@ -226,4 +249,23 @@
         </div>
     </div>
 </div>
+
+{{-- Script untuk auto buka modal jika ada error --}}
+@if ($errors->any() && !old('_method'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var tambahModal = new bootstrap.Modal(document.getElementById('modalTambahRW'));
+            tambahModal.show();
+        });
+    </script>
+@endif
+
+@if ($errors->any() && old('_method') === 'PUT' && old('id'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var editModal = new bootstrap.Modal(document.getElementById('modalEditRW{{ old('id') }}'));
+            editModal.show();
+        });
+    </script>
+@endif
 @endsection
