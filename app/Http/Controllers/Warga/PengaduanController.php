@@ -88,6 +88,7 @@ class PengaduanController extends Controller
             'foto_bukti' => null,
             'status' => 'belum',
             'level' => $request->level,
+            'konfirmasi_rw' => $request->level === 'rt' ? 'belum' : 'menunggu',
         ]);
 
         return back()->with('success', 'Pengaduan berhasil dibuat.');

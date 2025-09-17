@@ -81,9 +81,15 @@
                                                 </td>
                                                 <td class="text-center">
                                                     @if ($item->status === 'belum')
-                                                        <span class="badge bg-warning">Belum dibaca</span>
-                                                    @elseif ($item->status === 'sudah')
-                                                        <span class="badge bg-primary">Sudah dibaca</span>
+                                                        <span class="badge bg-secondary">Belum dibaca</span>
+                                                    @elseif ($item->status === 'diproses')
+                                                        <span class="badge bg-primary">Sedang diproses</span>
+                                                        @if ($item->konfirmasi_rw === 'sudah')
+                                                            <span class="badge bg-info">Sudah dikonfirmasi</span>
+                                                        @elseif ($item->konfirmasi_rw === 'menunggu')
+                                                            <span class="badge bg-warning">Menunggu
+                                                                konfirmasi RW</span>
+                                                        @endif
                                                     @else
                                                         <span class="badge bg-success">Selesai</span>
                                                     @endif

@@ -61,12 +61,10 @@
 </style>
 
 @php
-    if ($item->status === 'sudah') {
+    if ($item->status === 'diproses' || $item->status === 'belum') {
         $color = 'primary';
     } elseif ($item->status === 'selesai') {
         $color = 'success';
-    } else {
-        $color = 'warning';
     }
 @endphp
 
@@ -204,13 +202,7 @@
                             <div class="d-block mb-1">
                                 <div class="mt-3">
                                     <strong>Status:</strong>
-                                    @if ($item->status === 'belum')
-                                        <span class="badge bg-warning">Belum dibaca</span>
-                                    @elseif ($item->status === 'sudah')
-                                        <span class="badge bg-primary">Sudah dibaca</span>
-                                    @else
-                                        <span class="badge bg-success">Selesai</span>
-                                    @endif
+                                    <span class="badge bg-success">Selesai</span>
                                 </div>
                                 <div class="mt-3">
                                     <a href="{{ Storage::url($item->foto_bukti) }}" target="_blank"
@@ -234,15 +226,9 @@
                     @elseif ($item->status === 'selesai' && !$item->foto_bukti)
                         <div class="mt-3">
                             <strong>Status:</strong>
-                            @if ($item->status === 'belum')
-                                <span class="badge bg-warning">Belum dibaca</span>
-                            @elseif ($item->status === 'sudah')
-                                <span class="badge bg-primary">Sudah dibaca</span>
-                            @else
-                                <span class="badge bg-success">Selesai</span>
-                            @endif
+                            <span class="badge bg-success">Selesai</span>
                         </div>
-                    @elseif ($item->status !== 'selesai')
+                    @elseif ($item->status !== 'selesai' && $item->konfirmasi_rw === 'sudah')
                         <form action="{{ route('rt.pengaduan.baca', $item->id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
@@ -259,7 +245,7 @@
                                     class="form-control @error('file') is-invalid @enderror">
                                 <small class="form-text text-muted">Unggah Foto atau Video bukti selesai, atau
                                     biarkan
-                                    kosong jika tidak ingin mengubah.</small>
+                                    kosong jika tidak ingin menambah.</small>
                                 @error('file')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -274,6 +260,12 @@
                                 </div>
                             </div>
                         </form>
+                    @elseif ($item->status !== 'selesai' && $item->konfirmasi_rw !== 'sudah')
+                        <div class="mt-3">
+                            <strong>Status:</strong>
+                            <span class="badge bg-warning">Menunggu
+                                konfirmasi RW</span>
+                        </div>
                     @endif
                 </div>
             </div>

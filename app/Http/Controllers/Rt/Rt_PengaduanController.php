@@ -48,11 +48,12 @@ class Rt_PengaduanController extends Controller
 
         if (
             $pengaduan_rt_saya->status === 'belum' &&
-            $pengaduan_rt_saya->status !== 'sudah' &&
+            $pengaduan_rt_saya->status !== 'diproses' &&
             $pengaduan_rt_saya->status !== 'selesai'
         ) {
             $pengaduan_rt_saya->update([
-                'status' => 'sudah'
+                'status' => 'diproses',
+                'konfirmasi_rw' => 'menunggu'
             ]);
 
             PengaduanKomentar::create([

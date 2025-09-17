@@ -66,8 +66,8 @@
 
 @php
     if ($item->status === 'belum') {
-        $color = 'warning';
-    } elseif ($item->status === 'sudah') {
+        $color = 'secondary';
+    } elseif ($item->status === 'diproses') {
         $color = 'primary';
     } else {
         $color = 'success';
@@ -92,7 +92,7 @@
                 <ul class="list-unstyled mb-3 small">
                     <li>
                         <strong>Tanggal:</strong>
-                        @if ($item->status === 'sudah' || $item->status === 'selesai')
+                        @if ($item->status === 'diproses' || $item->status === 'selesai')
                             <span
                                 class="ms-1">{{ \Carbon\Carbon::parse($item->updated_at)->isoFormat('dddd, D MMMM Y') }}</span>
                         @else
@@ -156,9 +156,15 @@
                                 <div class="mt-3">
                                     <strong>Status:</strong>
                                     @if ($item->status === 'belum')
-                                        <span class="badge bg-warning">Belum dibaca</span>
-                                    @elseif ($item->status === 'sudah')
-                                        <span class="badge bg-primary">Sudah dibaca</span>
+                                        <span class="badge bg-secondary">Belum dibaca</span>
+                                    @elseif ($item->status === 'diproses')
+                                        <span class="badge bg-primary">Sedang diproses</span>
+                                        @if ($item->konfirmasi_rw === 'sudah')
+                                            <span class="badge bg-info">Sudah dikonfirmasi</span>
+                                        @elseif ($item->konfirmasi_rw === 'menunggu')
+                                            <span class="badge bg-warning">Menunggu
+                                                konfirmasi RW</span>
+                                        @endif
                                     @else
                                         <span class="badge bg-success">Selesai</span>
                                     @endif
@@ -177,9 +183,9 @@
                             <div class="mt-3">
                                 <strong>Status:</strong>
                                 @if ($item->status === 'belum')
-                                    <span class="badge bg-warning">Belum dibaca</span>
-                                @elseif ($item->status === 'sudah')
-                                    <span class="badge bg-primary">Sudah dibaca</span>
+                                    <span class="badge bg-secondary">Belum dibaca</span>
+                                @elseif ($item->status === 'diproses')
+                                    <span class="badge bg-primary">Sedang diproses</span>
                                 @else
                                     <span class="badge bg-success">Selesai</span>
                                 @endif

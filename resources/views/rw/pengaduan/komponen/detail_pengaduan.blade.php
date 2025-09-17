@@ -61,12 +61,12 @@
 </style>
 
 @php
-    if ($item->status === 'sudah') {
+    if ($item->status === 'diproses') {
         $color = 'primary';
     } elseif ($item->status === 'selesai') {
         $color = 'success';
     } else {
-        $color = 'warning';
+        $color = 'secondary';
     }
 @endphp
 
@@ -202,12 +202,17 @@
                                 @endif
                             </div>
                             <div class="d-block mb-1">
+                                @if ($item->level === 'rt')
+                                    <div class="mt-3">
+                                        <strong>RT:</strong> {{ $item->warga->kartuKeluarga->rukunTetangga->rt }}
+                                    </div>
+                                @endif
                                 <div class="mt-3">
                                     <strong>Status:</strong>
                                     @if ($item->status === 'belum')
-                                        <span class="badge bg-warning">Belum dibaca</span>
-                                    @elseif ($item->status === 'sudah')
-                                        <span class="badge bg-primary">Sudah dibaca</span>
+                                        <span class="badge bg-secondary">Belum dibaca</span>
+                                    @elseif ($item->status === 'diproses')
+                                        <span class="badge bg-primary">Sedang diproses</span>
                                     @else
                                         <span class="badge bg-success">Selesai</span>
                                     @endif
@@ -235,14 +240,14 @@
                         <div class="mt-3">
                             <strong>Status:</strong>
                             @if ($item->status === 'belum')
-                                <span class="badge bg-warning">Belum dibaca</span>
-                            @elseif ($item->status === 'sudah')
-                                <span class="badge bg-primary">Sudah dibaca</span>
+                                <span class="badge bg-secondary">Belum dibaca</span>
+                            @elseif ($item->status === 'diproses')
+                                <span class="badge bg-primary">Sedang diproses</span>
                             @else
                                 <span class="badge bg-success">Selesai</span>
                             @endif
                         </div>
-                    @elseif ($item->status !== 'selesai')
+                    @elseif ($item->status !== 'selesai' && $item->level === 'rw')
                         <form action="{{ route('rw.pengaduan.baca', $item->id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
@@ -259,7 +264,7 @@
                                     class="form-control @error('file') is-invalid @enderror">
                                 <small class="form-text text-muted">Unggah Foto atau Video bukti selesai, atau
                                     biarkan
-                                    kosong jika tidak ingin mengubah.</small>
+                                    kosong jika tidak ingin menambah.</small>
                                 @error('file')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -274,6 +279,21 @@
                                 </div>
                             </div>
                         </form>
+                    @elseif ($item->konfirmasi_rw !== 'sudah' && $item->level === 'rt')
+                        <form action="{{ route('rw.pengaduan.confirm', $item->id) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <div class="modal-footer justify-content-start d-flex mt-3">
+                                <button type="submit" class="btn btn-{{ $color }}">
+                                    Konfirmasi pengaduan
+                                </button>
+                            </div>
+                        </form>
+                    @elseif ($item->status !== 'selesai' && $item->level === 'rt' && $item->konfirmasi_rw === 'sudah')
+                        <div class="mt-3">
+                            <strong>Status:</strong>
+                            <span class="badge bg-primary">Sedang diproses</span>
+                        </div>
                     @endif
                 </div>
             </div>

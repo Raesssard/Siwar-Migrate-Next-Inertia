@@ -19,7 +19,7 @@ class PengaduanRwController extends Controller
         $pengaduan_rw = $user->rw->nomor_rw;
 
         $pengaduan_rw_saya = Pengaduan::WhereHas('warga.kartuKeluarga.rw', function ($aduan) use ($pengaduan_rw) {
-            $aduan->where('nomor_rw', $pengaduan_rw);
+            $aduan->where('konfirmasi_rw', '!=', 'belum')->where('nomor_rw', $pengaduan_rw);
         });
 
         if ($request->filled('search')) {
@@ -48,11 +48,12 @@ class PengaduanRwController extends Controller
 
         if (
             $pengaduan_rw_saya->status === 'belum' &&
-            $pengaduan_rw_saya->status !== 'sudah' &&
+            $pengaduan_rw_saya->status !== 'diproses' &&
             $pengaduan_rw_saya->status !== 'selesai'
         ) {
             $pengaduan_rw_saya->update([
-                'status' => 'sudah'
+                'status' => 'diproses',
+                'konfirmasi_rw' => 'sudah'
             ]);
 
             PengaduanKomentar::create([
@@ -89,8 +90,23 @@ class PengaduanRwController extends Controller
             ]);
 
             $pengaduan_rw_saya->update($dataUpdate);
-        }
 
-        return back()->with('success', 'Pengaduan telah selesai.');
+            return back()->with('success', 'Pengaduan telah selesai.');
+        }
+    }
+
+    public function confirm($id)
+    {
+        $rw_user = Auth::user()->rw->nomor_rw;
+
+        $pengaduan_rw_saya = Pengaduan::whereHas('warga.kartuKeluarga.rw', function ($aduan) use ($rw_user) {
+            $aduan->where('nomor_rw', $rw_user);
+        })->findOrFail($id);
+
+        $pengaduan_rw_saya->update([
+            'konfirmasi_rw' => 'sudah'
+        ]);
+
+        return back()->with('success', 'Pengaduan telah dikonfirmasi.');
     }
 }

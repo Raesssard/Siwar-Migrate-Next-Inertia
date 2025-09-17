@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('file_path')->nullable();
             $table->string('file_name')->nullable();
             $table->string('foto_bukti')->nullable();
-            $table->enum('status', ['belum', 'sudah', 'selesai']);
+            $table->enum('status', ['belum', 'diproses', 'selesai']);
             $table->enum('level', ['rt', 'rw']);
+            $table->enum('konfirmasi_rw', ['belum', 'menunggu', 'sudah']);
             $table->timestamps();
 
             $table->foreign('nik_warga')->references('nik')->on('warga')->onDelete('no action');

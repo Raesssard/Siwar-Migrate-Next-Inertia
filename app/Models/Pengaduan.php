@@ -20,6 +20,7 @@ class Pengaduan extends Model
         'foto_bukti',
         'status',
         'level',
+        'konfirmasi_rw',
         'created_at',
         'updated_at',
     ];

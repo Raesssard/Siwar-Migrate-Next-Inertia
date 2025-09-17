@@ -74,6 +74,9 @@ Route::prefix('rw')->as('rw.')->middleware(['auth', 'role:rw'])->group(function 
     Route::patch('pengaduan/{id}/baca', [PengaduanRwController::class, 'baca'])
         ->name('pengaduan.baca');
 
+    Route::patch('pengaduan/{id}/confirm', [PengaduanRwController::class, 'confirm'])
+        ->name('pengaduan.confirm');
+
     // Export & laporan
     Route::get('laporan_pengeluaran_bulanan/{bulan}/{tahun}', [LaporanController::class, 'pengeluaran_bulanan'])->name('laporan.pengeluaran_bulanan');
     Route::get('pengumuman/{id}/export', [PengumumanController::class, 'export'])->name('pengumuman.export');
