@@ -50,7 +50,7 @@ class Rt_dashboardController extends Controller
         $pengaduan_rt = $user->rukunTetangga->rt;
 
         $pengaduan_rt_saya = Pengaduan::WhereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($pengaduan_rt) {
-            $aduan->where('rt', $pengaduan_rt);
+            $aduan->where('level', 'rt')->where('rt', $pengaduan_rt);
         })->count();
 
         // Jumlah Warga dengan jenis 'penduduk' DI RT yang login

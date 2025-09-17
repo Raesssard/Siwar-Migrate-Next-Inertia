@@ -283,7 +283,7 @@
                                 Total Saldo
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
-                                Rp{{ number_format($total_saldo_akhir, 0, ',', '.') }}
+                                Rp. {{ number_format($total_saldo_akhir, 0, ',', '.') }}
                             </div>
                         </div>
                         <div class="col-auto">

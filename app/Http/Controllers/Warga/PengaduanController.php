@@ -64,7 +64,8 @@ class PengaduanController extends Controller
         $request->validate([
             'judul' => 'required',
             'isi' => 'required',
-            'file' => 'nullable|file|mimes:jpg,jpeg,JPG,PNG,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480',
+            'file' => 'required|file|mimes:jpg,jpeg,JPG,PNG,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480',
+            'level' => 'required|in:rt,rw',
         ]);
 
         $nik_user = Auth::user()->warga->nik;
@@ -84,7 +85,10 @@ class PengaduanController extends Controller
             'isi' => $request->isi,
             'file_path' => $filePath,
             'file_name' => $fileName,
+            'foto_bukti' => null,
             'status' => 'belum',
+            'level' => $request->level,
+            'konfirmasi_rw' => $request->level === 'rt' ? 'belum' : 'menunggu',
         ]);
 
         return back()->with('success', 'Pengaduan berhasil dibuat.');
@@ -122,6 +126,7 @@ class PengaduanController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'isi' => 'required|string',
+            'level' => 'required|in:rt,rw',
             'file' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480',
             'hapus_dokumen_lama' => 'nullable|boolean',
         ]);
@@ -129,6 +134,7 @@ class PengaduanController extends Controller
         $dataYangDiUpdate = [
             'judul' => $request->judul,
             'isi' => $request->isi,
+            'level' => $request->level,
         ];
 
         if ($request->hasFile('file')) {

@@ -58,10 +58,11 @@
                                             <th scope="col" class="text-center">No.</th>
                                             <th scope="col" class="text-center">NIK Warga</th>
                                             <th scope="col" class="text-center">Nama Warga</th>
-                                            <th scope="col" class="text-center">No. RT</th>
+                                            <th scope="col" class="text-center">RT</th>
                                             <th scope="col" class="text-center">Judul</th>
                                             <th scope="col" class="text-center">Isi</th>
                                             <th scope="col" class="text-center">Tanggal</th>
+                                            <th scope="col" class="text-center">Status</th>
                                             <th scope="col" class="text-center">Detail</th>
                                         </tr>
                                     </thead>
@@ -72,13 +73,23 @@
                                                     {{ $loop->iteration }}</th>
                                                 <th scope="row" class="text-center">{{ $item->warga->nik }}</th>
                                                 <td class="text-center">{{ $item->warga->nama }}</td>
-                                                <td class="text-center">{{ $item->warga->kartuKeluarga->rukunTetangga->rt }}</td>
+                                                <td class="text-center">{{ $item->warga->kartuKeluarga->rukunTetangga->rt }}
+                                                </td>
                                                 <td class="text-center">{{ $item->judul }}</td>
                                                 <td class="text-center">
                                                     {{ \Illuminate\Support\Str::limit($item->isi, 50, '...') }}
                                                 </td>
                                                 <td class="text-center">
                                                     {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y H:i') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    @if ($item->status === 'belum')
+                                                        <span class="badge bg-secondary">Belum dibaca</span>
+                                                    @elseif ($item->status === 'diproses')
+                                                        <span class="badge bg-primary">Sedang diproses</span>
+                                                    @else
+                                                        <span class="badge bg-success">Selesai</span>
+                                                    @endif
                                                 </td>
                                                 <td class="text-center align-item-center">
                                                     <button type="button" class="btn btn-success btn-sm"

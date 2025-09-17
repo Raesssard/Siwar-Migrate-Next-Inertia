@@ -61,6 +61,7 @@
                                             <th scope="col" class="text-center">Judul</th>
                                             <th scope="col" class="text-center">Isi</th>
                                             <th scope="col" class="text-center">Tanggal</th>
+                                            <th scope="col" class="text-center">Status</th>
                                             <th scope="col" class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
@@ -78,11 +79,26 @@
                                                 <td class="text-center">
                                                     {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y H:i') }}
                                                 </td>
+                                                <td class="text-center">
+                                                    @if ($item->status === 'belum')
+                                                        <span class="badge bg-secondary">Belum dibaca</span>
+                                                    @elseif ($item->status === 'diproses')
+                                                        <span class="badge bg-primary">Sedang diproses</span>
+                                                        @if ($item->konfirmasi_rw === 'sudah')
+                                                            <span class="badge bg-info">Sudah dikonfirmasi</span>
+                                                        @elseif ($item->konfirmasi_rw === 'menunggu')
+                                                            <span class="badge bg-warning">Menunggu
+                                                                konfirmasi RW</span>
+                                                        @endif
+                                                    @else
+                                                        <span class="badge bg-success">Selesai</span>
+                                                    @endif
+                                                </td>
                                                 <td class="text-center align-item-center">
                                                     <button type="button" class="btn btn-success btn-sm"
                                                         onclick="markAsRead({{ $item->id }})" data-bs-toggle="modal"
                                                         data-bs-target="#modalDetailPengaduan{{ $item->id }}">
-                                                        <i class="fas fa-info"></i>
+                                                        <i class="fas fa-bookmark"></i>
                                                     </button>
                                                 </td>
                                             </tr>
