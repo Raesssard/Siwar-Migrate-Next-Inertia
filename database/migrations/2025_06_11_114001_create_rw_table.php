@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('rw', function (Blueprint $table) {
@@ -16,17 +13,13 @@ return new class extends Migration
             $table->char('nik', 16)->unique();
             $table->string('nomor_rw');
             $table->string('nama_ketua_rw');
+            $table->foreignId('jabatan_id')->constrained('jabatan'); // ganti enum jadi relasi
             $table->date('mulai_menjabat');
             $table->date('akhir_jabatan');
             $table->timestamps();
         });
-
-        
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('rw');

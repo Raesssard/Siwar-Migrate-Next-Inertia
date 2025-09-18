@@ -8,6 +8,7 @@ use App\Models\Rw;
 use App\Models\User;
 use App\Models\Warga;
 use App\Models\Kategori_golongan;
+use App\Models\Jabatan;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -22,16 +23,25 @@ class UsersSeeder extends Seeder
             Role::firstOrCreate(['name' => $role]);
         }
 
-        // ambil id kategori kampung
+        // Ambil data kategori kampung dari seeder lain
         $kampung = Kategori_golongan::where('jenis', 'kampung')->first();
 
-        // 1. Buat RW
+        // Ambil jabatan dari seeder lain
+        $jabatanRw = Jabatan::where('level', 'rw')->where('nama_jabatan', 'ketua')->first();
+        $jabatanRt = Jabatan::where('level', 'rt')->where('nama_jabatan', 'ketua')->first();
+
+        /*
+        ==============================
+        RW
+        ==============================
+        */
         $rw = Rw::create([
             'nik' => '1234567890123452',
             'nomor_rw' => '01',
             'nama_ketua_rw' => 'Pak RW',
             'mulai_menjabat' => now(),
             'akhir_jabatan' => now()->addYears(3),
+            'jabatan_id' => $jabatanRw?->id,
         ]);
 
         /*
@@ -50,14 +60,13 @@ class UsersSeeder extends Seeder
             'provinsi' => 'Provinsi Sejahtera',
             'kode_pos' => '12345',
             'tgl_terbit' => now(),
-            'kategori_iuran' => $kampung->id,
+            'kategori_iuran' => $kampung->id ?? null,
             'instansi_penerbit' => 'Dinas Dukcapil',
             'kabupaten_kota_penerbit' => 'Kota Bandung',
             'nama_kepala_dukcapil' => 'Budi Santoso S.Kom',
             'nip_kepala_dukcapil' => '123456789012345678',
         ]);
 
-        // RT
         $rt = Rukun_tetangga::create([
             'no_kk' => $kk_rt->no_kk,
             'nik' => '0000000000000002',
@@ -65,13 +74,12 @@ class UsersSeeder extends Seeder
             'nama' => 'Andi Kurniawan',
             'mulai_menjabat' => now(),
             'akhir_jabatan' => now()->addYears(3),
-            'jabatan' => 'ketua',
+            'jabatan_id' => $jabatanRt?->id,
             'id_rw' => $rw->id,
         ]);
 
         $kk_rt->update(['id_rt' => $rt->id]);
 
-        // Warga Kepala Keluarga (yang juga RT)
         $warga_rt = Warga::create([
             'no_kk' => $kk_rt->no_kk,
             'nik' => '0000000000000002',
@@ -108,7 +116,7 @@ class UsersSeeder extends Seeder
             'provinsi' => 'Provinsi Sejahtera',
             'kode_pos' => '12345',
             'tgl_terbit' => now(),
-            'kategori_iuran' => $kampung->id,
+            'kategori_iuran' => $kampung->id ?? null,
             'instansi_penerbit' => 'Dinas Dukcapil',
             'kabupaten_kota_penerbit' => 'Kota Bandung',
             'nama_kepala_dukcapil' => 'Budi Santoso S.Kom',
@@ -154,7 +162,6 @@ class UsersSeeder extends Seeder
         ]);
         $pakRw->assignRole('rw');
 
-        // hanya kepala keluarga yang dapat user
         if ($warga_rt->status_hubungan_dalam_keluarga === 'kepala keluarga') {
             $pakRt = User::create([
                 'nik' => $warga_rt->nik,
@@ -163,7 +170,7 @@ class UsersSeeder extends Seeder
                 'id_rt' => $rt->id,
                 'id_rw' => $rw->id,
             ]);
-            $pakRt->assignRole(['rt', 'warga']); // multi role
+            $pakRt->assignRole(['rt', 'warga']);
         }
 
         if ($warga_biasa->status_hubungan_dalam_keluarga === 'kepala keluarga') {

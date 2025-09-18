@@ -17,11 +17,11 @@ return new class extends Migration
             $table->char('nik', 16)->unique();
             $table->string('rt');
             $table->string('nama');
+            $table->foreignId('jabatan_id')->constrained('jabatan'); // ganti enum jadi relasi
             $table->date('mulai_menjabat');
             $table->date('akhir_jabatan');
-            $table->enum('jabatan',['ketua', 'sekretaris', 'bendahara'])->default('ketua');
-            $table->foreign('id_rw')->references('id')->on('rw')->onDelete('cascade');
             $table->unsignedBigInteger('id_rw');
+            $table->foreign('id_rw')->references('id')->on('rw')->onDelete('cascade');
             $table->timestamps();
         });
     }
