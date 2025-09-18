@@ -6,10 +6,10 @@ return [
     // Jabatan di level RW
     // ==========================
     'rw' => [
-        'Ketua RW' => [
+        'ketua' => [
             '*', // full akses RW
         ],
-        'Sekretaris RW' => [
+        'sekretaris' => [
             'dashboard.rw',
             'rt.view',
             'rt.manage',
@@ -22,7 +22,7 @@ return [
             'pengaduan.rwrt.view',
             'pengaduan.rw.manage',
         ],
-        'Bendahara RW' => [
+        'bendahara' => [
             'dashboard.rw',
             'iuran.rwrt.view',
             'iuran.rw.manage',
@@ -37,17 +37,17 @@ return [
     // Jabatan di level RT
     // ==========================
     'rt' => [
-        'Ketua RT' => [
+        'ketua' => [
             '*', // full akses RT
         ],
-        'Sekretaris RT' => [
+        'sekretaris' => [
             'dashboard.rt',
             'warga.view',
             'kk.view',
             'pengumuman.rt.manage',
             'pengaduan.rt.view', // HANYA VIEW
         ],
-        'Bendahara RT' => [
+        'bendahara' => [
             'dashboard.rt',
             'iuran.rt.manage',
             'tagihan.rt.manage',

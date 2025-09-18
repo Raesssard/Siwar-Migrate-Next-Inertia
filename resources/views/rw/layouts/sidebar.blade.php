@@ -75,88 +75,116 @@
     /* .nav-link { ... } */
     /* dll. */
 </style>
-
+<!-- Sidebar Desktop -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion d-none d-md-block" id="accordionSidebar">
 
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('rw') }}">
-        <div class="sidebar-brand-icon">
-            <img src="{{ asset('img/logo.png') }}" alt="SiWar Logo" class="sidebar-brand-icon-logo">
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('rw.dashboard') }}">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-laugh-wink"></i>
         </div>
+        <div class="sidebar-brand-text mx-3">Siwar RW</div>
     </a>
 
     <hr class="sidebar-divider my-0">
 
-    <li class="nav-item {{ Request::is('rw') ? 'active' : '' }}"> {{-- Menggunakan Request::is() untuk aktivasi --}}
-        <a class="nav-link" href="{{ url('rw') }}">
+    {{-- Dashboard --}}
+    <li class="nav-item {{ Request::is('rw') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('rw.dashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
-    </li>
-
-    {{-- Item Navigasi Lainnya --}}
-    <li class="nav-item {{ Request::is('rw/rukun_tetangga*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rw.rukun_tetangga.index') }}">
-            <i class="fas fa-house-user"></i>
-            <span>Rukun Tetangga</span>
+            <span>Dashboard</span>
         </a>
     </li>
 
-    <li class="nav-item {{ Request::is('rw/warga*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rw.warga.index') }}">
-            <i class="fas fa-id-card"></i>
-            <span>Manajemen Warga</span>
-        </a>
-    </li>
+    {{-- Rukun Tetangga --}}
+    @if(auth()->user()->canRw('rt.view'))
+        <li class="nav-item {{ Request::is('rw/rukun_tetangga*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('rw.rukun_tetangga.index') }}">
+                <i class="fas fa-house-user"></i>
+                <span>Rukun Tetangga</span>
+            </a>
+        </li>
+    @endif
 
-    <li class="nav-item {{ Request::is('rw/kartu_keluarga*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rw.kartu_keluarga.index') }}">
-            <i class="fas fa-users "></i>
-            <span>Kartu Keluarga</span>
-        </a>
-    </li>
+    {{-- Manajemen Warga --}}
+    @if(auth()->user()->canRw('warga.view'))
+        <li class="nav-item {{ Request::is('rw/warga*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('rw.warga.index') }}">
+                <i class="fas fa-users"></i>
+                <span>Manajemen Warga</span>
+            </a>
+        </li>
+    @endif
 
-    <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
-            <i class="fas fa-comment-dots"></i>
-            <span>Pengaduan Warga</span>
-        </a>
-    </li>
+    {{-- Kartu Keluarga --}}
+    @if(auth()->user()->canRw('kk.view'))
+        <li class="nav-item {{ Request::is('rw/kartu_keluarga*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('rw.kartu_keluarga.index') }}">
+                <i class="fas fa-id-card"></i>
+                <span>Kartu Keluarga</span>
+            </a>
+        </li>
+    @endif
 
-    <li
-        class="nav-item {{ Request::is('rw/pengumuman') || (Request::is('rw/pengumuman/*') && !Request::is('rw/pengumuman-rt*')) ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rw.pengumuman.index') }}">
-            <i class="fas fa-bullhorn"></i>
-            <span>Pengumuman RW</span>
-        </a>
-    </li>
+    {{-- Pengumuman RW --}}
+    @if(auth()->user()->canRw('pengumuman.rw.manage'))
+        <li class="nav-item {{ Request::is('rw/pengumuman') && !Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('rw.pengumuman.index') }}">
+                <i class="fas fa-bullhorn"></i>
+                <span>Pengumuman RW</span>
+            </a>
+        </li>
+    @endif
 
-    <li class="nav-item {{ Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rw.pengumuman-rt.index') }}">
-            <i class="fas fa-bullhorn"></i>
-            <span>Pengumuman RT</span>
-        </a>
-    </li>
-    <li class="nav-item {{ Request::is('rw/iuran*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rw.iuran.index') }}">
-            <i class="fas fa-coins"></i>
-            <span>Iuran</span>
-        </a>
-    </li>
-    <li class="nav-item {{ Request::is('rw/tagihan*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rw.tagihan.index') }}">
-            <i class="fas fa-dollar-sign"></i>
-            <span>Tagihan</span>
-        </a>
-    </li>
-    <li class="nav-item {{ Request::is('rw/transaksi*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('rw.transaksi.index') }}">
-            <i class="fas fa-money-bill-wave"></i>
-            <span>Transaksi</span>
-        </a>
-    </li>
+    {{-- Pengumuman RT --}}
+    @if(auth()->user()->canRw('pengumuman.rwrt.view'))
+        <li class="nav-item {{ Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('rw.pengumuman-rt.index') }}">
+                <i class="fas fa-bullhorn"></i>
+                <span>Pengumuman RT</span>
+            </a>
+        </li>
+    @endif
+
+    {{-- Iuran --}}
+    @if(auth()->user()->canRw('iuran.rwrt.view'))
+        <li class="nav-item {{ Request::is('rw/iuran*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('rw.iuran.index') }}">
+                <i class="fas fa-coins"></i>
+                <span>Iuran</span>
+            </a>
+        </li>
+    @endif
+
+    {{-- Tagihan --}}
+    @if(auth()->user()->canRw('tagihan.rwrt.view'))
+        <li class="nav-item {{ Request::is('rw/tagihan*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('rw.tagihan.index') }}">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Tagihan</span>
+            </a>
+        </li>
+    @endif
+
+    {{-- Transaksi --}}
+    @if(auth()->user()->canRw('transaksi.rwrt.view'))
+        <li class="nav-item {{ Request::is('rw/transaksi*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('rw.transaksi.index') }}">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Transaksi</span>
+            </a>
+        </li>
+    @endif
+
+    {{-- Pengaduan --}}
+    @if(auth()->user()->canRw('pengaduan.rwrt.view'))
+        <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
+                <i class="fas fa-paper-plane"></i>
+                <span>Lihat Pengaduan</span>
+            </a>
+        </li>
+    @endif
+
     <hr class="sidebar-divider d-none d-md-block">
-
-    <div class="text-center">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
-
 </ul>

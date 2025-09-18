@@ -28,7 +28,9 @@ class WargaController extends Controller
         $id_rw = Auth::user()->id_rw; // Dapatkan id_rw dari user yang sedang login
 
         // Dapatkan daftar RT yang relevan untuk dropdown filter
-        $rukun_tetangga_filter = Rukun_tetangga::where('jabatan', 'ketua')
+        $rukun_tetangga_filter = Rukun_tetangga::whereHas('jabatan', function ($q) {
+                $q->where('nama_jabatan', 'ketua');
+            })
             ->where('id_rw', $id_rw)
             ->select('rt')
             ->distinct()
