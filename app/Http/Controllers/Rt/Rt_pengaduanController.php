@@ -12,6 +12,7 @@ class Rt_PengaduanController extends Controller
 {
     public function index(Request $request)
     {
+
         $title = ' Daftar Pengaduan Warga';
         $user = Auth::user();
 
@@ -36,9 +37,9 @@ class Rt_PengaduanController extends Controller
         return view('rt.pengaduan.pengaduan', compact('title', 'rt_pengaduan', 'total_pengaduan_rt'));
     }
 
-
     public function show(Request $request, $id)
     {
+
         $rt_user = Auth::user()->rukunTetangga->rt;
 
         $pengaduan_rt_saya = Pengaduan::whereHas('warga.kartuKeluarga.rukunTetangga', function ($aduan) use ($rt_user) {
