@@ -58,34 +58,81 @@ Route::prefix('admin')->as('admin.')->middleware(['auth', 'role:admin'])->group(
 |--------------------------------------------------------------------------
 */
 Route::prefix('rw')->as('rw.')->middleware(['auth', 'role:rw'])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('warga', WargaController::class);
-    Route::resource('kartu_keluarga', Kartu_keluargaController::class);
-    Route::resource('rukun_tetangga', Rukun_tetanggaController::class);
-    Route::resource('pengumuman', PengumumanController::class);
-    Route::resource('pengumuman-rt', PengumumanRtController::class);
-    Route::resource('tagihan', TagihanController::class);
-    Route::resource('iuran', IuranController::class);
+    // Dashboard
+    Route::get('/', [DashboardController::class, 'index'])
+        ->name('dashboard')
+        ->middleware('rw.can:dashboard.rw');
+
+    // Data Warga
+    Route::resource('warga', WargaController::class)
+        ->middleware('rw.can:warga.view');
+
+    // Kartu Keluarga
+    Route::resource('kartu_keluarga', Kartu_keluargaController::class)
+        ->middleware('rw.can:kk.view');
+    Route::put('kartu_keluarga/{kartu_keluarga}/upload-foto', [Kartu_keluargaController::class, 'uploadFoto'])
+        ->name('kartu_keluarga.upload_foto')
+        ->middleware('rw.can:kk.manage');
+    Route::delete('kartu_keluarga/{kartu_keluarga}/delete-foto', [Kartu_keluargaController::class, 'deleteFoto'])
+        ->name('kartu_keluarga.delete_foto')
+        ->middleware('rw.can:kk.manage');
+    Route::get('kartu_keluarga/{kartu_keluarga}/upload-form', [Kartu_keluargaController::class, 'uploadForm'])
+        ->name('kartu_keluarga.upload_form')
+        ->middleware('rw.can:kk.manage');
+
+    // Rukun Tetangga
+    Route::resource('rukun_tetangga', Rukun_tetanggaController::class)
+        ->middleware('rw.can:rt.view');
+
+    // Pengumuman
+    Route::resource('pengumuman', PengumumanController::class)
+        ->middleware('rw.can:pengumuman.rwrt.view');
+    Route::resource('pengumuman-rt', PengumumanRtController::class)
+        ->middleware('rw.can:pengumuman.rwrt.view');
+    Route::get('pengumuman/{id}/export', [PengumumanController::class, 'export'])
+        ->name('pengumuman.export')
+        ->middleware('rw.can:pengumuman.rwrt.view');
+    Route::get('pengumuman-rt/{id}/export', [PengumumanRtController::class, 'export'])
+        ->name('pengumuman_rt.export')
+        ->middleware('rw.can:pengumuman.rwrt.view');
+
+    // Tagihan
+    Route::resource('tagihan', TagihanController::class)
+        ->middleware('rw.can:tagihan.rwrt.view');
+    Route::get('tagihan/export/manual', [TagihanController::class, 'exportManual'])
+        ->name('tagihan.export.manual')
+        ->middleware('rw.can:tagihan.rwrt.view');
+    Route::get('tagihan/export/otomatis', [TagihanController::class, 'exportOtomatis'])
+        ->name('tagihan.export.otomatis')
+        ->middleware('rw.can:tagihan.rwrt.view');
+    Route::get('tagihan/export/semua', [TagihanController::class, 'exportSemua'])
+        ->name('tagihan.export.semua')
+        ->middleware('rw.can:tagihan.rwrt.view');
+
+    // Iuran
+    Route::resource('iuran', IuranController::class)
+        ->middleware('rw.can:iuran.rwrt.view');
+    Route::get('iuran/export/{jenis?}', [IuranController::class, 'export'])
+        ->name('iuran.export')
+        ->middleware('rw.can:iuran.rwrt.view');
+
+    // Transaksi
+    Route::resource('transaksi', TransaksiController::class)
+        ->middleware('rw.can:transaksi.rwrt.view');
+    Route::get('transaksi/export/{jenis}', [TransaksiController::class, 'export'])
+        ->name('transaksi.export')
+        ->middleware('rw.can:transaksi.rwrt.view');
+
+    // Pengaduan
+    Route::resource('pengaduan', PengaduanRwController::class)
+        ->middleware('rw.can:pengaduan.rwrt.view');
+
+    // Kategori golongan (tanpa middleware, sesuai permintaan)
     Route::resource('kategori_golongan', Kategori_golonganController::class);
-    Route::resource('pengeluaran', PengeluaranController::class);
-    Route::resource('transaksi', TransaksiController::class);
-    Route::resource('pengaduan', PengaduanRwController::class);
 
-    // Export & laporan
-    Route::get('laporan_pengeluaran_bulanan/{bulan}/{tahun}', [LaporanController::class, 'pengeluaran_bulanan'])->name('laporan.pengeluaran_bulanan');
-    Route::get('pengumuman/{id}/export', [PengumumanController::class, 'export'])->name('pengumuman.export');
-    Route::get('pengumuman-rt/{id}/export', [PengumumanRtController::class, 'export'])->name('pengumuman_rt.export');
-
-    Route::get('iuran/export/{jenis?}', [IuranController::class, 'export'])->name('iuran.export');
-    Route::get('tagihan/export/manual', [TagihanController::class, 'exportManual'])->name('tagihan.export.manual');
-    Route::get('tagihan/export/otomatis', [TagihanController::class, 'exportOtomatis'])->name('tagihan.export.otomatis');
-    Route::get('tagihan/export/semua', [TagihanController::class, 'exportSemua'])->name('tagihan.export.semua');
-    Route::get('transaksi/export/{jenis}', [TransaksiController::class, 'export'])->name('transaksi.export');
-
-    // Upload / delete foto KK
-    Route::put('kartu_keluarga/{kartu_keluarga}/upload-foto', [Kartu_keluargaController::class, 'uploadFoto'])->name('kartu_keluarga.upload_foto');
-    Route::delete('kartu_keluarga/{kartu_keluarga}/delete-foto', [Kartu_keluargaController::class, 'deleteFoto'])->name('kartu_keluarga.delete_foto');
-    Route::get('kartu_keluarga/{kartu_keluarga}/upload-form', [Kartu_keluargaController::class, 'uploadForm'])->name('kartu_keluarga.upload_form');
+    // Laporan (sementara dibiarkan tanpa middleware)
+    Route::get('laporan_pengeluaran_bulanan/{bulan}/{tahun}', [LaporanController::class, 'pengeluaran_bulanan'])
+        ->name('laporan.pengeluaran_bulanan');
 });
 
 /*

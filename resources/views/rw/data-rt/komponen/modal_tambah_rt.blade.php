@@ -86,16 +86,19 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="jabatan" class="form-label">Jabatan</label>
-                        <select name="jabatan" id="jabatan"
-                            class="form-select {{ $errors->has('jabatan') && old('form_type') === 'rt_tambah' ? 'is-invalid' : '' }}" required>
+                        <label for="jabatan_id" class="form-label">Jabatan</label>
+                        <select name="jabatan_id" id="jabatan_id"
+                            class="form-select {{ $errors->has('jabatan_id') && old('form_type') === 'rt_tambah' ? 'is-invalid' : '' }}" required>
                             <option value="">-- Pilih Jabatan --</option>
-                            <option value="ketua" {{ old('form_type') === 'rt_tambah' && old('jabatan') === 'ketua' ? 'selected' : '' }}>Ketua</option>
-                            <option value="sekretaris" {{ old('form_type') === 'rt_tambah' && old('jabatan') === 'sekretaris' ? 'selected' : '' }}>Sekretaris</option>
-                            <option value="bendahara" {{ old('form_type') === 'rt_tambah' && old('jabatan') === 'bendahara' ? 'selected' : '' }}>Bendahara</option>
+                            @foreach($jabatan_filter as $id => $nama)
+                                <option value="{{ $id }}"
+                                    {{ old('form_type') === 'rt_tambah' && old('jabatan_id') == $id ? 'selected' : '' }}>
+                                    {{ ucfirst($nama) }}
+                                </option>
+                            @endforeach
                         </select>
-                        @if ($errors->has('jabatan') && old('form_type') === 'rt_tambah')
-                            <div class="invalid-feedback">{{ $errors->first('jabatan') }}</div>
+                        @if ($errors->has('jabatan_id') && old('form_type') === 'rt_tambah')
+                            <div class="invalid-feedback">{{ $errors->first('jabatan_id') }}</div>
                         @endif
                     </div>
 
