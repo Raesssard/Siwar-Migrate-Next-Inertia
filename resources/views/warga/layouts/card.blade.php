@@ -183,12 +183,13 @@
     </div>
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
-        <div class="card border-left-danger shadow h-100 py-2 card-clickable">
+        <div class="card border-left-{{ $jumlah_tagihan < 1 ? 'success' : 'danger' }} shadow h-100 py-2 card-clickable">
             <a href="{{ route('warga.tagihan') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
-                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                            <div
+                                class="text-xs font-weight-bold text-{{ $jumlah_tagihan < 1 ? 'success' : 'danger' }} text-uppercase mb-1">
                                 Tagihan
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
@@ -205,12 +206,13 @@
     </div>
 
     <div class="col-6 col-md-4 col-xl-3 mb-4">
-        <div class="card border-left-danger shadow h-100 py-2 card-clickable">
+        <div class="card border-left-{{ $total_tagihan < 1 ? 'success' : 'danger' }} shadow h-100 py-2 card-clickable">
             <a href="{{ route('warga.tagihan') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
-                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                            <div
+                                class="text-xs font-weight-bold text-{{ $total_tagihan < 1 ? 'success' : 'danger' }} text-uppercase mb-1">
                                 Total Tagihan
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
@@ -294,5 +296,4 @@
             </a>
         </div>
     </div>
-    
 </div>
