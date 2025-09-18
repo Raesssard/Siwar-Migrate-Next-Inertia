@@ -60,7 +60,7 @@
                     <!-- Form Pencarian -->
                     <form action="{{ route('warga.pengaduan.index') }}" method="GET"
                         class="d-flex align-items-center gap-2">
-                        <div class="input-group input-group-sm">
+                        <div class="input-group input-group-sm" style="width: 500px;">
                             <input type="text" name="search" value="{{ request('search') }}" class="form-control"
                                 placeholder="Cari Judul Pengaduan...">
                             <button class="btn btn-primary" type="submit">
