@@ -38,13 +38,16 @@ class RtIuranController extends Controller
             $query->where('nama', 'like', '%' . $search . '%');
         }
 
+        if ($request->filled('rt')) {
+            $query->where('id_rt', $request->input('rt'));
+        }
+
         $iuran = $query->paginate(5);
 
         $golongan_list = Kategori_golongan::all();
-        $rt = Rukun_tetangga::all(); // 🔹 tambahin ini
         $title = 'Iuran';
 
-        return view('rt.iuran.iuran', compact('iuran', 'golongan_list', 'title', 'rt'));
+        return view('rt.iuran.iuran', compact('iuran', 'golongan_list', 'title'));
     }
 
     public function store(Request $request)

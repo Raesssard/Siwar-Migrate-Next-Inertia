@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Pengaduan extends Model
@@ -16,7 +17,10 @@ class Pengaduan extends Model
         'isi',
         'file_path',
         'file_name',
+        'foto_bukti',
         'status',
+        'level',
+        'konfirmasi_rw',
         'created_at',
         'updated_at',
     ];
@@ -24,6 +28,11 @@ class Pengaduan extends Model
     public function warga(): BelongsTo
     {
         return $this->belongsTo(Warga::class, 'nik_warga', 'nik');
+    }
+
+    public function komentar(): HasMany
+    {
+        return $this->hasMany(PengaduanKomentar::class, 'pengaduan_id', 'id');
     }
 
     public function getOriginalFileNameAttribute()

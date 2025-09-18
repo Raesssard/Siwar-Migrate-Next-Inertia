@@ -169,23 +169,6 @@
                         @csrf
 
                         <div class="mb-3">
-                            <label for="rt" class="form-label">Nomor RT</label>
-                            <select name="rt" id="rt_add" class="form-select @error('rt') is-invalid @enderror"
-                                required>
-                                <option value="" selected disabled>Pilih RT</option>
-                                @foreach ($rukun_tetangga as $rt_value => $rt_text)
-                                    <option value="{{ $rt_text }}"
-                                        {{ $user->rukunTetangga->rt === $rt_text ? 'selected' : '' }}>
-                                        RT {{ $rt_text }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('rt')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
                             <label for="tanggal" class="form-label">Tanggal Transaksi</label>
                             <input type="date" name="tanggal"
                                 class="form-control @error('tanggal') is-invalid @enderror"
@@ -271,23 +254,6 @@
                         <form action="{{ route('rt.transaksi.update', $item->id) }}" method="POST" class="p-3">
                             @csrf
                             @method('PUT')
-
-                            <div class="mb-3">
-                                <label for="rt" class="form-label">Nomor RT</label>
-                                <select name="rt" id="rt_edit_{{ $item->id }}"
-                                    class="form-select @error('rt') is-invalid @enderror" required>
-                                    <option value="" disabled>Pilih RT</option>
-                                    @foreach ($rukun_tetangga as $rt_value => $rt_text)
-                                        <option value="{{ $rt_text }}"
-                                            {{ $user->rukunTetangga->rt === $rt_text ? 'selected' : '' }}>
-                                            RT {{ $rt_text }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('rt')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
 
                             <div class="mb-3">
                                 <label for="tanggal" class="form-label">Tanggal Transaksi</label>

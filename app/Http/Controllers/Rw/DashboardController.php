@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Rw;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kartu_keluarga;
+use App\Models\Pengaduan;
 use App\Models\Pengumuman;
 use App\Models\Rukun_tetangga;
 use App\Models\Tagihan;
@@ -13,7 +14,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Models\Pengaduan;
 
 class DashboardController extends Controller
 {
@@ -21,6 +21,13 @@ class DashboardController extends Controller
     {
         $id_rw = Auth::user()->id_rw;
         $id_rt = Auth::user()->id_rt;
+        $user = Auth::user();
+
+        $pengaduan_rw = $user->rw->nomor_rw;
+
+        $pengaduan_rw_saya = Pengaduan::WhereHas('warga.kartuKeluarga.rw', function ($aduan) use ($pengaduan_rw) {
+            $aduan->where('konfirmasi_rw', '!=', 'belum')->where('nomor_rw', $pengaduan_rw);
+        })->count();
 
         $jumlah_warga = Warga::count();
         $jumlah_kk = Kartu_keluarga::count();
@@ -60,7 +67,7 @@ class DashboardController extends Controller
         $jumlah_warga_pendatang = Warga::where('status_warga', 'pendatang')->count();
 
         $nik = Auth::user()->nik;
-        $pengaduan = Pengaduan::count(); // kalau semua pengaduan
+        $pengaduan = $pengaduan_rw_saya; // kalau semua pengaduan
 
 
         return view('rw.dashboard.dashboard', compact(

@@ -3,130 +3,145 @@
 @section('title', $title)
 
 @section('content')
-
-<div id="content">
-    @include('rt.layouts.topbar')
-
-    <div class="container-fluid">
-        <div class="row">
-            {{-- Alert --}}
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show mx-2" role="alert">
-                    {{ session('success') }}
-                    <i class="fas fa-check-circle"></i>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show mx-2" role="alert">
-                    {{ session('error') }}
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            {{-- Search & Filter --}}
-            <form action="{{ route('rt.pengaduan.index') }}" method="GET" class="row g-2 align-items-center px-3 pb-2">
-                <div class="col-md-5">
-                    <div class="input-group input-group-sm">
-                        <input type="text" name="search" value="{{ request('search') }}" 
-                               class="form-control" placeholder="Cari Judul / Warga...">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
+    <div id="content">
+        @include('rt.layouts.topbar')
+        <div class="container-fluid">
+            <div class="row">
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show mx-2" role="alert">
+                        {{ session('success') }}
+                        <i class="fas fa-paper-plane"></i>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                        <option value="">-- Filter Status --</option>
-                        <option value="diproses" {{ request('status') == 'diproses' ? 'selected' : '' }}>Diproses</option>
-                        <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
-                    </select>
-                </div>
-                <div class="col-md-3 d-flex gap-2">
-                    <a href="{{ route('rt.pengaduan.index') }}" class="btn btn-secondary btn-sm">Reset</a>
-                </div>
-            </form>
+                @endif
 
-            {{-- Card --}}
-            <div class="col-xl-12">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-2 d-flex justify-content-between align-items-center">
-                        <h6 class="m-0 font-weight-bold text-primary">Pengaduan Warga</h6>
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show mx-2" role="alert">
+                        {{ session('error') }}
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-
-                    <div class="card-body">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
-                            <div class="d-flex align-items-center gap-1">
-                                <i class="fas fa-users me-2 text-primary"></i>
-                                <span class="fw-semibold">{{ $total_pengaduan ?? 0 }} Pengaduan</span>
-                            </div>
+                @endif
+                <form action="{{ route('rt.pengaduan.index') }}" method="GET"
+                    class="row g-2 align-items-center px-3 pb-2">
+                    <div class="col-md-5 col-sm-12">
+                        <div class="input-group input-group-sm">
+                            <input type="text" name="search" value="{{ request('search') }}" class="form-control"
+                                placeholder="Cari Judul Pengaduan...">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 d-flex gap-2">
+                        <a href="{{ route('rt.pengaduan.index') }}" class="btn btn-secondary btn-sm">Reset Pencarian</a>
+                    </div>
+                </form>
+                <div class="col-xl-12 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-2 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Pengaduan RT Saya</h6>
                         </div>
 
-                        {{-- Tabel --}}
-                        <div class="table-responsive">
-                            <table class="table table-hover table-sm text-nowrap">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">No</th>
-                                        <th class="text-center">Tanggal</th>
-                                        <th class="text-center">NIK</th> {{-- kolom baru --}}
-                                        <th class="text-center">Warga</th>
-                                        <th class="text-center">Judul</th>
-                                        <th class="text-center">Isi</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($pengaduan as $item)
-                                        <tr>
-                                            <td class="text-center">{{ $loop->iteration }}</td>
-                                            <td class="text-center">
-                                                {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y H:i') }}
-                                            </td>
-                                            <td class="text-center">{{ $item->warga->nik ?? '-' }}</td> {{-- tampilkan nik --}}
-                                            <td class="text-center">{{ $item->warga->nama ?? '-' }}</td>
-                                            <td class="text-center">{{ $item->judul }}</td>
-                                            <td class="text-center">{{ \Illuminate\Support\Str::limit($item->isi, 40, '...') }}</td>
-                                            <td class="text-center">
-                                                <span class="badge {{ $item->status === 'diproses' ? 'bg-warning' : 'bg-success' }}">
-                                                    {{ ucfirst($item->status) }}
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <button class="btn btn-success btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#modalDetail{{ $item->id }}">
-                                                    <i class="fas fa-info"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        {{-- Modal detail --}}
-                                        @include('rt.pengaduan.komponen.detail_pengaduan', ['item' => $item])
-                                    @empty
-                                        <tr>
-                                            <td colspan="8" class="text-center">Tidak ada pengaduan</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-
-                        {{-- Pagination --}}
-                        <div class="d-flex justify-content-between align-items-center mt-2">
-                            <div class="text-muted">
-                                Menampilkan {{ $pengaduan->firstItem() ?? 0 }} - {{ $pengaduan->lastItem() }}
-                                dari {{ $pengaduan->total() }} data
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between mb-1">
+                                {{-- Total Pengumuman (kiri) --}}
+                                <div class="d-flex align-items-center gap-1 mb-1 mb-sm-0">
+                                    <i class="fas fa-paper-plane me-2 text-primary"></i>
+                                    <span class="fw-semibold text-dark">{{ $total_pengaduan_rt ?? 0 }} Pengaduan</span>
+                                </div>
                             </div>
-                            <div>
-                                {{ $pengaduan->links('pagination::bootstrap-5') }}
+                            <div class="table-responsive table-container">
+                                <table class="table table-hover table-sm scroll-table text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="text-center">No</th>
+                                            <th scope="col" class="text-center">NIK Warga</th>
+                                            <th scope="col" class="text-center">Nama</th>
+                                            <th scope="col" class="text-center">Judul</th>
+                                            <th scope="col" class="text-center">Isi</th>
+                                            <th scope="col" class="text-center">Tanggal</th>
+                                            <th scope="col" class="text-center">Status</th>
+                                            <th scope="col" class="text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($rt_pengaduan as $item)
+                                            <tr>
+                                                <th scope="row" class="text-center">
+                                                    {{ $loop->iteration }}</th>
+                                                <th scope="row" class="text-center">{{ $item->nik_warga }}</th>
+                                                <td class="text-center">{{ $item->warga->nama }}</td>
+                                                <td class="text-center">{{ $item->judul }}</td>
+                                                <td class="text-center">
+                                                    {{ \Illuminate\Support\Str::limit($item->isi, 50, '...') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y H:i') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    @if ($item->status === 'belum')
+                                                        <span class="badge bg-secondary">Belum dibaca</span>
+                                                    @elseif ($item->status === 'diproses')
+                                                        <span class="badge bg-primary">Sedang diproses</span>
+                                                        @if ($item->konfirmasi_rw === 'sudah')
+                                                            <span class="badge bg-info">Sudah dikonfirmasi</span>
+                                                        @elseif ($item->konfirmasi_rw === 'menunggu')
+                                                            <span class="badge bg-warning">Menunggu
+                                                                konfirmasi RW</span>
+                                                        @endif
+                                                    @else
+                                                        <span class="badge bg-success">Selesai</span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center align-item-center">
+                                                    <button type="button" class="btn btn-success btn-sm"
+                                                        onclick="markAsRead({{ $item->id }})" data-bs-toggle="modal"
+                                                        data-bs-target="#modalDetailPengaduan{{ $item->id }}">
+                                                        <i class="fas fa-bookmark"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            @include('rt.pengaduan.komponen.detail_pengaduan')
+                                        @empty
+                                            <tr>
+                                                <td colspan="7" class="text-center">Tidak ada pengaduan</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                                <div class="text-muted mb-2">
+                                    Menampilkan {{ $rt_pengaduan->firstItem() ?? '0' }}-{{ $rt_pengaduan->lastItem() }}
+                                    dari total
+                                    {{ $rt_pengaduan->total() }} data
+                                </div>
+
+                                <div>
+                                    {{ $rt_pengaduan->links('pagination::bootstrap-5') }}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div> 
-</div>
+    </div>
+    <script>
+        function markAsRead(id) {
+            fetch("{{ url('/rt/pengaduan') }}/" + id + "/baca", {
+                    method: "PATCH",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(res => res.json())
+                .then(data => console.log("Status updated:", data))
+                .catch(err => console.error(err));
+        }
+    </script>
 @endsection
