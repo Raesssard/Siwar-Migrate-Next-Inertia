@@ -126,7 +126,9 @@ Route::prefix('rw')->as('rw.')->middleware(['auth', 'role:rw'])->group(function 
     // Pengaduan
     Route::resource('pengaduan', PengaduanRwController::class)
         ->middleware('rw.can:pengaduan.rwrt.view');
-
+Route::patch('pengaduan/{id}/confirm', [PengaduanRwController::class, 'confirm'])
+    ->name('pengaduan.confirm')
+    ->middleware('rw.can:pengaduan.rwrt.view');
     // Kategori golongan (tanpa middleware, sesuai permintaan)
     Route::resource('kategori_golongan', Kategori_golonganController::class);
 
@@ -229,20 +231,6 @@ Route::middleware(['auth', 'role:rw|rt|warga|admin'])->group(function () {
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/api/warga/{nik}', [Admin_rtController::class, 'getWargaByNik'])->name('warga.by_nik');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Auth Routes
-|--------------------------------------------------------------------------
-*/
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login.post');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/choose-role', [LoginController::class, 'chooseRole'])->name('choose-role');
-    Route::post('/choose-role', [LoginController::class, 'setRole'])->name('choose.role');
 });
 
 /*
