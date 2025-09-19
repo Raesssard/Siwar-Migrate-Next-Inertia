@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        return view('login.login');
+        // return view('login.login'); ini yg blade
+        return Inertia::render('Login');
     }
 
     public function login(Request $request)
@@ -31,10 +33,12 @@ class LoginController extends Controller
             }
 
             // kalau punya banyak role → tampilkan halaman pilih role
-            return redirect()->route('choose-role');
+            // return redirect()->route('choose-role');
+            return Inertia::location(route('choose-role'));
         }
 
         // Jika gagal login
+
         return back()->withErrors([
             'nik' => 'NIK atau password salah.',
             'password' => 'NIK atau password salah.',
@@ -74,8 +78,11 @@ class LoginController extends Controller
     // Halaman pilih role
     public function chooseRole()
     {
+        /** @var User $user */
         $user = Auth::user();
-        return view('auth.choose-role', ['roles' => $user->roles]);
+        $roles = $user->getRoleNames();
+        // return view('auth.choose-role', ['roles' => $user->roles]);
+        return Inertia::render('ChooseRole', compact('user', 'roles'));
     }
 
     // Simpan role yang dipilih

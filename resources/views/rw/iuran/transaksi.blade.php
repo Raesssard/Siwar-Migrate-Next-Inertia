@@ -105,8 +105,8 @@
                                         <th>No</th>
                                         <th>RT</th>
                                         <th>Tanggal</th>
-                                        <th>Nama Transaksi</th>
                                         <th>Jenis</th>
+                                        <th>Nama Transaksi</th>
                                         <th>Nominal</th>
                                         <th>Keterangan</th>
                                         <th>Aksi</th>
@@ -118,12 +118,12 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->rt }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
-                                        <td>{{ $item->nama_transaksi }}</td>
                                         <td>
                                             <span class="badge {{ $item->jenis == 'pemasukan' ? 'bg-success' : 'bg-danger' }}">
                                                 {{ ucfirst($item->jenis) }}
                                             </span>
                                         </td>
+                                        <td>{{ $item->nama_transaksi }}</td>
                                         <td>Rp{{ number_format($item->nominal, 0, ',', '.') }}</td>
                                         <td>{{ $item->keterangan }}</td>
                                         <td>
@@ -195,17 +195,18 @@
                     <input type="date" name="tanggal" class="form-control form-control-sm"
                         value="{{ $item->tanggal->format('Y-m-d') }}" required>
                 </div>
-                <div class="mb-2">
-                    <label>Nama Transaksi</label>
-                    <input type="text" name="nama_transaksi" class="form-control form-control-sm"
-                        value="{{ $item->nama_transaksi }}" required>
-                </div>
+
                 <div class="mb-2">
                     <label>Jenis</label>
                     <select name="jenis" class="form-select form-select-sm" required>
                         <option value="pemasukan" {{ $item->jenis == 'pemasukan' ? 'selected' : '' }}>Pemasukan</option>
                         <option value="pengeluaran" {{ $item->jenis == 'pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
                     </select>
+                </div>
+                <div class="mb-2">
+                    <label>Nama Transaksi</label>
+                    <input type="text" name="nama_transaksi" class="form-control form-control-sm"
+                        value="{{ $item->nama_transaksi }}" required>
                 </div>
                 <div class="mb-2">
                     <label>Nominal</label>
@@ -254,16 +255,17 @@
                     <label>Tanggal</label>
                     <input type="date" name="tanggal" class="form-control form-control-sm" value="{{ old('tanggal') }}" required>
                 </div>
-                <div class="mb-2">
-                    <label>Nama Transaksi</label>
-                    <input type="text" name="nama_transaksi" class="form-control form-control-sm" value="{{ old('nama_transaksi') }}" required>
-                </div>
+
                 <div class="mb-2">
                     <label>Jenis</label>
                     <select name="jenis" class="form-select form-select-sm" required>
                         <option value="pemasukan" {{ old('jenis') == 'pemasukan' ? 'selected' : '' }}>Pemasukan</option>
                         <option value="pengeluaran" {{ old('jenis') == 'pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
                     </select>
+                </div>
+                <div class="mb-2">
+                    <label>Nama Transaksi</label>
+                    <input type="text" name="nama_transaksi" class="form-control form-control-sm" value="{{ old('nama_transaksi') }}" required>
                 </div>
                 <div class="mb-2">
                     <label>Nominal</label>

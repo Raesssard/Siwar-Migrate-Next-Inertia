@@ -67,7 +67,7 @@
 
                                 <div class="kk-info-grid row row-cols-1 row-cols-md-2 g-3 mb-4 small">
                                     <div class="col">
-                                        <p class="mb-1"><strong>Nama Kepala Keluarga</strong> : {{ $kepala->nama ?? '-' }}
+                                        <p class="mb-1"><strong>Kepala Keluarga</strong> : {{ $kepala->nama ?? '-' }}
                                         </p>
                                         <p class="mb-1"><strong>Alamat</strong> : {{ $kartuKeluarga->alamat ?? '-' }}</p>
                                         <p class="mb-1"><strong>RT/RW</strong> :
@@ -75,19 +75,17 @@
                                         </p>
                                         <p class="mb-0"><strong>Desa/Kelurahan</strong> :
                                             {{ $kartuKeluarga->kelurahan ?? '-' }}</p>
-                                    </div>
-                                    <div class="col">
                                         <p class="mb-1"><strong>Kecamatan</strong> :
                                             {{ $kartuKeluarga->kecamatan ?? '-' }}
                                         </p>
+                                    </div>
+                                    <div class="col">
                                         <p class="mb-1"><strong>Kabupaten/Kota</strong> :
                                             {{ $kartuKeluarga->kabupaten ?? '-' }}</p>
                                         <p class="mb-1"><strong>Kode Pos</strong> : {{ $kartuKeluarga->kode_pos ?? '-' }}
                                         </p>
                                         <p class="mb-0"><strong>Provinsi</strong> : {{ $kartuKeluarga->provinsi ?? '-' }}
                                         </p>
-                                        <p class="mb-0"><strong>Kategori Iuran</strong> :
-                                            {{ $kartuKeluarga->kategoriGolongan->jenis ?? '-' }}</p>
                                     </div>
                                 </div>
 

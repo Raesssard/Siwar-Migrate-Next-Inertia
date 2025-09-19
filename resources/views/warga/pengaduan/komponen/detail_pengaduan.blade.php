@@ -198,7 +198,8 @@
                         @forelse($item->komentar as $komen)
                             <div class="border rounded p-2 mb-2 bg-light">
                                 <small class="text-muted">
-                                    {{ $komen->user->nama }} • {{ $komen->created_at->diffForHumans() }}
+                                    {{ $komen->user->nama }} • {{ $komen->pengaduan->level }}
+                                    {{ $komen->user->rukunTetangga->rt }} • {{ $komen->created_at->diffForHumans() }}
                                 </small>
                                 <p class="mb-0">{{ $komen->isi_komentar }}</p>
                             </div>
