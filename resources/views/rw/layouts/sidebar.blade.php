@@ -125,6 +125,16 @@
             </a>
         </li>
     @endif
+    
+    {{-- Pengaduan --}}
+    @if(auth()->user()->canRw('pengaduan.rwrt.view'))
+        <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
+                <i class="fas fa-paper-plane"></i>
+                <span>Lihat Pengaduan</span>
+            </a>
+        </li>
+    @endif
 
     {{-- Pengumuman RW --}}
     @if(auth()->user()->canRw('pengumuman.rw.manage'))
@@ -176,15 +186,6 @@
         </li>
     @endif
 
-    {{-- Pengaduan --}}
-    @if(auth()->user()->canRw('pengaduan.rwrt.view'))
-        <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
-                <i class="fas fa-paper-plane"></i>
-                <span>Lihat Pengaduan</span>
-            </a>
-        </li>
-    @endif
 
     <hr class="sidebar-divider d-none d-md-block">
 </ul>
