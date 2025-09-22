@@ -26,7 +26,9 @@ class Rukun_tetanggaController extends Controller
         $id_rw = Auth::user()->id_rw; // Dapatkan id_rw dari user yang sedang login
 
         // Mengambil data RT untuk dropdown filter RT (hanya ketua, unik, dan di RW yang sama)
-        $rukun_tetangga_filter = Rukun_tetangga::where('jabatan', 'ketua')
+        $rukun_tetangga_filter = Rukun_tetangga::whereHas('jabatan', function ($q) {
+                $q->where('nama', 'ketua'); // atau field yg ada di tabel jabatan
+            })
             ->where('id_rw', $id_rw) // Filter berdasarkan id_rw user yang login
             ->select('rt')
             ->distinct()
@@ -67,9 +69,9 @@ class Rukun_tetanggaController extends Controller
         // Filter berdasarkan pencarian (no_kk atau nama)
         if ($request->has('search') && $request->search != '') {
             $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
                 $q->where('no_kk', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('nama', 'like', '%' . $searchTerm . '%');
+                    ->orWhere('nama', 'like', '%' . $searchTerm . '%');
                 // Jika "alamat" adalah kolom di tabel rukun_tetangga, tambahkan di sini:
                 // ->orWhere('alamat', 'like', '%' . $searchTerm . '%');
             });
@@ -77,7 +79,6 @@ class Rukun_tetanggaController extends Controller
 
         // Lanjutkan dengan pengurutan dan paginasi setelah filter diterapkan
         $rukun_tetangga = $query->orderBy('rt')
-            ->orderBy('jabatan') // Opsional: urutkan juga berdasarkan jabatan
             ->paginate(10)
             ->withQueryString(); // Memastikan parameter filter tetap ada di URL paginasi
 
@@ -130,8 +131,8 @@ class Rukun_tetanggaController extends Controller
                     }),
                     function ($attribute, $value, $fail) use ($request) {
                         $warga = Warga::where('nik', $value)
-                                    ->where('no_kk', $request->no_kk)
-                                    ->first();
+                            ->where('no_kk', $request->no_kk)
+                            ->first();
                         if (!$warga) {
                             $fail('NIK tidak ditemukan atau tidak terdaftar sebagai anggota keluarga di Nomor KK yang dipilih. Mohon periksa kembali.');
                         }
@@ -228,7 +229,6 @@ class Rukun_tetanggaController extends Controller
 
             return redirect()->route('rw.rukun_tetangga.index')
                 ->with('success', 'Data RT dan akun pengguna berhasil ditambahkan.');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()
                 ->withErrors($e->errors())
@@ -267,7 +267,7 @@ class Rukun_tetanggaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-     public function update(Request $request, string $id)
+    public function update(Request $request, string $id)
     {
         // Temukan data Rukun Tetangga berdasarkan ID. Jika tidak ditemukan, akan otomatis 404.
         $rukunTetangga = Rukun_tetangga::findOrFail($id);
@@ -313,8 +313,8 @@ class Rukun_tetanggaController extends Controller
                     // DAN terdaftar sebagai anggota keluarga di Nomor KK yang dipilih.
                     function ($attribute, $value, $fail) use ($request) {
                         $warga = Warga::where('nik', $value)
-                                    ->where('no_kk', $request->no_kk)
-                                    ->first();
+                            ->where('no_kk', $request->no_kk)
+                            ->first();
                         if (!$warga) {
                             $fail('NIK tidak ditemukan atau tidak terdaftar sebagai anggota keluarga di Nomor KK yang dipilih. Mohon periksa kembali.');
                         }
@@ -400,7 +400,6 @@ class Rukun_tetanggaController extends Controller
             }
 
             return redirect()->route('rw.rukun_tetangga.index')->with('success', 'Data Rukun Tetangga berhasil diperbarui. 👍');
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Menangkap error validasi dan mengembalikan ke halaman sebelumnya dengan pesan error.
             return redirect()->back()

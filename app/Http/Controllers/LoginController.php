@@ -11,7 +11,7 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        // return view('login.login'); ini yg blade
+        // return view('login.login');
         return Inertia::render('Login');
     }
 
@@ -64,7 +64,8 @@ class LoginController extends Controller
                     'nik' => 'Hanya Kepala Keluarga yang bisa login.',
                 ]);
             }
-            return redirect()->route('warga.dashboard');
+            return Inertia::location(route('warga.dashboard'));
+            // return redirect()->route('warga.dashboard');
         }
 
         return match ($role) {

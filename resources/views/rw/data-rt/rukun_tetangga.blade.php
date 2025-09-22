@@ -121,7 +121,7 @@
                                                 <th scope="row">{{ $rt->nik }}</th>
                                                 <td>{{ $rt->rt }}</td>
                                                 <td class="text-center">{{ ucwords(strtolower($rt->nama)) }}</td>
-                                                <td class="text-center">{{ ucwords(strtolower($rt->jabatan)) }}</td>
+                                                <td class="text-center">{{ ucwords(strtolower($rt->jabatan->nama_jabatan)) }}</td>
                                                 <td class="text-center">
                                                     {{ \Carbon\Carbon::parse($rt->mulai_menjabat)->format('d-m-Y') }}</td>
                                                 <td class="text-center">

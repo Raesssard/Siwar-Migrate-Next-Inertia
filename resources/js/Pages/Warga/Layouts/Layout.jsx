@@ -1,9 +1,9 @@
 import React, { useState } from "react"
-// import '../../css/layout.css'
-// import Sidebar from '../Pages/Component/Sidebar'
-// import Footer from '../Pages/Component/Footer'
-// import { ModalSidebar } from '../Pages/Component/Modal'
-import Logo from '../../../public/img/logo.png'
+import '../../../../css//warga/layout.css'
+import Sidebar from './Sidebar'
+import Footer from './Footer'
+import Topbar from './Topbar'
+// import { ModalSidebar } from './Modal'
 
 export default function layout({ children }) {
     return (
@@ -11,14 +11,15 @@ export default function layout({ children }) {
             <div id="wrapper">
                 <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion d-none d-md-block"
                     id="accordionSidebar">
-                    {/* <Sidebar /> */}
+                    <Sidebar />
                 </ul>
                 {/* <ModalSidebar /> */}
                 <div id="content-wrapper" className="d-flex flex-column">
                     <div id="content">
+                        <Topbar />
                         {children}
                     </div>
-                    {/* <Footer /> */}
+                    <Footer />
                 </div>
             </div>
         </>

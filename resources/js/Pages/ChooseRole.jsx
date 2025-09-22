@@ -1,10 +1,13 @@
 import React, { useState } from "react"
 import { Inertia } from "@inertiajs/inertia"
-import { Head } from "@inertiajs/react"
+import { Head, usePage } from "@inertiajs/react"
 import '../../css/choose-role.css'
 
 export default function ChooseRole({ roles }) {
     const [selectedRole, setSelectedRole] = useState("");
+    const { auth } = usePage().props
+    const user = auth?.user
+    console.log("User =>", user);
 
     function submit(e) {
         e.preventDefault();

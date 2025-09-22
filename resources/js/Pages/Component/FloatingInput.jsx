@@ -19,7 +19,7 @@ export default function FloatingInput({ label, type = "text", value, onChange, i
                 value={value}
                 onChange={onChange}
                 placeholder=" " // <- wajib, biar label bisa geser
-                className="peer w-full border rounded-lg px-10 pt-5 pb-2 
+                className="peer w-full border rounded-lg px-10 pt-4 pb-2 
                    placeholder-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
