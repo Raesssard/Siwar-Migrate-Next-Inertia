@@ -14,11 +14,8 @@ export default function layout({ children }) {
                     <Sidebar />
                 </ul>
                 {/* <ModalSidebar /> */}
-                <div id="content-wrapper" className="d-flex flex-column">
-                    <div id="content">
-                        <Topbar />
-                        {children}
-                    </div>
+                <div id="content-wrapper" className="main-content d-flex flex-column">
+                    {children}
                     <Footer />
                 </div>
             </div>

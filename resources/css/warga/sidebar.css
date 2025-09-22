@@ -1,15 +1,21 @@
 .sidebar {
     position: fixed;
+    /* supaya nempel di kiri */
     top: 0;
     left: 0;
     height: 100vh;
+    /* full tinggi layar */
     width: 250px;
+    /* lebar sidebar */
     display: flex;
     flex-direction: column;
     background-color: #4e73df;
-    /* sesuaikan */
+    /* sesuaikan warna */
     z-index: 1030;
+    /* di atas konten lain */
 }
+
+
 
 .sidebar .nav-item {
     width: 100%;
@@ -66,5 +72,9 @@
         position: relative;
         width: 100%;
         height: auto;
+    }
+
+    .main-content {
+        margin-left: 0;
     }
 }

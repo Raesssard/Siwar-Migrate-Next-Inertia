@@ -31,7 +31,7 @@ export default function Sidebar() {
         <>
             <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion d-none d-md-block" id="accordionSidebar">
 
-                <Link className="sidebar-brand" href="/">
+                <Link className="sidebar-brand" href="/warga">
                     <div className="sidebar-brand-icon">
                         <img src={logo} alt="SiWar Logo" className="sidebar-brand-icon-logo" />
                     </div>
@@ -40,7 +40,7 @@ export default function Sidebar() {
                 <hr className="sidebar-divider my-0" />
 
                 <li className={`nav-item ${isActive(url, '/warga') ? 'active' : ''}`}>
-                    <Link className="nav-link" href="/">
+                    <Link className="nav-link" href="/warga">
                         <FontAwesomeIcon icon={["fas", "tachometer-alt"]} />
                         <span>Dashboard</span>
                     </Link>
