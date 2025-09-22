@@ -115,6 +115,9 @@ Route::prefix('rw')->as('rw.')->middleware(['auth', 'role:rw'])->group(function 
     Route::get('iuran/export/{jenis?}', [IuranController::class, 'export'])
         ->name('iuran.export')
         ->middleware('rw.can:iuran.rwrt.view');
+    Route::put('iuran/otomatis/{id}', [IuranController::class, 'updateOtomatis'])
+        ->name('iuran.updateOtomatis')
+        ->middleware('rw.can:iuran.rwrt.manage');
 
     // Transaksi
     Route::resource('transaksi', TransaksiController::class)

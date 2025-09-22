@@ -7,6 +7,7 @@ use App\Models\Kartu_keluarga;
 use App\Models\Rukun_tetangga;
 use App\Models\User;
 use App\Models\Warga;
+use App\Models\HistoryWarga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
