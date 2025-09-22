@@ -261,4 +261,28 @@ if ($request->jenis === 'otomatis') {
 
         return Excel::download(new IuranExport($jenis), "iuran-{$jenis}.xlsx");
     }
+    public function updateOtomatis(Request $request, $id)
+{
+    $request->validate([
+        'nominal' => 'required|numeric|min:0',
+        'tgl_tagih' => 'required|date',
+        'tgl_tempo' => 'required|date|after_or_equal:tgl_tagih',
+    ]);
+
+    // cari detail iuran_golongan
+    $detail = IuranGolongan::findOrFail($id);
+
+    // update data detail (nominal)
+    $detail->update([
+        'nominal' => $request->nominal,
+    ]);
+
+    // update juga tgl_tagih & tgl_tempo di tabel iuran induknya
+    $detail->iuran()->update([
+        'tgl_tagih' => $request->tgl_tagih,
+        'tgl_tempo' => $request->tgl_tempo,
+    ]);
+
+    return back()->with('success', 'Iuran otomatis berhasil diperbarui.');
+}
 }

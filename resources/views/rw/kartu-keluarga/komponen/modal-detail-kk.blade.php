@@ -266,7 +266,7 @@
 
                     <div class="kk-info-grid mb-4">
                         <div class="kk-info-item">
-                            <p><strong>Nama Kepala Keluarga</strong> : {{ $kepala->nama ?? '-' }}</p>
+                            <p><strong>Kepala Keluarga</strong> : {{ $kepala->nama ?? '-' }}</p>
                             <p><strong>Alamat</strong> : {{ $kk->alamat ?? '-' }}</p>
                             <p><strong>RT/RW</strong> :
                                 {{ $kk->rukunTetangga->rt ?? '-' }}/{{ $kk->rw->nomor_rw ?? '-' }}
