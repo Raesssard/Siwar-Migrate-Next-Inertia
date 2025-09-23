@@ -1,13 +1,13 @@
-import React from "react";
-import Layout from "./Layouts/Layout";
-import { Head, Link, usePage } from "@inertiajs/react";
+import React from "react"
+import Layout from "./Layouts/Layout"
+import { Head, Link, usePage } from "@inertiajs/react"
 import '../../../css/warga/card.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import Topbar from "./Layouts/Topbar";
+import Topbar from "./Layouts/Topbar"
 
 library.add(fas, far, fab)
 
@@ -18,13 +18,15 @@ export default function Dashboard(toggle) {
         jumlah_tagihan,
         jumlah_transaksi,
         total_saldo_akhir,
-        pengaduan } = usePage().props
+        pengaduan,
+        title } = usePage().props
     const formatRupiah = (angka) => {
-        return "Rp. " + angka.toLocaleString("id-ID");
-    };
+        return "Rp. " + angka.toLocaleString("id-ID")
+    }
+
     return (
         <Layout>
-            <Head title="Dashboard" />
+            <Head title={`Dashboard ${title}`} />
             <div id="content">
                 <Topbar />
                 <div className="container-fluid">

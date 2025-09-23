@@ -17,7 +17,7 @@ class DashboardWargaController extends Controller
 
     public function index()
     {
-        $title = 'Dashboard';
+        $title = 'Warga';
 
         // Mengambil ID RT dan RW dari pengguna yang sedang login
         // Menggunakan null coalescing operator untuk menghindari error jika relasi tidak ada
@@ -101,6 +101,7 @@ class DashboardWargaController extends Controller
             'jumlah_transaksi' => $jumlah_transaksi,
             'total_saldo_akhir' => $total_saldo_akhir,
             'pengaduan' => $pengaduan,
+            'title' => $title
         ]);
     }
 }

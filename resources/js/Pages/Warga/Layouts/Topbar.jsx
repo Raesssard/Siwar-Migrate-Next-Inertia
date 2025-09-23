@@ -80,12 +80,21 @@ export default function Topbar() {
                     >
                         <button
                             type="button"
-                            className="btn btn-sm btn-warning dropdown-item"
+                            className="btn btn-sm btn-warning dropdown-item m-0"
                             onClick={() => setShowPasswordModal(true)}
                         >
                             <i className="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>{" "}
                             Ubah Password
                         </button>
+                        <Link
+                            href="/choose-role"
+                            method="get"
+                            as="button"
+                            className="dropdown-item"
+                        >
+                            <i className="fas fa-users-cog fa-sm fa-fw mr-2 text-gray-400"></i>{" "}
+                            Ganti Akun
+                        </Link>
                         <Link
                             href="/logout"
                             method="post"

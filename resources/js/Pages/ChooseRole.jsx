@@ -4,15 +4,14 @@ import { Head, usePage } from "@inertiajs/react"
 import '../../css/choose-role.css'
 
 export default function ChooseRole({ roles }) {
-    const [selectedRole, setSelectedRole] = useState("");
+    const [selectedRole, setSelectedRole] = useState("")
     const { auth } = usePage().props
     const user = auth?.user
-    console.log("User =>", user);
 
     function submit(e) {
-        e.preventDefault();
+        e.preventDefault()
         if (selectedRole) {
-            Inertia.post('/choose-role', { role: selectedRole });
+            Inertia.post('/choose-role', { role: selectedRole })
         }
     }
 
