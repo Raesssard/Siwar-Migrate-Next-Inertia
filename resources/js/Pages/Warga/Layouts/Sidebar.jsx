@@ -52,7 +52,7 @@ export default function Sidebar({ toggleKeParent }) {
 
                 <li className={`nav-item ${isActive(url, '/warga') ? 'active' : ''}`}>
                     <Link className="nav-link" href="/warga">
-                        <FontAwesomeIcon icon={["fas", "tachometer-alt"]} className='mr-2' />
+                        <i className="fas fa-fw fa-tachometer-alt mr-2"></i>
                         <span>Dashboard</span>
                     </Link>
                 </li>
@@ -60,33 +60,33 @@ export default function Sidebar({ toggleKeParent }) {
 
                 <li className={`nav-item ${isActive(url, '/warga/pengumuman') ? 'active' : ''}`}>
                     <Link className="nav-link" href="/warga/pengumuman">
-                        <FontAwesomeIcon icon={["fas", "bullhorn"]} className='mr-2' />
+                        <i className="fas fa-bullhorn mr-2"></i>
                         <span>Pengumuman</span>
                     </Link>
                 </li>
 
                 <li className={`nav-item ${isActive(url, '/warga/pengaduan') ? 'active' : ''}`}>
                     <Link className="nav-link" href="/warga/pengaduan">
-                        <FontAwesomeIcon icon={["fas", "paper-plane"]} className='mr-2' />
+                        <i className="fas fa-paper-plane mr-2"></i>
                         <span>Pengaduan</span>
                     </Link>
                 </li>
 
                 <li className={`nav-item ${isActive(url, '/warga/kk') ? 'active' : ''}`}>
                     <Link className="nav-link" href="/warga/kk">
-                        <FontAwesomeIcon icon={["fas", "id-card"]} className='mr-2' />
+                        <i className="fas fa-id-card mr-2"></i>
                         <span>Lihat KK</span>
                     </Link>
                 </li>
                 <li className={`nav-item ${isActive(url, '/warga/tagihan') ? 'active' : ''}`}>
                     <Link className="nav-link" href="/warga/tagihan">
-                        <FontAwesomeIcon icon={["fas", "hand-holding-usd"]} className='mr-2' />
+                        <i className="fas fa-hand-holding-usd mr-2"></i>
                         <span>Lihat Tagihan</span>
                     </Link>
                 </li>
                 <li className={`nav-item ${isActive(url, '/warga/transaksi') ? 'active' : ''}`}>
                     <Link className="nav-link" href="/warga/transaksi">
-                        <FontAwesomeIcon icon={["fas", "money-bill-wave"]} className='mr-2' />
+                        <i className="fas fa-money-bill-wave mr-2"></i>
                         <span>Lihat Transaksi</span>
                     </Link>
                 </li>
@@ -95,7 +95,7 @@ export default function Sidebar({ toggleKeParent }) {
 
                 <div className="text-center">
                     <button className="rounded-circle border-0" onClick={toggleSidebar} id="sidebarToggle">
-                        <FontAwesomeIcon icon={["fas", `chevron-${rotation}`]} className='arrow-toggle' />
+                        <i className={`fas fa-chevron-${rotation} arrow-toggle`}></i>
                     </button>
                 </div>
 

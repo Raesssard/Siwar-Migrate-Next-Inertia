@@ -1,4 +1,5 @@
 import './bootstrap'
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import '../css/app.css'
 import '../css/sb-admin-2-custom.css'

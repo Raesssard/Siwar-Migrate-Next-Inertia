@@ -43,7 +43,7 @@ export default function Dashboard(toggle) {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "comments"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
+                                                <i class="fas fa-comments text-gray-400" style={{ fontSize: '3rem' }}></i>
                                             </div>
                                         </div>
                                     </div>
@@ -64,7 +64,7 @@ export default function Dashboard(toggle) {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "paper-plane"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
+                                                <i class="fas fa-paper-plane text-gray-400" style={{ fontSize: '3rem' }}></i>
                                             </div>
                                         </div>
                                     </div>
@@ -85,7 +85,7 @@ export default function Dashboard(toggle) {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "money-check-alt"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
+                                                <i class="fas fa-money-check-alt text-gray-400" style={{ fontSize: '3rem' }}></i>
                                             </div>
                                         </div>
                                     </div>
@@ -106,7 +106,7 @@ export default function Dashboard(toggle) {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "hand-holding-usd"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
+                                                <i class="fas fa-hand-holding-usd text-gray-400" style={{ fontSize: '3rem' }}></i>
                                             </div>
                                         </div>
                                     </div>
@@ -127,7 +127,7 @@ export default function Dashboard(toggle) {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "money-bill-wave"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
+                                                <i class="fas fa-money-bill-wave text-gray-400" style={{ fontSize: '3rem' }}></i>
                                             </div>
                                         </div>
                                     </div>
@@ -148,7 +148,7 @@ export default function Dashboard(toggle) {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "wallet"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
+                                                <i class="fas fa-wallet text-gray-400" style={{ fontSize: '3rem' }}></i>
                                             </div>
                                         </div>
                                     </div>
@@ -169,7 +169,7 @@ export default function Dashboard(toggle) {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "wallet"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
+                                                <i class="fas fa-wallet text-gray-400" style={{ fontSize: '3rem' }}></i>
                                             </div>
                                         </div>
                                     </div>
