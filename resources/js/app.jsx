@@ -1,7 +1,7 @@
 import './bootstrap'
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import '../css/app.css'
+import '../css/sb-admin-2-custom.css'
 import React from 'react'
 import { createInertiaApp } from '@inertiajs/react'
 import { createRoot } from 'react-dom/client'

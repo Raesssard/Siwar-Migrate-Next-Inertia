@@ -9,7 +9,7 @@ export default function FloatingInput({ label, type = "text", value, onChange, i
             {/* Icon kiri */}
             {icon && (
                 <i
-                    className={`bi ${icon} absolute left-3 top-1/2 -translate-y-1/2 text-gray-400`}
+                    className={`bi ${icon} absolute left-3 top-1/2 -translate-y-1/2 text-gray-800`}
                 ></i>
             )}
 
@@ -25,7 +25,7 @@ export default function FloatingInput({ label, type = "text", value, onChange, i
 
             {/* Label */}
             <label
-                className="absolute left-10 text-gray-400 transition-all
+                className="absolute left-10 text-gray-800 transition-all
           peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 
           peer-placeholder-shown:text-base
           peer-focus:top-1 peer-focus:text-sm peer-focus:text-blue-500
@@ -37,7 +37,7 @@ export default function FloatingInput({ label, type = "text", value, onChange, i
                 <button
                     type="button"
                     onClick={() => setShow(!show)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-800"
                 >
                     <i className={`bi ${show ? "bi-eye-slash" : "bi-eye"}`} />
                 </button>
@@ -45,5 +45,3 @@ export default function FloatingInput({ label, type = "text", value, onChange, i
         </div>
     )
 }
-
-FloatingInput.layout = null

@@ -17,8 +17,15 @@
 
 
 
-.sidebar .nav-item {
+ul.navbar-nav li.nav-item .nav-link {
     width: 100%;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+ul.navbar-nav li.nav-item .nav-link:hover {
+    width: 100%;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: bold;
 }
 
 .sidebar-brand-icon-logo {
@@ -77,4 +84,8 @@
     .main-content {
         margin-left: 0;
     }
+}
+
+.arrow-toggle {
+color: rgba(255, 255, 255, 0.5);
 }

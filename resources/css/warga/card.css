@@ -1,137 +1,118 @@
-    /* ------------------------------------------- */
-    /* General Card Styling                        */
-    /* ------------------------------------------- */
-    .card-clickable {
-        transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+/* ================================================================== */
+/* General Card Styling                                               */
+/* ================================================================== */
+.card {
+    width: 100%;
+    height: auto;
+}
+
+.card-clickable {
+    border-radius: 0.35rem;
+    /* biar rounded */
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+    cursor: pointer;
+}
+
+.card-clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.6rem 1rem rgba(0, 0, 0, .15);
+}
+
+.card-clickable:active {
+    transform: translateY(1px);
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, .1);
+}
+
+.card-clickable .text-decoration-none {
+    display: block;
+    /* link cover seluruh card */
+    color: inherit;
+    /* biar nggak berubah warna */
+}
+
+.text-gray-800 {
+    color: #5a5c69 !important;
+}
+
+.text-gray-400 {
+    color: #d1d3e2 !important;
+}
+
+/* ================================================================== */
+/* Card Body Text                                                     */
+/* ================================================================== */
+.card-body {
+    margin: 0;
+    width: 100%;
+}
+
+.card-body .text-xs {
+    text-align: left;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.card-body .h4 {
+    text-align: left;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+/* ================================================================== */
+/* Icon Column                                                        */
+/* ================================================================== */
+.card-body .col-auto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-body .fa-3x,
+.card-body .bi {
+    font-size: 2rem;
+    opacity: 0.75;
+}
+
+/* ================================================================== */
+/* Responsive Breakpoints                                             */
+/* ================================================================== */
+@media (max-width: 767.98px) {
+    .card-body {
+        margin: 0;
+        width: 100%;
     }
 
-    .card-clickable:active {
-        transform: translateY(2px);
-        box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, .1) !important;
+    .card-body .h4 {
+        font-size: 1.2rem;
     }
 
-    .card-clickable .text-decoration-none {
-        display: block;
-        /* Ensures the link covers the entire card body area */
+    .card-body .text-xs {
+        font-size: 0.65rem;
     }
 
-    /* ------------------------------------------- */
-    /* Responsive Adjustments                      */
-    /* ------------------------------------------- */
+    .card-body .fa-3x,
+    .card-body .bi {
+        font-size: 1.5rem;
+    }
+}
 
-    /* For screens below medium (tablets and phones) */
-    @media (max-width: 767.98px) {
-        .card-body {
-            padding: 0.7rem !important;
-            /* Slightly more compact padding */
-        }
-
-        .card-body .h4 {
-            font-size: 1.2rem !important;
-            /* Slightly smaller h4 font size */
-            margin-bottom: 0.1rem !important;
-            /* More compact bottom margin for h4 */
-        }
-
-        .card-body .text-xs {
-            font-size: 0.58rem !important;
-            /* Slightly smaller title text size for better fit */
-            margin-bottom: 0.1rem !important;
-            /* More compact bottom margin for title text */
-
-            /* REMOVED: white-space: nowrap; overflow: hidden; text-overflow: ellipsis; */
-            /* Teks akan membungkus baris jika terlalu panjang */
-        }
-
-        .card-body .bi,
-        /* Target Bootstrap SVG Icons */
-        .card-body .fa-3x {
-            /* Target Font Awesome icons */
-            font-size: 1.7em !important;
-            /* Slightly smaller icon size */
-            width: 26px !important;
-            /* Slightly smaller SVG width */
-            height: 26px !important;
-            /* Slightly smaller SVG height */
-        }
-
-        /* Crucial fixes for alignment and offset within card-body */
-        .card-body>.row {
-            /* Target the direct child row of card-body */
-            display: flex;
-            /* Ensure it's a flex container */
-            align-items: center;
-            /* Vertically align items in the center */
-            flex-wrap: nowrap;
-            /* Prevent columns from wrapping to a new line */
-            justify-content: space-between;
-            /* Push content to ends of the row */
-            gap: 0.5rem;
-            /* Add consistent space between columns */
-
-            /* Ensure no default Bootstrap negative margins interfere */
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-        }
-
-        /* Resetting Bootstrap's default column spacing for more control */
-        .card-body .col,
-        .card-body .col-auto {
-            padding: 0 !important;
-            /* Remove all padding from cols */
-            margin: 0 !important;
-            /* Remove all margins from cols */
-        }
-
-        .card-body .col {
-            /* For the text column */
-            flex-basis: 0;
-            /* Base size before growing */
-            flex-grow: 1;
-            /* Allow text column to take available space */
-            min-width: 0;
-            /* Important to prevent content overflow (text wrapping is allowed now) */
-        }
-
-        .card-body .col-auto {
-            /* For the icon column */
-            flex-shrink: 0;
-            /* Prevent icon column from shrinking */
-            display: flex;
-            /* Use flexbox to center icon content */
-            align-items: center;
-            justify-content: center;
-        }
+@media (max-width: 575.98px) {
+    .card-body {
+        margin: 0;
+        width: 100%;
     }
 
-    /* For extra small screens (very small phones) */
-    @media (max-width: 575.98px) {
-        .card-body {
-            padding: 0.4rem !important;
-            /* Even more compact padding */
-        }
-
-        .card-body .h4 {
-            font-size: 0.95rem !important;
-            /* Further reduce for very small screens */
-            margin-bottom: 0.05rem !important;
-        }
-
-        .card-body .text-xs {
-            font-size: 0.5rem !important;
-            /* Further reduce for very small screens */
-            margin-bottom: 0.05rem !important;
-        }
-
-        .card-body .bi,
-        .card-body .fa-3x {
-            font-size: 1.3em !important;
-            width: 20px !important;
-            height: 20px !important;
-        }
-
-        .card-body>.row {
-            gap: 0.2rem;
-            /* Slightly smaller gap for very small screens */
-        }
+    .card-body .h4 {
+        font-size: 1rem;
     }
+
+    .card-body .text-xs {
+        font-size: 0.55rem;
+    }
+
+    .card-body .fa-3x,
+    .card-body .bi {
+        font-size: 1.25rem;
+    }
+}

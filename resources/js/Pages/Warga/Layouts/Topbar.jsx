@@ -46,7 +46,7 @@ export default function Topbar() {
     }
 
     return (
-        <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 sticky-top shadow">
+        <nav className="navbar nav-top navbar-expand navbar-light bg-white topbar mb-4 sticky-top shadow">
             <button
                 className="btn btn-link d-md-none rounded-circle mr-3"
                 data-bs-toggle="modal"
@@ -61,7 +61,7 @@ export default function Topbar() {
 
             <ul className="navbar-nav ml-auto">
                 <li className="nav-item dropdown no-arrow position-relative">
-                    <a
+                    <Link
                         className="nav-link dropdown-toggle"
                         href="#"
                         id="userDropdown"
@@ -73,7 +73,7 @@ export default function Topbar() {
                         <span className="mr-3 text-gray-600 small user-name-display">
                             {user?.nama}
                         </span>
-                    </a>
+                    </Link>
                     <div
                         className="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                         aria-labelledby="userDropdown"

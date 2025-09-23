@@ -11,7 +11,7 @@ import Topbar from "./Layouts/Topbar";
 
 library.add(fas, far, fab)
 
-export default function Dashboard() {
+export default function Dashboard(toggle) {
     const { jumlah_pengumuman,
         total_tagihan,
         total_transaksi,
@@ -29,13 +29,13 @@ export default function Dashboard() {
                 <Topbar />
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-6 col-md-4 col-xl-3 mb-4">
+                        <div className="col-xl-3 col-md-6 mb-4">
                             <div className="card border-left-warning shadow h-100 py-2 card-clickable">
                                 <Link href="/warga/pengumuman" className="text-decoration-none">
                                     <div className="card-body">
-                                        <div className="row align-items-center">
-                                            <div className="col">
-                                                <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                        <div className="row no-gutters align-items-center">
+                                            <div className="col mr-2">
+                                                <div className="text-xs font-weight-bold text-warning text-uppercase mb-1 text-align-start">
                                                     Jumlah Pengumuman
                                                 </div>
                                                 <div className="h4 mb-0 font-weight-bolder text-gray-800">
@@ -43,19 +43,19 @@ export default function Dashboard() {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "comments"]} size="3x" className="text-gray-400" />
+                                                <FontAwesomeIcon icon={["fas", "comments"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
                                             </div>
                                         </div>
                                     </div>
                                 </Link>
                             </div>
                         </div>
-                        <div className="col-6 col-md-4 col-xl-3 mb-4">
+                        <div className="col-xl-3 col-md-6 mb-4">
                             <div className="card border-left-warning shadow h-100 py-2 card-clickable">
                                 <Link href="/warga/pengaduan" className="text-decoration-none">
                                     <div className="card-body">
-                                        <div className="row align-items-center">
-                                            <div className="col">
+                                        <div className="row no-gutters align-items-center">
+                                            <div className="col mr-2">
                                                 <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                     Pengaduan
                                                 </div>
@@ -64,19 +64,19 @@ export default function Dashboard() {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "paper-plane"]} size="3x" className="text-gray-400" />
+                                                <FontAwesomeIcon icon={["fas", "paper-plane"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
                                             </div>
                                         </div>
                                     </div>
                                 </Link>
                             </div>
                         </div>
-                        <div className="col-6 col-md-4 col-xl-3 mb-4">
+                        <div className="col-xl-3 col-md-6 mb-4">
                             <div className={`card border-left-${jumlah_tagihan < 1 ? 'success' : 'danger'} shadow h-100 py-2 card-clickable`}>
                                 <Link href="/warga/tagihan" className="text-decoration-none">
                                     <div className="card-body">
-                                        <div className="row align-items-center">
-                                            <div className="col">
+                                        <div className="row no-gutters align-items-center">
+                                            <div className="col mr-2">
                                                 <div className={`text-xs font-weight-bold text-${jumlah_tagihan < 1 ? 'success' : 'danger'} text-uppercase mb-1`}>
                                                     Tagihan
                                                 </div>
@@ -85,19 +85,19 @@ export default function Dashboard() {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "money-check-alt"]} size="3x" className="text-gray-400" />
+                                                <FontAwesomeIcon icon={["fas", "money-check-alt"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
                                             </div>
                                         </div>
                                     </div>
                                 </Link>
                             </div>
                         </div>
-                        <div className="col-6 col-md-4 col-xl-3 mb-4">
+                        <div className="col-xl-3 col-md-6 mb-4">
                             <div className={`card border-left-${total_tagihan < 1 ? 'success' : 'danger'} shadow h-100 py-2 card-clickable`}>
                                 <Link href="/warga/tagihan" className="text-decoration-none">
                                     <div className="card-body">
-                                        <div className="row align-items-center">
-                                            <div className="col">
+                                        <div className="row no-gutters align-items-center">
+                                            <div className="col mr-2">
                                                 <div className={`text-xs font-weight-bold text-${total_tagihan < 1 ? 'success' : 'danger'} text-uppercase mb-1`}>
                                                     Total Tagihan
                                                 </div>
@@ -106,19 +106,19 @@ export default function Dashboard() {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "hand-holding-usd"]} size="3x" className="text-gray-400" />
+                                                <FontAwesomeIcon icon={["fas", "hand-holding-usd"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
                                             </div>
                                         </div>
                                     </div>
                                 </Link>
                             </div>
                         </div>
-                        <div className="col-6 col-md-4 col-xl-3 mb-4">
+                        <div className="col-xl-3 col-md-6 mb-4">
                             <div className="card border-left-primary shadow h-100 py-2 card-clickable">
                                 <Link href="/warga/transaksi" className="text-decoration-none">
                                     <div className="card-body">
-                                        <div className="row align-items-center">
-                                            <div className="col">
+                                        <div className="row no-gutters align-items-center">
+                                            <div className="col mr-2">
                                                 <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Transaksi
                                                 </div>
@@ -127,19 +127,19 @@ export default function Dashboard() {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "money-bill-wave"]} size="3x" className="text-gray-400" />
+                                                <FontAwesomeIcon icon={["fas", "money-bill-wave"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
                                             </div>
                                         </div>
                                     </div>
                                 </Link>
                             </div>
                         </div>
-                        <div className="col-6 col-md-4 col-xl-3 mb-4">
+                        <div className="col-xl-3 col-md-6 mb-4">
                             <div className="card border-left-primary shadow h-100 py-2 card-clickable">
                                 <Link href="/warga/transaksi" className="text-decoration-none">
                                     <div className="card-body">
-                                        <div className="row align-items-center">
-                                            <div className="col">
+                                        <div className="row no-gutters align-items-center">
+                                            <div className="col mr-2">
                                                 <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Total Transaksi
                                                 </div>
@@ -148,19 +148,19 @@ export default function Dashboard() {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "wallet"]} size="3x" className="text-gray-400" />
+                                                <FontAwesomeIcon icon={["fas", "wallet"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
                                             </div>
                                         </div>
                                     </div>
                                 </Link>
                             </div>
                         </div>
-                        <div className="col-6 col-md-4 col-xl-3 mb-4">
+                        <div className="col-xl-3 col-md-6 mb-4">
                             <div className="card border-left-primary shadow h-100 py-2 card-clickable">
                                 <Link href="/warga/transaksi" className="text-decoration-none">
                                     <div className="card-body">
-                                        <div className="row align-items-center">
-                                            <div className="col">
+                                        <div className="row no-gutters align-items-center">
+                                            <div className="col mr-2">
                                                 <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                     Total Saldo
                                                 </div>
@@ -169,7 +169,7 @@ export default function Dashboard() {
                                                 </div>
                                             </div>
                                             <div className="col-auto">
-                                                <FontAwesomeIcon icon={["fas", "wallet"]} size="3x" className="text-gray-400" />
+                                                <FontAwesomeIcon icon={["fas", "wallet"]} style={{ fontSize: "3rem" }} className="text-gray-400" />
                                             </div>
                                         </div>
                                     </div>

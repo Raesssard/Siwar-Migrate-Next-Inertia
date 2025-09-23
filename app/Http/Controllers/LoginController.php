@@ -69,8 +69,11 @@ class LoginController extends Controller
         }
 
         return match ($role) {
+            // 'admin' => Inertia::location(route('admin.dashboard')),
             'admin' => redirect()->route('admin.dashboard'),
+            // 'rw'    => Inertia::location(route('rw.dashboard')),
             'rw'    => redirect()->route('rw.dashboard'),
+            // 'rt'    => Inertia::location(route('rt.dashboard')),
             'rt'    => redirect()->route('rt.dashboard'),
             default => redirect('/login'),
         };

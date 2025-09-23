@@ -92,15 +92,15 @@ class DashboardWargaController extends Controller
         // Saldo akhir
         $total_saldo_akhir = $total_pemasukan - $total_pengeluaran;
 
-        return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman', 'total_tagihan', 'total_transaksi', 'jumlah_tagihan', 'jumlah_transaksi','total_saldo_akhir', 'pengaduan'));
-        // return Inertia::render('Warga/Dashboard', [
-        //     'jumlah_pengumuman' => $jumlah_pengumuman,
-        //     'total_tagihan' => $total_tagihan,
-        //     'total_transaksi' => $total_transaksi,
-        //     'jumlah_tagihan' => $jumlah_tagihan,
-        //     'jumlah_transaksi' => $jumlah_transaksi,
-        //     'total_saldo_akhir' => $total_saldo_akhir,
-        //     'pengaduan' => $pengaduan,
-        // ]);
+        // return view('warga.dashboard.dashboard', compact('title', 'jumlah_pengumuman', 'total_tagihan', 'total_transaksi', 'jumlah_tagihan', 'jumlah_transaksi','total_saldo_akhir', 'pengaduan'));
+        return Inertia::render('Warga/Dashboard', [
+            'jumlah_pengumuman' => $jumlah_pengumuman,
+            'total_tagihan' => $total_tagihan,
+            'total_transaksi' => $total_transaksi,
+            'jumlah_tagihan' => $jumlah_tagihan,
+            'jumlah_transaksi' => $jumlah_transaksi,
+            'total_saldo_akhir' => $total_saldo_akhir,
+            'pengaduan' => $pengaduan,
+        ]);
     }
 }
