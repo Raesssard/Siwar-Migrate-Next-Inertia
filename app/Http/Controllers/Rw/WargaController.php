@@ -205,6 +205,13 @@ class WargaController extends Controller
             'tujuan_pindah' => $request->tujuan_pindah,
         ]);
 
+        HistoryWarga::create([
+            'warga_nik' => $warga->nik,
+            'jenis' => 'masuk',
+            'keterangan' => 'Warga baru ditambahkan dengan NIK ' . $warga->nik,
+            'tanggal' => now(),
+        ]);
+
         // Buat user hanya jika status kepala keluarga
         if ($request->status_hubungan_dalam_keluarga === 'kepala keluarga') {
             $user = User::create([
@@ -401,15 +408,25 @@ class WargaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, string $nik)
-    {
-        $warga = Warga::findOrFail($nik);
+public function destroy(Request $request, string $nik)
+{
+    try {
+        // Cari data warga
+        $warga = Warga::where('nik', $nik)->firstOrFail();
+
+        HistoryWarga::create([
+            'warga_nik'  => $warga->nik,
+            'nama'       => $warga->nama,
+            'jenis'      => 'keluar',
+            'keterangan' => $request->keterangan ?? 'Tidak ada keterangan',
+            'tanggal'    => now(),
+        ]);
 
         // Cari user berdasarkan NIK
         $user = User::where('nik', $nik)->first();
-
         if ($user) {
-            if ($user->roles->count() > 1) {
+            // Cek jumlah role
+            if ($user->roles()->count() > 1) {
                 // Hapus hanya role 'warga'
                 $user->removeRole('warga');
             } else {
@@ -421,6 +438,13 @@ class WargaController extends Controller
         // Hapus data warga
         $warga->delete();
 
-        return redirect()->to($request->redirect_to)->with('success', 'Warga berhasil dihapus.');
+        return redirect()
+            ->back()
+            ->with('success', "Warga {$warga->nama} berhasil dihapus dan dicatat ke history.");
+    } catch (\Exception $e) {
+        return redirect()
+            ->back()
+            ->with('error', 'Gagal menghapus warga: ' . $e->getMessage());
     }
+}
 }

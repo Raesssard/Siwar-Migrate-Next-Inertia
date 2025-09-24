@@ -1,5 +1,5 @@
 @php
-    $modalId = "deleteWargaHistoryModal{$warga->nik}";
+    $modalId = "deleteWargaModal{$warga->nik}";
 @endphp
 
 <div class="modal fade" id="{{ $modalId }}" tabindex="-1" aria-labelledby="{{ $modalId }}Label" aria-hidden="true">
@@ -111,3 +111,4 @@ function validateDeleteWarga{{ $warga->nik }}() {
     return true;
 }
 </script>
+
