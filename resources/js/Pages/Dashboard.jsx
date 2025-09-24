@@ -2,13 +2,6 @@ import React from "react"
 import Layout from "../Layouts/Layout"
 import { Head, Link, usePage } from "@inertiajs/react"
 import '../../css/card.css'
-// import { library } from '@fortawesome/fontawesome-svg-core'
-// import { fas } from '@fortawesome/free-solid-svg-icons'
-// import { far } from '@fortawesome/free-regular-svg-icons'
-// import { fab } from '@fortawesome/free-brands-svg-icons'
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-
-// library.add(fas, far, fab)
 
 export default function Dashboard() {
     const { jumlah_pengumuman,
@@ -29,7 +22,7 @@ export default function Dashboard() {
     const role = props.auth?.currentRole
     return (
         <Layout>
-            <Head title={`Dashboard ${role.length <= 2
+            <Head title={`${title} ${role.length <= 2
                 ? role.toUpperCase()
                 : role.charAt(0).toUpperCase() + role.slice(1)}`}
             />

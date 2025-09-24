@@ -3,27 +3,24 @@ import { usePage, Link } from "@inertiajs/react"
 import { useState } from "react"
 import '../../css/topbar.css'
 import { Inertia } from "@inertiajs/inertia"
+import { PasswordModal } from "../Pages/Component/Modal"
 
-export default function Topbar() {
+export default function Topbar({ modalShow }) {
     const { url, props } = usePage()
     const user = props.auth?.user
     const roles = props.auth?.roles
-    const currentRole = props.auth?.currentRole
     const [showPasswordModal, setShowPasswordModal] = useState(false)
     const [gantiAkun, setGantiAkun] = useState(false)
     const [selectedRole, setSelectedRole] = useState("")
+
+    const modalHandler = (showModal) => {
+        setShowPasswordModal(showModal)
+    }
 
     function submit(e) {
         e.preventDefault()
         if (selectedRole) {
             Inertia.post('/choose-role', { role: selectedRole })
-        }
-    }
-
-    function submitPass(e) {
-        e.preventDefault()
-        if (selectedRole) {
-            Inertia.post('/update-password', { role: selectedRole })
         }
     }
 
@@ -73,8 +70,7 @@ export default function Topbar() {
         <nav className="navbar nav-top navbar-expand navbar-light bg-white topbar mb-4 sticky-top shadow">
             <button
                 className="btn btn-link d-md-none rounded-circle mr-3"
-                data-bs-toggle="modal"
-                data-bs-target="#mobileSidebarModal"
+                onClick={() => modalShow(true)}
             >
                 <i className="fa fa-bars"></i>
             </button>
@@ -118,7 +114,7 @@ export default function Topbar() {
                                 onClick={acccountChange}
                             >
                                 <i className="fas fa-users-cog fa-sm fa-fw mr-2 text-gray-400"></i>{" "}
-                                Akun
+                                Ganti akun
                             </button>)
                         }
                         <div className={`akun-dropdown ${gantiAkun ? "show" : ""}`}>
@@ -158,88 +154,10 @@ export default function Topbar() {
                 </li>
             </ul>
 
-            {showPasswordModal && (
-                <div
-                    className="modal fade show"
-                    style={{ display: "block" }}
-                    tabIndex="-1"
-                >
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content">
-                            <form onSubmit={submitPass}>
-                                <div className="modal-header">
-                                    <h5 className="modal-title">
-                                        <i className="fas fa-key text-primary me-1"></i>{" "}
-                                        Ubah Password
-                                    </h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        onClick={() => setShowPasswordModal(false)}
-                                    />
-                                </div>
-                                <div className="modal-body">
-                                    <div className="form-floating mb-3 position-relative">
-                                        <input
-                                            type="password"
-                                            name="current_password"
-                                            className="form-control"
-                                            id="current_password"
-                                            placeholder="Password Lama"
-                                            required
-                                        />
-                                        <label htmlFor="current_password">
-                                            <i className="fas fa-lock me-2"></i>
-                                            Password Lama
-                                        </label>
-                                    </div>
-                                    <div className="form-floating mb-3 position-relative">
-                                        <input
-                                            type="password"
-                                            name="password"
-                                            className="form-control"
-                                            id="password"
-                                            placeholder="Password Baru"
-                                            required
-                                            minLength="6"
-                                        />
-                                        <label htmlFor="password">
-                                            <i className="fas fa-lock me-2"></i>
-                                            Password Baru
-                                        </label>
-                                    </div>
-                                    <div className="form-floating mb-3 position-relative">
-                                        <input
-                                            type="password"
-                                            name="password_confirmation"
-                                            className="form-control"
-                                            id="password_confirmation"
-                                            placeholder="Konfirmasi Password Baru"
-                                            required
-                                        />
-                                        <label htmlFor="password_confirmation">
-                                            <i className="fas fa-lock me-2"></i>
-                                            Konfirmasi Password
-                                        </label>
-                                    </div>
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={() => setShowPasswordModal(false)}
-                                    >
-                                        Batal
-                                    </button>
-                                    <button type="submit" className="btn btn-primary">
-                                        Simpan Perubahan
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {showPasswordModal &&
+                <PasswordModal
+                    show={modalHandler} />
+            }
         </nav>
     )
 }

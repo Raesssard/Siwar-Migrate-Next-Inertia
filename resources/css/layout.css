@@ -72,7 +72,7 @@
     }
 
     .modal-body {
-        overflow-y: auto;
+        overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
         flex-grow: 1;
     }
@@ -120,4 +120,15 @@ div.row {
 
 div.container-fluid {
     padding: 0;
+}
+
+.modal-dialog.animasi-modal {
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal-dialog.animasi-modal.show {
+  transform: translateX(0);
+  opacity: 1;
 }

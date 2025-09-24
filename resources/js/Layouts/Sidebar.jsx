@@ -1,22 +1,19 @@
 import '../../css/sidebar.css'
 import logo from '../../../public/img/logo.png'
-// import { library } from '@fortawesome/fontawesome-svg-core'
-// import { fas } from '@fortawesome/free-solid-svg-icons'
-// import { far } from '@fortawesome/free-regular-svg-icons'
-// import { fab } from '@fortawesome/free-brands-svg-icons'
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Link, usePage } from "@inertiajs/react"
 import React, { useState } from "react"
-
-// library.add(fas, far, fab)
 
 export default function Sidebar({ toggleKeParent }) {
     const [toggle, setToggle] = useState("")
     const { auth } = usePage().props
     const { url } = usePage()
-    const isActive = (url, pattern) => {
+    const isActive = (url, pattern, exact = false) => {
+        if (exact) {
+            return url === pattern
+        }
         return url.startsWith(pattern)
     }
+
 
     const toggleSidebar = (e) => {
         e.preventDefault()
@@ -27,16 +24,6 @@ export default function Sidebar({ toggleKeParent }) {
     }
 
     const rotation = toggle ? 'right' : 'left'
-
-    // jangan di hapus ntar ke pake klo mau dijadiin layout bersama
-    // const role = () => {
-    //     if (auth?.roles?.includes('admin')) return '/admin/dashboard'
-    //     if (auth?.roles?.includes('rw')) return '/rw'
-    //     if (auth?.roles?.includes('rt')) return '/rt'
-    //     if (auth?.roles?.includes('warga')) return '/warga'
-    //     return '/login'
-    // }
-    // const path = role()
 
     return (
         <>
@@ -50,7 +37,7 @@ export default function Sidebar({ toggleKeParent }) {
 
                 <hr className="sidebar-divider my-0" />
 
-                <li className={`nav-item ${isActive(url, '/warga') ? 'active' : ''}`}>
+                <li className={`nav-item ${isActive(url, '/warga', true) ? 'active' : ''}`}>
                     <Link className="nav-link" href="/warga">
                         <i className="fas fa-fw fa-tachometer-alt mr-2"></i>
                         <span>Dashboard</span>
