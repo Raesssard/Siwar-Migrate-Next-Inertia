@@ -1,14 +1,38 @@
 import React from "react"
 import { usePage, Link } from "@inertiajs/react"
 import { useState } from "react"
-import '../../../../css/warga/topbar.css'
+import '../../css/topbar.css'
+import { Inertia } from "@inertiajs/inertia"
 
 export default function Topbar() {
     const { url, props } = usePage()
     const user = props.auth?.user
+    const roles = props.auth?.roles
+    const currentRole = props.auth?.currentRole
     const [showPasswordModal, setShowPasswordModal] = useState(false)
+    const [gantiAkun, setGantiAkun] = useState(false)
+    const [selectedRole, setSelectedRole] = useState("")
 
-    // ambil segment
+    function submit(e) {
+        e.preventDefault()
+        if (selectedRole) {
+            Inertia.post('/choose-role', { role: selectedRole })
+        }
+    }
+
+    function submitPass(e) {
+        e.preventDefault()
+        if (selectedRole) {
+            Inertia.post('/update-password', { role: selectedRole })
+        }
+    }
+
+    function acccountChange(e) {
+        e.preventDefault()
+        e.stopPropagation()
+        setGantiAkun(!gantiAkun)
+    }
+
     const segments = url.split("/").filter(Boolean)
     const segment = segments[1] ?? segments[0] ?? ""
 
@@ -77,6 +101,7 @@ export default function Topbar() {
                     <div
                         className="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                         aria-labelledby="userDropdown"
+                        data-bs-auto-close="outside"
                     >
                         <button
                             type="button"
@@ -86,15 +111,40 @@ export default function Topbar() {
                             <i className="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>{" "}
                             Ubah Password
                         </button>
-                        <Link
-                            href="/choose-role"
-                            method="get"
-                            as="button"
-                            className="dropdown-item"
-                        >
-                            <i className="fas fa-users-cog fa-sm fa-fw mr-2 text-gray-400"></i>{" "}
-                            Ganti Akun
-                        </Link>
+                        {roles.length > 1 &&
+                            (<button
+                                type="button"
+                                className="btn btn-sm btn-secondary dropdown-item m-0"
+                                onClick={acccountChange}
+                            >
+                                <i className="fas fa-users-cog fa-sm fa-fw mr-2 text-gray-400"></i>{" "}
+                                Akun
+                            </button>)
+                        }
+                        <div className={`akun-dropdown ${gantiAkun ? "show" : ""}`}>
+                            {gantiAkun && roles.map((rol, index) => (
+                                <form key={index} onSubmit={submit}>
+                                    <input
+                                        type="hidden"
+                                        name="role"
+                                        value={rol}
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="btn btn-sm btn-account dropdown-item mt-0 mb-0"
+                                        onClick={() => setSelectedRole(rol)}
+                                    >
+                                        <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        {` 
+                                            Akun ${rol.length <= 2
+                                                ? rol.toUpperCase()
+                                                : rol.charAt(0).toUpperCase() + rol.slice(1)
+                                            }
+                                        `}
+                                    </button>
+                                </form>
+                            ))}
+                        </div>
                         <Link
                             href="/logout"
                             method="post"
@@ -108,7 +158,6 @@ export default function Topbar() {
                 </li>
             </ul>
 
-            {/* modal ubah password */}
             {showPasswordModal && (
                 <div
                     className="modal fade show"
@@ -117,7 +166,7 @@ export default function Topbar() {
                 >
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
-                            <form action={route("update.password")} method="post">
+                            <form onSubmit={submitPass}>
                                 <div className="modal-header">
                                     <h5 className="modal-title">
                                         <i className="fas fa-key text-primary me-1"></i>{" "}

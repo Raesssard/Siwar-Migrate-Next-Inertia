@@ -1,24 +1,32 @@
 import React, { useState } from "react"
-// import '../../css/layout.css'
-// import Sidebar from '../Pages/Component/Sidebar'
-// import Footer from '../Pages/Component/Footer'
-// import { ModalSidebar } from '../Pages/Component/Modal'
-import Logo from '../../../public/img/logo.png'
+import '../../css/layout.css'
+import Sidebar from './Sidebar'
+import Footer from './Footer'
+import Topbar from "./Topbar"
+// import { ModalSidebar } from './Modal'
 
 export default function layout({ children }) {
+    const [toggle, setToggle] = useState("")
+
+    const handleToggle = (t) => {
+        setToggle(t)
+    }
+
     return (
         <>
             <div id="wrapper">
-                <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion d-none d-md-block"
-                    id="accordionSidebar">
-                    {/* <Sidebar /> */}
-                </ul>
+                <Sidebar toggleKeParent={handleToggle} />
                 {/* <ModalSidebar /> */}
-                <div id="content-wrapper" className="d-flex flex-column">
+                <div id="content-wrapper" className={`main-content d-flex flex-column ${toggle}`}>
                     <div id="content">
-                        {children}
+                        <Topbar />
+                        <div className="container-fluid">
+                            <div className="row">
+                                {children}
+                            </div>
+                        </div>
                     </div>
-                    {/* <Footer /> */}
+                    <Footer />
                 </div>
             </div>
         </>

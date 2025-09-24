@@ -171,3 +171,21 @@
 .nav-top {
     margin-right: 0;
 }
+
+.akun-dropdown {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.akun-dropdown.show {
+    max-height: 500px;
+    opacity: 1;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+div.akun-dropdown form .btn.btn-account {
+    font-size: 0.85rem;
+    padding-left: 2rem;
+}

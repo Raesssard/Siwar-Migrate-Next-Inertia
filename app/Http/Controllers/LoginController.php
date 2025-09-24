@@ -29,7 +29,9 @@ class LoginController extends Controller
 
             // kalau user hanya punya 1 role → langsung redirect
             if ($user->roles->count() === 1) {
-                return $this->redirectByRole($user->roles->first()->name, $user);
+                $role = $user->roles->first()->name;
+                session(['active_role' => $role]); // langsung simpan
+                return $this->redirectByRole($role, $user);
             }
 
             // kalau punya banyak role → tampilkan halaman pilih role

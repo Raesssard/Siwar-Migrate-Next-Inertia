@@ -1,14 +1,14 @@
-import '../../../../css/warga/sidebar.css'
-import logo from '../../../../../public/img/logo.png'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
-import { far } from '@fortawesome/free-regular-svg-icons'
-import { fab } from '@fortawesome/free-brands-svg-icons'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import '../../css/sidebar.css'
+import logo from '../../../public/img/logo.png'
+// import { library } from '@fortawesome/fontawesome-svg-core'
+// import { fas } from '@fortawesome/free-solid-svg-icons'
+// import { far } from '@fortawesome/free-regular-svg-icons'
+// import { fab } from '@fortawesome/free-brands-svg-icons'
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Link, usePage } from "@inertiajs/react"
 import React, { useState } from "react"
 
-library.add(fas, far, fab)
+// library.add(fas, far, fab)
 
 export default function Sidebar({ toggleKeParent }) {
     const [toggle, setToggle] = useState("")
