@@ -207,6 +207,7 @@ class WargaController extends Controller
 
         HistoryWarga::create([
             'warga_nik' => $warga->nik,
+            'nama' => $warga->nama,
             'jenis' => 'masuk',
             'keterangan' => 'Warga baru ditambahkan dengan NIK ' . $warga->nik,
             'tanggal' => now(),
