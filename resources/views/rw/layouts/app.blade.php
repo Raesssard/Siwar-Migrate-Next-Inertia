@@ -11,18 +11,19 @@
 
     <title>{{ $title ?? 'WargaKita' }}</title>
 
-    <!-- Custom fonts for this template-->
+    <!-- FontAwesome -->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles -->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         @media (min-width: 768px) {
@@ -106,16 +107,8 @@
                 border-bottom: 2px solid #e3e6f0;
             }
 
-            .modal-header .close {
-                margin-top: -1.5rem;
-                margin-bottom: 0;
-                padding: 0.5rem;
-            }
-
-            .modal-header .modal-title,
-            .modal-header .sidebar-brand-icon-logo {
-                margin-top: 0;
-                margin-bottom: 0;
+            .modal-header .btn-close {
+                margin: -0.5rem 0 0 auto;
             }
 
             .sidebar-brand-icon-logo {
@@ -125,7 +118,6 @@
             }
         }
     </style>
-
 
 </head>
 
@@ -140,6 +132,7 @@
 
     <!-- Page Wrapper -->
     <div id="wrapper">
+
         <!-- Sidebar Desktop -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion d-none d-md-block"
             id="accordionSidebar">
@@ -147,151 +140,148 @@
         </ul>
 
         <!-- Sidebar Mobile -->
-<!-- Sidebar Mobile -->
-<div class="modal fade" id="mobileSidebarModal" tabindex="-1" role="dialog" aria-labelledby="mobileSidebarLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-slideout-left modal-sm" role="document">
-        <div class="modal-content bg-primary text-white">
-            <div class="modal-header border-0">
-                <img src="{{ asset('img/logo.png') }}" class="sidebar-brand-icon-logo" alt="Logo">
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Tutup">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body p-0">
-                <ul class="navbar-nav sidebar sidebar-dark accordion">
-                    <hr class="sidebar-divider my-0">
+        <div class="modal fade" id="mobileSidebarModal" tabindex="-1" aria-labelledby="mobileSidebarLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-slideout-left modal-sm">
+                <div class="modal-content bg-primary text-white">
+                    <div class="modal-header border-0">
+                        <img src="{{ asset('img/logo.png') }}" class="sidebar-brand-icon-logo" alt="Logo">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <ul class="navbar-nav sidebar sidebar-dark accordion">
+                            <hr class="sidebar-divider my-0">
 
-                    {{-- Dashboard --}}
-                    <li class="nav-item {{ Request::is('rw') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('rw.dashboard') }}">
-                            <i class="fas fa-fw fa-tachometer-alt"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
+                            {{-- Dashboard --}}
+                            <li class="nav-item {{ Request::is('rw') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('rw.dashboard') }}">
+                                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
 
-                    {{-- Menu RW --}}
-                    @if(auth()->user()->canRw('rt.view'))
-                        <li class="nav-item {{ Request::is('rw/rukun_tetangga*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('rw.rukun_tetangga.index') }}">
-                                <i class="fas fa-house-user"></i>
-                                <span>Rukun Tetangga</span>
-                            </a>
-                        </li>
-                    @endif
+                            {{-- Menu RW --}}
+                            @if(auth()->user()->canRw('rt.view'))
+                                <li class="nav-item {{ Request::is('rw/rukun_tetangga*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('rw.rukun_tetangga.index') }}">
+                                        <i class="fas fa-house-user"></i>
+                                        <span>Rukun Tetangga</span>
+                                    </a>
+                                </li>
+                            @endif
 
-                    @if(auth()->user()->canRw('warga.view'))
-                        <li class="nav-item {{ Request::is('rw/warga*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('rw.warga.index') }}">
-                                <i class="fas fa-users"></i>
-                                <span>Manajemen Warga</span>
-                            </a>
-                        </li>
-                    @endif
+                            @if(auth()->user()->canRw('warga.view'))
+                                <li class="nav-item {{ Request::is('rw/warga*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('rw.warga.index') }}">
+                                        <i class="fas fa-users"></i>
+                                        <span>Manajemen Warga</span>
+                                    </a>
+                                </li>
+                            @endif
 
-                    @if(auth()->user()->canRw('kk.view'))
-                        <li class="nav-item {{ Request::is('rw/kartu_keluarga*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('rw.kartu_keluarga.index') }}">
-                                <i class="fas fa-id-card"></i>
-                                <span>Kartu Keluarga</span>
-                            </a>
-                        </li>
-                    @endif
+                            @if(auth()->user()->canRw('kk.view'))
+                                <li class="nav-item {{ Request::is('rw/kartu_keluarga*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('rw.kartu_keluarga.index') }}">
+                                        <i class="fas fa-id-card"></i>
+                                        <span>Kartu Keluarga</span>
+                                    </a>
+                                </li>
+                            @endif
 
-                    @if(auth()->user()->canRw('pengaduan.rwrt.view'))
-                        <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
-                                <i class="fas fa-paper-plane"></i>
-                                <span>Lihat Pengaduan</span>
-                            </a>
-                        </li>
-                    @endif
-                    
-                    @if(auth()->user()->canRw('pengumuman.rw.manage'))
-                        <li class="nav-item {{ Request::is('rw/pengumuman') && !Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('rw.pengumuman.index') }}">
-                                <i class="fas fa-bullhorn"></i>
-                                <span>Pengumuman RW</span>
-                            </a>
-                        </li>
-                    @endif
+                            @if(auth()->user()->canRw('pengaduan.rwrt.view'))
+                                <li class="nav-item {{ Request::is('rw/pengaduan*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('rw.pengaduan.index') }}">
+                                        <i class="fas fa-paper-plane"></i>
+                                        <span>Lihat Pengaduan</span>
+                                    </a>
+                                </li>
+                            @endif
 
-                    @if(auth()->user()->canRw('pengumuman.rwrt.view'))
-                        <li class="nav-item {{ Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('rw.pengumuman-rt.index') }}">
-                                <i class="fas fa-bullhorn"></i>
-                                <span>Pengumuman RT</span>
-                            </a>
-                        </li>
-                    @endif
+                            @if(auth()->user()->canRw('pengumuman.rw.manage'))
+                                <li class="nav-item {{ Request::is('rw/pengumuman') && !Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('rw.pengumuman.index') }}">
+                                        <i class="fas fa-bullhorn"></i>
+                                        <span>Pengumuman RW</span>
+                                    </a>
+                                </li>
+                            @endif
 
-                    @if(auth()->user()->canRw('iuran.rwrt.view'))
-                        <li class="nav-item {{ Request::is('rw/iuran*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('rw.iuran.index') }}">
-                                <i class="fas fa-coins"></i>
-                                <span>Iuran</span>
-                            </a>
-                        </li>
-                    @endif
+                            @if(auth()->user()->canRw('pengumuman.rwrt.view'))
+                                <li class="nav-item {{ Request::is('rw/pengumuman-rt*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('rw.pengumuman-rt.index') }}">
+                                        <i class="fas fa-bullhorn"></i>
+                                        <span>Pengumuman RT</span>
+                                    </a>
+                                </li>
+                            @endif
 
-                    @if(auth()->user()->canRw('tagihan.rwrt.view'))
-                        <li class="nav-item {{ Request::is('rw/tagihan*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('rw.tagihan.index') }}">
-                                <i class="fas fa-file-invoice-dollar"></i>
-                                <span>Tagihan</span>
-                            </a>
-                        </li>
-                    @endif
+                            @if(auth()->user()->canRw('iuran.rwrt.view'))
+                                <li class="nav-item {{ Request::is('rw/iuran*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('rw.iuran.index') }}">
+                                        <i class="fas fa-coins"></i>
+                                        <span>Iuran</span>
+                                    </a>
+                                </li>
+                            @endif
 
-                    @if(auth()->user()->canRw('transaksi.rwrt.view'))
-                        <li class="nav-item {{ Request::is('rw/transaksi*') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route('rw.transaksi.index') }}">
-                                <i class="fas fa-money-bill-wave"></i>
-                                <span>Transaksi</span>
-                            </a>
-                        </li>
-                    @endif
+                            @if(auth()->user()->canRw('tagihan.rwrt.view'))
+                                <li class="nav-item {{ Request::is('rw/tagihan*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('rw.tagihan.index') }}">
+                                        <i class="fas fa-file-invoice-dollar"></i>
+                                        <span>Tagihan</span>
+                                    </a>
+                                </li>
+                            @endif
 
+                            @if(auth()->user()->canRw('transaksi.rwrt.view'))
+                                <li class="nav-item {{ Request::is('rw/transaksi*') ? 'active' : '' }}">
+                                    <a class="nav-link" href="{{ route('rw.transaksi.index') }}">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <span>Transaksi</span>
+                                    </a>
+                                </li>
+                            @endif
 
-
-                    <hr class="sidebar-divider d-none d-md-block">
-                </ul>
+                            <hr class="sidebar-divider d-none d-md-block">
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-        <!-- End of Sidebar -->
+        <!-- End Sidebar Mobile -->
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
+
             <!-- Main Content -->
             @yield('content')
-            <!-- End of Main Content -->
+            <!-- End Main Content -->
 
-            {{-- footer --}}
+            {{-- Footer --}}
             @include('rw.layouts.footer')
         </div>
     </div>
-    <!-- End of Page Wrapper -->
+    <!-- End Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
+    <!-- Scroll to Top -->
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <!-- Logout Modal (Bootstrap 5 syntax) -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                    <h5 class="modal-title" id="logoutLabel">Ready to Leave?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">
+                    Select "Logout" below if you are ready to end your current session.
+                </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
                     <a class="btn btn-primary" href="login.html">Logout</a>
                 </div>
             </div>
@@ -300,7 +290,6 @@
 
     <!-- JS -->
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

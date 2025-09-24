@@ -149,19 +149,15 @@
                                                 <td>{{ $item->kartuKeluarga->rukunTetangga->rt ?? '-' }}</td>
                                                 <td class="text-center align-middle d-flex">
                                                     <div class="d-flex justify-content-center gap-1">
-                                                        {{-- Hapus & Edit button tetap --}}
-                                                        <form action="{{ route('rw.warga.destroy', $item->nik) }}"
-                                                            method="POST"
-                                                            onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <input type="hidden" name="redirect_to"
-                                                                value="{{ route('rw.warga.index') }}"> {{-- Kembali ke halaman index warga --}}
-                                                            <button type="submit" class="btn btn-danger btn-sm"
-                                                                title="Hapus Warga">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
+                                                        {{-- Tombol Hapus (pakai modal) --}}
+                                                        <button type="button" class="btn btn-danger btn-sm"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#deleteWargaHistoryModal{{ $item->nik }}"
+                                                            title="Hapus Warga">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                        @include('rw.warga.komponen.delete_warga_history_modal', ['warga' => $item])
+                                                        {{-- Tombol Edit --}}
                                                         <button type="button" class="btn btn-warning btn-sm"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#modalEditwarga{{ $item->nik }}"

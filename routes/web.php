@@ -129,7 +129,7 @@ Route::prefix('rw')->as('rw.')->middleware(['auth', 'role:rw'])->group(function 
     // Pengaduan
     Route::resource('pengaduan', PengaduanRwController::class)
         ->middleware('rw.can:pengaduan.rwrt.view');
-Route::patch('pengaduan/{id}/confirm', [PengaduanRwController::class, 'confirm'])
+    Route::patch('pengaduan/{id}/confirm', [PengaduanRwController::class, 'confirm'])
     ->name('pengaduan.confirm')
     ->middleware('rw.can:pengaduan.rwrt.view');
     // Kategori golongan (tanpa middleware, sesuai permintaan)

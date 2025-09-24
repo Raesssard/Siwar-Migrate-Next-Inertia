@@ -10,6 +10,7 @@ class HistoryWarga extends Model
 
     protected $fillable = [
         'warga_nik',
+        'nama',
         'jenis',
         'keterangan',
         'tanggal',
@@ -17,6 +18,6 @@ class HistoryWarga extends Model
 
     public function warga()
     {
-        return $this->belongsTo(Warga::class);
+        return $this->belongsTo(Warga::class, 'warga_nik', 'nik');
     }
 }

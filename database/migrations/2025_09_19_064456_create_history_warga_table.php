@@ -11,12 +11,7 @@ return new class extends Migration {
         Schema::create('history_warga', function (Blueprint $table) {
             $table->id();
             $table->char('warga_nik', 16);
-
-            $table->foreign('warga_nik')
-                ->references('nik')
-                ->on('warga')
-                ->onDelete('cascade');
-
+            $table->string('nama');
             $table->enum('jenis', ['masuk', 'keluar']);
             $table->text('keterangan')->nullable();
             $table->date('tanggal')->nullable();
