@@ -73,4 +73,9 @@ class Warga extends Model
     {
         return $this->hasOne(User::class, 'nik', 'nik');
     }
+
+    public function historyWarga()
+    {
+        return $this->hasMany(HistoryWarga::class, 'warga_nik', 'nik');
+    }
 }

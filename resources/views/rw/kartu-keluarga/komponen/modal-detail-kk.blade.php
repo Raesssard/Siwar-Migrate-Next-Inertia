@@ -266,7 +266,7 @@
 
                     <div class="kk-info-grid mb-4">
                         <div class="kk-info-item">
-                            <p><strong>Nama Kepala Keluarga</strong> : {{ $kepala->nama ?? '-' }}</p>
+                            <p><strong>Kepala Keluarga</strong> : {{ $kepala->nama ?? '-' }}</p>
                             <p><strong>Alamat</strong> : {{ $kk->alamat ?? '-' }}</p>
                             <p><strong>RT/RW</strong> :
                                 {{ $kk->rukunTetangga->rt ?? '-' }}/{{ $kk->rw->nomor_rw ?? '-' }}
@@ -327,8 +327,8 @@
                             </thead>
                             <tbody>
                                 @forelse ($kk->warga->sortByDesc(function($item) {
-                                        return $item->status_hubungan_dalam_keluarga === 'kepala keluarga' ? 1 : ($item->status_hubungan_dalam_keluarga === 'Istri' ? 0.5 : 0);
-                                    }) as $data)
+                                    return $item->status_hubungan_dalam_keluarga === 'kepala keluarga' ? 1 : ($item->status_hubungan_dalam_keluarga === 'Istri' ? 0.5 : 0);
+                                }) as $data)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td>{{ $data->nama ?? '-' }}</td>
@@ -346,40 +346,39 @@
                                         <td>{{ $data->status_hubungan_dalam_keluarga ?? '-' }}</td>
                                         <td class="text-center">{{ $data->kewarganegaraan ?? 'WNI' }}</td>
                                         <td class="text-center">{{ $data->no_paspor ?? '-' }}</td>
-                                        <td class="text-center">
-                                            {{ $data->no_kitas ?? '-' }}/{{ $data->no_kitap ?? '-' }}</td>
+                                        <td class="text-center">{{ $data->no_kitas ?? '-' }}/{{ $data->no_kitap ?? '-' }}</td>
                                         <td>{{ $data->nama_ayah ?? '-' }}</td>
                                         <td>{{ $data->nama_ibu ?? '-' }}</td>
                                         <td class="text-center">{{ $data->status_warga ?? '-' }}</td>
                                         <td class="text-center">
-                                            <div
-                                                class="d-flex justify-content-center align-items-center gap-1 flex-nowrap">
-                                                <form action="{{ route('rw.warga.destroy', $data->nik) }}" method="POST"
-                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                                    @csrf
-                                                    <input type="hidden" name="redirect_to"
-                                                        value="{{ route('rw.kartu_keluarga.index') }}">
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="btn btn-sm btn-danger d-flex align-items-center"
-                                                        title="Hapus Warga">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
-                                                </form>
+                                            <div class="d-flex justify-content-center align-items-center gap-1 flex-nowrap">
+                                                <!-- Tombol hapus -->
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger d-flex align-items-center"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteWargaModal{{ $data->nik }}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+
+                                                <!-- Tombol edit -->
                                                 <button type="button"
                                                     class="btn btn-sm btn-warning d-flex align-items-center"
                                                     data-bs-toggle="modal"
-                                                    data-bs-target="#modalEditwarga{{ $data->nik }}"
-                                                    title="Edit Warga">
+                                                    data-bs-target="#modalEditwarga{{ $data->nik }}">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                             </div>
                                         </td>
                                     </tr>
+
+                                    {{-- Modal hapus khusus untuk warga ini --}}
+                                    
+
                                 @empty
                                     <tr>
                                         <td colspan="19" class="text-center text-muted p-4">
-                                            Belum ada anggota keluarga yang terdaftar.</td>
+                                            Belum ada anggota keluarga yang terdaftar.
+                                        </td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -499,8 +498,8 @@
                     </button>
                 </div>
             </div> {{-- End modal-body --}}
-            </div> {{-- End modal-content --}}
-        </div> {{-- End modal-dialog --}}
+        </div> {{-- End modal-content --}}
+    </div> {{-- End modal-dialog --}}
 </div> {{-- End modalDetailkk --}}
 <script>
     document.addEventListener('DOMContentLoaded', function () {

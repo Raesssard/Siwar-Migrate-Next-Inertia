@@ -139,6 +139,9 @@
 </style>
 
 <div class="row">
+
+    {{-- Jumlah Warga --}}
+    @if(auth()->user()->canRt('warga.view'))
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-primary shadow h-100 py-2 card-clickable">
             <a href="{{ route('rt.warga.index') }}" class="text-decoration-none">
@@ -151,8 +154,9 @@
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">{{ $jumlah_warga }}</div>
                         </div>
                         <div class="col-auto">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor"
-                                class="bi bi-people-fill text-gray-400" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                                fill="currentColor" class="bi bi-people-fill text-gray-400"
+                                viewBox="0 0 16 16">
                                 <path
                                     d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
                             </svg>
@@ -162,7 +166,10 @@
             </a>
         </div>
     </div>
-    
+    @endif
+
+    {{-- Jumlah Warga Penduduk --}}
+    @if(auth()->user()->canRt('warga.view'))
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-primary shadow h-100 py-2 card-clickable">
             <a href="{{ route('rt.warga.index') }}" class="text-decoration-none">
@@ -182,6 +189,10 @@
             </a>
         </div>
     </div>
+    @endif
+
+    {{-- Jumlah Warga Pendatang --}}
+    @if(auth()->user()->canRt('warga.view'))
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-primary shadow h-100 py-2 card-clickable">
             <a href="{{ route('rt.warga.index') }}" class="text-decoration-none">
@@ -201,8 +212,10 @@
             </a>
         </div>
     </div>
+    @endif
 
-
+    {{-- Jumlah KK --}}
+    @if(auth()->user()->canRt('kk.view'))
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-info shadow h-100 py-2 card-clickable">
             <a href="{{ route('rt.kartu_keluarga.index') }}" class="text-decoration-none">
@@ -210,9 +223,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Jumlah KK</div>
-                            <div class="d-flex align-items-center">
-                                <div class="h4 mb-0 font-weight-bolder text-gray-800 me-2">{{ $jumlah_kk }}</div>
-                            </div>
+                            <div class="h4 mb-0 font-weight-bolder text-gray-800">{{ $jumlah_kk }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-clipboard-list fa-3x text-gray-400"></i>
@@ -222,7 +233,10 @@
             </a>
         </div>
     </div>
+    @endif
 
+    {{-- Jumlah Pengumuman --}}
+    @if(auth()->user()->canRt('pengumuman.rt.manage'))
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-warning shadow h-100 py-2 card-clickable">
             <a href="{{ route('rt.pengumuman.index') }}" class="text-decoration-none">
@@ -242,7 +256,10 @@
             </a>
         </div>
     </div>
+    @endif
 
+    {{-- Jumlah Pengaduan --}}
+    @if(auth()->user()->canRt('pengaduan.rt.view'))
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-warning shadow h-100 py-2 card-clickable">
             <a href="{{ route('rt.pengaduan.index') }}" class="text-decoration-none">
@@ -262,9 +279,10 @@
             </a>
         </div>
     </div>
+    @endif
 
-    <!-- Card Total Pengeluaran -->
-    <!-- Card Total Pemasukan -->
+    {{-- Total Pemasukan --}}
+    @if(auth()->user()->canRt('transaksi.rt.manage'))
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-success shadow h-100 py-2 card-clickable">
             <a href="{{ route('rt.transaksi.index') }}" class="text-decoration-none">
@@ -286,8 +304,10 @@
             </a>
         </div>
     </div>
+    @endif
 
-    <!-- Card Total Pengeluaran -->
+    {{-- Total Pengeluaran --}}
+    @if(auth()->user()->canRt('transaksi.rt.manage'))
     <div class="col-6 col-md-4 col-xl-3 mb-4">
         <div class="card border-left-danger shadow h-100 py-2 card-clickable">
             <a href="{{ route('rt.transaksi.index') }}" class="text-decoration-none">
@@ -309,10 +329,10 @@
             </a>
         </div>
     </div>
+    @endif
 
-    {{-- ==================================================================== --}}
-    {{-- CARD BARU: Saldo Akhir --}}
-    {{-- ==================================================================== --}}
+    {{-- Saldo Akhir --}}
+    @if(auth()->user()->canRt('transaksi.rt.manage'))
     @php
         if ($total_saldo_akhir === 0) {
             $warna = 'warning';
@@ -322,17 +342,13 @@
             $warna = 'success';
         }
     @endphp
-
     <div class="col-6 col-md-4 col-xl-3 mb-4">
-        <div
-            class="card border-left-{{ $warna }} shadow h-100 py-2 card-clickable">
-            {{-- Anda bisa pilih warna border lain, misal border-left-info --}}
-            <a href="{{ route('rt.transaksi.index') }}" class="text-decoration-none"> {{-- Link ke halaman transaksi --}}
+        <div class="card border-left-{{ $warna }} shadow h-100 py-2 card-clickable">
+            <a href="{{ route('rt.transaksi.index') }}" class="text-decoration-none">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col">
-                            <div
-                                class="text-xs font-weight-bold text-{{ $warna }} text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-{{ $warna }} text-uppercase mb-1">
                                 Saldo Akhir
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">
@@ -340,11 +356,14 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-wallet fa-3x text-gray-400"></i> {{-- Icon dompet atau sejenisnya --}}
+                            <i class="fas fa-wallet fa-3x text-gray-400"></i>
                         </div>
                     </div>
                 </div>
             </a>
         </div>
     </div>
+    @endif
+
 </div>
+

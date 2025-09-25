@@ -199,6 +199,7 @@
         @foreach ($warga as $item)
             <!-- Modal Edit Warga -->
             @include('rw.kartu-keluarga.komponen.modal-edit-warga')
+            @include('rw.kartu-keluarga.komponen.modal-delete-warga', ['warga' => $item])
             {{-- End Modal Edit Warga --}}
         @endforeach
 

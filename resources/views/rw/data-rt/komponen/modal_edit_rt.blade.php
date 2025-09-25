@@ -88,20 +88,22 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="jabatan{{ $rt->id }}" class="form-label">Jabatan</label>
-                        <select name="jabatan" id="jabatan{{ $rt->id }}"
-                            class="form-select @error('jabatan') is-invalid @enderror">
+                        <label for="jabatan_id{{ $rt->id }}" class="form-label">Jabatan</label>
+                        <select name="jabatan_id" id="jabatan_id{{ $rt->id }}"
+                            class="form-select @error('jabatan_id') is-invalid @enderror" required>
                             <option value="">-- Pilih Jabatan --</option>
-                            <option value="ketua" {{ old('jabatan', $rt->jabatan) === 'ketua' ? 'selected' : '' }}>Ketua</option>
-                            <option value="sekretaris" {{ old('jabatan', $rt->jabatan) === 'sekretaris' ? 'selected' : '' }}>Sekretaris</option>
-                            <option value="bendahara" {{ old('jabatan', $rt->jabatan) === 'bendahara' ? 'selected' : '' }}>Bendahara</option>
+                            @foreach($jabatan_filter as $id => $nama)
+                                <option value="{{ $id }}"
+                                    {{ old('jabatan_id', $rt->jabatan_id) == $id ? 'selected' : '' }}>
+                                    {{ ucfirst($nama) }}
+                                </option>
+                            @endforeach
                         </select>
                         <small class="form-text text-muted">Pilih jabatan pengurus RT.</small>
-                        @error('jabatan')
+                        @error('jabatan_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-warning w-100">Simpan Perubahan</button>
                 </div>

@@ -146,58 +146,85 @@
                         <ul class="navbar-nav sidebar sidebar-dark accordion">
                             <hr class="sidebar-divider my-0">
 
+                            {{-- Dashboard --}}
+                            @if(auth()->user()->canRt('dashboard.rt'))
                             <li class="nav-item {{ Request::is('rt') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.dashboard') }}">
                                     <i class="fas fa-fw fa-tachometer-alt"></i>
                                     <span>Dashboard</span>
                                 </a>
                             </li>
+                            @endif
 
+                            {{-- Warga --}}
+                            @if(auth()->user()->canRt('warga.view'))
                             <li class="nav-item {{ Request::is('rt/warga*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.warga.index') }}">
                                     <i class="fas fa-id-card"></i>
                                     <span>Manajemen Warga</span>
                                 </a>
                             </li>
+                            @endif
 
+                            {{-- Kartu Keluarga --}}
+                            @if(auth()->user()->canRt('kk.view'))
                             <li class="nav-item {{ Request::is('rt/kartu_keluarga*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.kartu_keluarga.index') }}">
-                                    <i class="fas fa-users "></i>
+                                    <i class="fas fa-users"></i>
                                     <span>Kartu Keluarga</span>
                                 </a>
                             </li>
+                            @endif
+
+                            {{-- Pengumuman --}}
+                            @if(auth()->user()->canRt('pengumuman.rt.manage'))
                             <li class="nav-item {{ Request::is('rt/pengumuman*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.pengumuman.index') }}">
                                     <i class="fas fa-bullhorn"></i>
                                     <span>Pengumuman</span>
                                 </a>
                             </li>
+                            @endif
+
+                            {{-- Pengaduan --}}
+                            @if(auth()->user()->canRt('pengaduan.rt.view'))
                             <li class="nav-item {{ Request::is('rt/pengaduan*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.pengaduan.index') }}">
                                     <i class="fas fa-paper-plane"></i>
                                     <span>Pengaduan Warga</span>
                                 </a>
                             </li>
+                            @endif
+
+                            {{-- Iuran --}}
+                            @if(auth()->user()->canRt('iuran.rt.manage'))
                             <li class="nav-item {{ Request::is('rt/iuran*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.iuran.index') }}">
                                     <i class="fas fa-file-invoice-dollar"></i>
                                     <span>Iuran</span>
                                 </a>
                             </li>
+                            @endif
 
+                            {{-- Tagihan --}}
+                            @if(auth()->user()->canRt('tagihan.rt.manage'))
                             <li class="nav-item {{ Request::is('rt/tagihan*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.tagihan.index') }}">
                                     <i class="fas fa-hand-holding-usd"></i>
                                     <span>Tagihan</span>
                                 </a>
                             </li>
+                            @endif
 
+                            {{-- Transaksi --}}
+                            @if(auth()->user()->canRt('transaksi.rt.manage'))
                             <li class="nav-item {{ Request::is('rt/transaksi*') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('rt.transaksi.index') }}">
                                     <i class="fas fa-money-bill-wave"></i>
                                     <span>Transaksi</span>
                                 </a>
                             </li>
+                            @endif
 
                             <hr class="sidebar-divider d-none d-md-block">
                         </ul>

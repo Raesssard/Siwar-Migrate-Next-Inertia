@@ -62,4 +62,35 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function jabatanRw(): ?string
+    {
+        return $this->rw?->jabatan?->nama_jabatan;
+    }
+
+    public function jabatanRt(): ?string
+    {
+        return $this->rukunTetangga?->jabatan?->nama_jabatan;
+    }
+
+    public function canRw(string $perm): bool
+    {
+        if (!$this->hasRole('rw')) return false;
+        $jabatan = strtolower(trim($this->jabatanRw())); // normalize
+        $permissions = config("jabatan_permission.rw.$jabatan") ?? [];
+        if (in_array('*', $permissions)) return true;
+
+        return in_array($perm, $permissions);
+    }
+
+    public function canRt(string $perm): bool
+    {
+        if (!$this->hasRole('rt')) return false;
+        $jabatan = strtolower(trim($this->jabatanRt())); // normalize
+        $permissions = config("jabatan_permission.rt.$jabatan") ?? [];
+        if (in_array('*', $permissions)) return true;
+
+        return in_array($perm, $permissions);
+    }
+
 }

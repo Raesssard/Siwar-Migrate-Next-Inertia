@@ -57,12 +57,11 @@
                         </div>
 
                         <div class="col-md-3 col-sm-6">
-                            <select name="jabatan" class="form-select form-select-sm">
+                            <select name="jabatan_id" class="form-select form-select-sm">
                                 <option value="">Semua Jabatan</option>
-                                {{-- Pastikan variabel di sini adalah yang sudah difilter dari controller --}}
-                                @foreach ($jabatan_filter as $key => $value)
-                                    <option value="{{ $key }}" {{ request('jabatan') == $key ? 'selected' : '' }}>
-                                        {{ $value }}
+                                @foreach ($jabatan_filter as $id => $nama_jabatan)
+                                    <option value="{{ $id }}" {{ request('jabatan_id') == $id ? 'selected' : '' }}>
+                                        {{ ucwords($nama_jabatan) }}
                                     </option>
                                 @endforeach
                             </select>
