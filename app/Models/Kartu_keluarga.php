@@ -12,7 +12,11 @@ class Kartu_keluarga extends Model
     protected $primaryKey = 'no_kk';
     public $incrementing = false;
     protected $keyType = 'string';
-
+    protected $hidden = [
+        'no_kk',
+        'no_registrasi',
+        'alamat',
+    ];
     protected $fillable = [
         'no_kk',
         'no_registrasi',
@@ -37,7 +41,7 @@ class Kartu_keluarga extends Model
     {
         return $this->belongsTo(Rukun_tetangga::class, 'id_rt', 'id');
     }
-    
+
     public function rw(): BelongsTo
     {
         return $this->belongsTo(Rw::class, 'id_rw', 'id');
@@ -62,7 +66,6 @@ class Kartu_keluarga extends Model
     public function kepalaKeluarga()
     {
         return $this->hasOne(Warga::class, 'no_kk', 'no_kk')
-                    ->where('status_hubungan_dalam_keluarga', 'kepala keluarga');
+            ->where('status_hubungan_dalam_keluarga', 'kepala keluarga');
     }
-
 }

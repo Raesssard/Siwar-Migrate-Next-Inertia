@@ -38,7 +38,7 @@ class HandleInertiaRequests extends Middleware
         $currentRole = session('active_role');
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => $request->user()?->makeHidden(['nik', 'no_kk']),
+                'user' => $request->user(),
                 'roles' => $request->user()?->getRoleNames(),
                 'currentRole' => $currentRole,
                 'permissions' => $request->user()

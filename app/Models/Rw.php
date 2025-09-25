@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Rw extends Model
 {
     protected $table = 'rw';
-
+    protected $hidden = ['nik'];
     protected $fillable = [
         'nik',
         'nomor_rw',
@@ -43,4 +43,3 @@ class Rw extends Model
         return $this->belongsTo(Jabatan::class, 'jabatan_id');
     }
 }
-

@@ -78,7 +78,7 @@ class PengumumanWargaController extends Controller
             ->when($tahun, fn($q) => $q->whereYear('tanggal', $tahun))
             ->when($bulan, fn($q) => $q->whereMonth('tanggal', $bulan))
             ->when($kategori, fn($q) => $q->where('kategori', $kategori))
-            ->orderByDesc('created_at')
+            ->orderByDesc('tanggal')
             ->paginate(5)
             ->through(function ($item) {
                 $item->tanggal = \Carbon\Carbon::parse($item->tanggal)
@@ -136,7 +136,8 @@ class PengumumanWargaController extends Controller
             'daftar_bulan' => $daftar_bulan,
             'daftar_kategori' => $daftar_kategori,
             'total_pengumuman' => $total_pengumuman,
-            'list_bulan' => $list_bulan
+            'list_bulan' => $list_bulan,
+            'filters' => $request->only(['search', 'tahun', 'bulan', 'kategori']),
         ]);
     }
 

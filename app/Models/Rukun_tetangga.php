@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Rukun_tetangga extends Model
 {
     protected $table = 'rukun_tetangga';
-
+    protected $hidden = ['nik', 'no_kk'];
     protected $fillable = [
         'nik',
         'no_kk',
@@ -55,4 +55,3 @@ class Rukun_tetangga extends Model
         return $this->belongsTo(Jabatan::class, 'jabatan_id');
     }
 }
-
