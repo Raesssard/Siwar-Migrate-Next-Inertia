@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Warga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        return view('login.login');
+        // return view('login.login');
+        return Inertia::render('Login');
     }
 
     public function login(Request $request)
@@ -27,14 +29,18 @@ class LoginController extends Controller
 
             // kalau user hanya punya 1 role → langsung redirect
             if ($user->roles->count() === 1) {
-                return $this->redirectByRole($user->roles->first()->name, $user);
+                $role = $user->roles->first()->name;
+                session(['active_role' => $role]); // langsung simpan
+                return $this->redirectByRole($role, $user);
             }
 
             // kalau punya banyak role → tampilkan halaman pilih role
-            return redirect()->route('choose-role');
+            // return redirect()->route('choose-role');
+            return Inertia::location(route('choose-role'));
         }
 
         // Jika gagal login
+
         return back()->withErrors([
             'nik' => 'NIK atau password salah.',
             'password' => 'NIK atau password salah.',
@@ -60,12 +66,16 @@ class LoginController extends Controller
                     'nik' => 'Hanya Kepala Keluarga yang bisa login.',
                 ]);
             }
-            return redirect()->route('warga.dashboard');
+            return Inertia::location(route('warga.dashboard'));
+            // return redirect()->route('warga.dashboard');
         }
 
         return match ($role) {
+            // 'admin' => Inertia::location(route('admin.dashboard')),
             'admin' => redirect()->route('admin.dashboard'),
+            // 'rw'    => Inertia::location(route('rw.dashboard')),
             'rw'    => redirect()->route('rw.dashboard'),
+            // 'rt'    => Inertia::location(route('rt.dashboard')),
             'rt'    => redirect()->route('rt.dashboard'),
             default => redirect('/login'),
         };
@@ -74,8 +84,11 @@ class LoginController extends Controller
     // Halaman pilih role
     public function chooseRole()
     {
+        /** @var User $user */
         $user = Auth::user();
-        return view('auth.choose-role', ['roles' => $user->roles]);
+        $roles = $user->getRoleNames();
+        // return view('auth.choose-role', ['roles' => $user->roles]);
+        return Inertia::render('ChooseRole', compact('user', 'roles'));
     }
 
     // Simpan role yang dipilih

@@ -130,17 +130,17 @@ Route::prefix('rw')->as('rw.')->middleware(['auth', 'role:rw'])->group(function 
     Route::resource('pengaduan', PengaduanRwController::class)
         ->middleware('rw.can:pengaduan.rwrt.view');
     Route::patch('pengaduan/{id}/confirm', [PengaduanRwController::class, 'confirm'])
-    ->name('pengaduan.confirm')
-    ->middleware('rw.can:pengaduan.rwrt.view');
+        ->name('pengaduan.confirm')
+        ->middleware('rw.can:pengaduan.rwrt.view');
+
     // Kategori golongan (tanpa middleware, sesuai permintaan)
     Route::resource('kategori_golongan', Kategori_golonganController::class);
-
 
     // Laporan (sementara dibiarkan tanpa middleware)
     Route::get('laporan_pengeluaran_bulanan/{bulan}/{tahun}', [LaporanController::class, 'pengeluaran_bulanan'])
         ->name('laporan.pengeluaran_bulanan');
-
 });
+
 
 /*
 |--------------------------------------------------------------------------

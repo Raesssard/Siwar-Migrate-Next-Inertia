@@ -177,7 +177,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Jumlah Warga Sebagai Penduduk
+                                Jumlah Warga Penduduk
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">{{ $jumlah_warga_penduduk }}</div>
                         </div>
@@ -200,7 +200,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Jumlah Warga Sebagai Pendatang
+                                Jumlah Warga Pendatang
                             </div>
                             <div class="h4 mb-0 font-weight-bolder text-gray-800">{{ $jumlah_warga_pendatang }}</div>
                         </div>

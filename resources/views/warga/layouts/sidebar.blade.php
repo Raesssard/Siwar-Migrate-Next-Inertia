@@ -67,8 +67,6 @@
     /* dll. */
 </style>
 
-
-
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion d-none d-md-block" id="accordionSidebar">
 
