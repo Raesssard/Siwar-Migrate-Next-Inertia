@@ -2,6 +2,8 @@ import React from "react"
 import Layout from "../Layouts/Layout"
 import { Head, Link, usePage } from "@inertiajs/react"
 import '../../css/card.css'
+import Can from "./Component/Can"
+import Role from "./Component/Role"
 
 export default function Dashboard() {
     const { jumlah_pengumuman,
@@ -20,33 +22,40 @@ export default function Dashboard() {
     };
     const { props } = usePage()
     const role = props.auth?.currentRole
+    const user = props.auth?.user;
+
+    console.log(props.auth?.currentRole)
+    console.log(props.auth?.permissions)
     return (
         <Layout>
             <Head title={`${title} ${role.length <= 2
                 ? role.toUpperCase()
                 : role.charAt(0).toUpperCase() + role.slice(1)}`}
             />
-            <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card border-left-warning shadow h-100 py-2 card-clickable">
-                    <Link href="/warga/pengumuman" className="text-decoration-none">
-                        <div className="card-body">
-                            <div className="row no-gutters align-items-center">
-                                <div className="col mr-2">
-                                    <div className="text-xs font-weight-bold text-warning text-uppercase mb-1 text-align-start">
-                                        Jumlah Pengumuman
+            {/* <Can permission="pengumuman.rwrt.view"> */}
+                <div className="col-xl-3 col-md-6 mb-4">
+                    <div className="card border-left-warning shadow h-100 py-2 card-clickable">
+                        <Link href="/warga/pengumuman" className="text-decoration-none">
+                            <div className="card-body">
+                                <div className="row no-gutters align-items-center">
+                                    <div className="col mr-2">
+                                        <div className="text-xs font-weight-bold text-warning text-uppercase mb-1 text-align-start">
+                                            Jumlah Pengumuman
+                                        </div>
+                                        <div className="h4 mb-0 font-weight-bolder text-gray-800">
+                                            {jumlah_pengumuman}
+                                        </div>
                                     </div>
-                                    <div className="h4 mb-0 font-weight-bolder text-gray-800">
-                                        {jumlah_pengumuman}
+                                    <div className="col-auto">
+                                        <i className="fas fa-comments text-gray-400" style={{ fontSize: '3rem' }}></i>
                                     </div>
-                                </div>
-                                <div className="col-auto">
-                                    <i className="fas fa-comments text-gray-400" style={{ fontSize: '3rem' }}></i>
                                 </div>
                             </div>
-                        </div>
-                    </Link>
+                        </Link>
+                    </div>
                 </div>
-            </div>
+            {/* </Can> */}
+            {/* <Role role="rt"> */}
             <div className="col-xl-3 col-md-6 mb-4">
                 <div className="card border-left-warning shadow h-100 py-2 card-clickable">
                     <Link href="/warga/pengaduan" className="text-decoration-none">
@@ -68,6 +77,7 @@ export default function Dashboard() {
                     </Link>
                 </div>
             </div>
+            {/* </Role> */}
             <div className="col-xl-3 col-md-6 mb-4">
                 <div className={`card border-left-${jumlah_tagihan < 1 ? 'success' : 'danger'} shadow h-100 py-2 card-clickable`}>
                     <Link href="/warga/tagihan" className="text-decoration-none">

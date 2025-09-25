@@ -98,6 +98,21 @@ class PengumumanWargaController extends Controller
             ->distinct()
             ->pluck('kategori');
 
+        $list_bulan = [
+            'januari',
+            'februari',
+            'maret',
+            'april',
+            'mei',
+            'juni',
+            'juli',
+            'agustus',
+            'september',
+            'oktober',
+            'november',
+            'desember'
+        ];
+
         $daftar_bulan = range(1, 12);
 
         $rukun_tetangga = $userRtId ? Rukun_tetangga::find($userRtId) : null;
@@ -120,7 +135,8 @@ class PengumumanWargaController extends Controller
             'daftar_tahun' => $daftar_tahun,
             'daftar_bulan' => $daftar_bulan,
             'daftar_kategori' => $daftar_kategori,
-            'total_pengumuman' => $total_pengumuman
+            'total_pengumuman' => $total_pengumuman,
+            'list_bulan' => $list_bulan
         ]);
     }
 

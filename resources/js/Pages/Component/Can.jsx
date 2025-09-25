@@ -2,8 +2,8 @@ import { usePage } from '@inertiajs/react';
 
 export default function Can({ permission, children }) {
   const { auth } = usePage().props;
-  const user = auth?.user;
+  const permissions = auth?.permissions;
 
-  if (!user?.permissions.includes(permission)) return null;
+  if (!permissions?.includes(permission)) return null;
   return children;
 }

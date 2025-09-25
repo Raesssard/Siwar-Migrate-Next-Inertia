@@ -123,12 +123,55 @@ div.container-fluid {
 }
 
 .modal-dialog.animasi-modal {
-  transform: translateX(-100%);
-  opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .modal-dialog.animasi-modal.show {
-  transform: translateX(0);
-  opacity: 1;
+    transform: translateX(0);
+    opacity: 1;
+}
+
+
+form.form-filter {
+    width: 100%;
+    align-items: center;
+}
+
+div.input-group {
+    align-items: center;
+}
+
+div.input-group button.btn-filter {
+    border-radius: 0 0.35rem 0.35rem 0;
+    margin: 0.75rem 0;
+}
+
+div.input-group input.form-control {
+    border-radius: 0.35rem 0 0 0.35rem;
+    height: 37.6px;
+}
+
+form.form-filter .btn-input {
+    margin: 0.75rem 0;
+}
+
+form.form-filter select.form-select {
+    border-radius: 0.35rem;
+    border-width: 0.0625rem;
+    border-color: darkgray;
+}
+
+form.form-filter a.btn-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form.form-filter .btn-input,
+form.form-filter select.form-select {
+    height: 2.35rem;
+    margin: auto;
+    justify-content: center;
 }

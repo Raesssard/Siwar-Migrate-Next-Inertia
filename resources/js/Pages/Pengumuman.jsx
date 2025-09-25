@@ -1,13 +1,12 @@
 import React, { useState } from "react"
 import Layout from "../Layouts/Layout"
 import { Head, Link, usePage } from "@inertiajs/react"
-import '../../css/card.css'
 import { Inertia } from "@inertiajs/inertia"
 
 export default function Pengumuman() {
     const { title,
         pengumuman,
-        rukun_tetangga,
+        list_bulan,
         daftar_tahun,
         daftar_bulan,
         daftar_kategori,
@@ -32,8 +31,8 @@ export default function Pengumuman() {
             <Head title={`${title} ${role.length <= 2
                 ? role.toUpperCase()
                 : role.charAt(0).toUpperCase() + role.slice(1)}`} />
-            <form onSubmit={filter} className="row g-2 align-items-start px-3 pb-2">
-                <div className="col-md-5 col-12 mb-2">
+            <form onSubmit={filter} className="form-filter row g-2 px-3 pb-2 mb-2">
+                <div className="col-md-5 col-12">
                     <div className="input-group input-group-sm">
                         <input
                             type="text"
@@ -43,7 +42,7 @@ export default function Pengumuman() {
                             className="form-control"
                             placeholder="Cari Judul/Isi/hari..."
                         />
-                        <button className="btn btn-primary" type="submit">
+                        <button className="btn-filter btn btn-primary" type="submit">
                             <i className="fas fa-search"></i>
                         </button>
                     </div>
@@ -54,7 +53,7 @@ export default function Pengumuman() {
                         name="tahun"
                         value={tahun}
                         onChange={(e) => setTahun(e.target.value)}
-                        className="form-select form-select-sm w-auto flex-fill"
+                        className="form-select form-select-sm w-auto flex-fill my-2"
                     >
                         <option value="">Semua Tahun</option>
                         {daftar_tahun.map((th) => (
@@ -68,7 +67,7 @@ export default function Pengumuman() {
                         name="bulan"
                         value={bulan}
                         onChange={(e) => setBulan(e.target.value)}
-                        className="form-select form-select-sm w-auto flex-fill"
+                        className="form-select form-select-sm w-auto flex-fill my-2"
                     >
                         <option value="">Semua Bulan</option>
                         {daftar_bulan.map((bln) => (
@@ -82,7 +81,7 @@ export default function Pengumuman() {
                         name="kategori"
                         value={kategori}
                         onChange={(e) => setKategori(e.target.value)}
-                        className="form-select form-select-sm w-auto flex-fill"
+                        className="form-select form-select-sm w-auto flex-fill my-2"
                     >
                         <option value="">Semua Kategori</option>
                         {daftar_kategori.map((kt) => (
@@ -92,25 +91,25 @@ export default function Pengumuman() {
                         ))}
                     </select>
 
-                    <button type="submit" className="btn btn-sm btn-primary flex-fill">
+                    <button type="submit" className="btn-input btn btn-sm btn-primary flex-fill">
                         Filter
                     </button>
-                    <Link href="/warga/pengumuman" className="btn btn-secondary btn-sm flex-fill">
+                    <Link href="/warga/pengumuman" className="btn-input btn btn-secondary btn-sm flex-fill">
                         Reset
                     </Link>
                 </div>
             </form>
 
             <div className="col-12">
-                <div className="card shadow mb-4">
-                    <div className="card-header py-2 d-flex flex-row align-items-center justify-content-between">
+                <div className="card shadow mb-4 py-0">
+                    <div className="card-header py-auto d-flex flex-row align-items-center justify-content-between">
                         <h6 className="m-0 font-weight-bold text-primary">Daftar Pengumuman</h6>
                     </div>
                     <div className="card-body">
-                        <div class="d-flex flex-wrap align-items-center justify-content-between mb-1">
-                            <div class="d-flex align-items-center gap-1 mb-1 mb-sm-0">
-                                <i class="fas fa-bullhorn me-2 text-primary"></i>
-                                <span class="fw-semibold text-dark">{total_pengumuman} Pengumuman</span>
+                        <div className="d-flex flex-wrap align-items-center justify-content-between mb-1">
+                            <div className="d-flex align-items-center gap-1 mb-1 mb-sm-0">
+                                <i className="fas fa-bullhorn me-2 text-primary"></i>
+                                <span className="fw-semibold text-dark">{total_pengumuman} Pengumuman</span>
                             </div>
                         </div>
                         <div className="table-responsive table-container">
@@ -134,10 +133,10 @@ export default function Pengumuman() {
                                                 <td>{item.kategori}</td>
                                                 <td>{item.isi.slice(0, 50)}...</td>
                                                 <td>{item.tanggal}</td>
-                                                <td className="text-center">
+                                                <td>
                                                     <button
                                                         type="button"
-                                                        className="btn btn-success btn-sm"
+                                                        className="btn-aksi btn btn-success btn-sm my-2"
                                                         data-bs-toggle="modal"
                                                         data-bs-target={`#modalDetailPengumuman${item.id}`}
                                                     >

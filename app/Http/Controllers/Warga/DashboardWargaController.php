@@ -17,7 +17,7 @@ class DashboardWargaController extends Controller
 
     public function index()
     {
-        $title = 'Warga';
+        $title = 'Dashboard';
 
         $userRtId = Auth::user()->warga->kartuKeluarga->rukunTetangga->id ?? null;
         $userRwId = Auth::user()->warga->kartuKeluarga->rw->id ?? null;
