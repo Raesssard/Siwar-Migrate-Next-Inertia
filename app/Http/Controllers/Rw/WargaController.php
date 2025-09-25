@@ -7,6 +7,7 @@ use App\Models\Kartu_keluarga;
 use App\Models\Rukun_tetangga;
 use App\Models\User;
 use App\Models\Warga;
+use App\Models\HistoryWarga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -28,7 +29,9 @@ class WargaController extends Controller
         $id_rw = Auth::user()->id_rw; // Dapatkan id_rw dari user yang sedang login
 
         // Dapatkan daftar RT yang relevan untuk dropdown filter
-        $rukun_tetangga_filter = Rukun_tetangga::where('jabatan', 'ketua')
+        $rukun_tetangga_filter = Rukun_tetangga::whereHas('jabatan', function ($q) {
+                $q->where('nama_jabatan', 'ketua');
+            })
             ->where('id_rw', $id_rw)
             ->select('rt')
             ->distinct()
@@ -200,6 +203,14 @@ class WargaController extends Controller
             'alamat_domisili' => $request->alamat_domisili,
             'tanggal_mulai_tinggal' => $request->tanggal_mulai_tinggal,
             'tujuan_pindah' => $request->tujuan_pindah,
+        ]);
+
+        HistoryWarga::create([
+            'warga_nik' => $warga->nik,
+            'nama' => $warga->nama,
+            'jenis' => 'masuk',
+            'keterangan' => 'Warga baru ditambahkan dengan NIK ' . $warga->nik,
+            'tanggal' => now(),
         ]);
 
         // Buat user hanya jika status kepala keluarga
@@ -398,15 +409,25 @@ class WargaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, string $nik)
-    {
-        $warga = Warga::findOrFail($nik);
+public function destroy(Request $request, string $nik)
+{
+    try {
+        // Cari data warga
+        $warga = Warga::where('nik', $nik)->firstOrFail();
+
+        HistoryWarga::create([
+            'warga_nik'  => $warga->nik,
+            'nama'       => $warga->nama,
+            'jenis'      => 'keluar',
+            'keterangan' => $request->keterangan ?? 'Tidak ada keterangan',
+            'tanggal'    => now(),
+        ]);
 
         // Cari user berdasarkan NIK
         $user = User::where('nik', $nik)->first();
-
         if ($user) {
-            if ($user->roles->count() > 1) {
+            // Cek jumlah role
+            if ($user->roles()->count() > 1) {
                 // Hapus hanya role 'warga'
                 $user->removeRole('warga');
             } else {
@@ -418,6 +439,13 @@ class WargaController extends Controller
         // Hapus data warga
         $warga->delete();
 
-        return redirect()->to($request->redirect_to)->with('success', 'Warga berhasil dihapus.');
+        return redirect()
+            ->back()
+            ->with('success', "Warga {$warga->nama} berhasil dihapus dan dicatat ke history.");
+    } catch (\Exception $e) {
+        return redirect()
+            ->back()
+            ->with('error', 'Gagal menghapus warga: ' . $e->getMessage());
     }
+}
 }

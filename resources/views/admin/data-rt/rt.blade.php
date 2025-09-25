@@ -9,7 +9,6 @@
         max-height: 80vh;
         overflow-y: auto;
     }
-
     .modal-body-scroll {
         max-height: 65vh;
         overflow-y: auto;
@@ -45,7 +44,8 @@
                                         <th>No</th>
                                         <th>NIK</th>
                                         <th>Nomor RT</th>
-                                        <th>Nama Ketua RT</th>
+                                        <th>Nama</th>
+                                        <th>Jabatan</th>
                                         <th>Mulai Menjabat</th>
                                         <th>Akhir Jabatan</th>
                                         <th>Aksi</th>
@@ -58,6 +58,7 @@
                                             <td>{{ $rt->nik }}</td>
                                             <td>{{ $rt->rt }}</td>
                                             <td>{{ $rt->nama }}</td>
+                                            <td>{{ $rt->jabatan->nama_jabatan}}</td>
                                             <td>{{ $rt->mulai_menjabat }}</td>
                                             <td>{{ $rt->akhir_jabatan }}</td>
                                             <td>
@@ -132,6 +133,24 @@
                             class="form-control @error('nama') is-invalid @enderror"
                             placeholder="Masukkan Nama Ketua RT (Sesuai dengan NIK)" required>
                         @error('nama')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Jabatan --}}
+                    <div class="mb-3">
+                        <label for="jabatan_id{{ $rt->id }}" class="form-label">Jabatan</label>
+                        <select name="jabatan_id" id="jabatan_id{{ $rt->id }}"
+                            class="form-control @error('jabatan_id') is-invalid @enderror" required>
+                            <option value="">-- Pilih Jabatan --</option>
+                            @foreach ($jabatans as $jabatan)
+                                <option value="{{ $jabatan->id }}"
+                                    {{ (old('id') == $rt->id ? old('jabatan_id') : $rt->jabatan_id) == $jabatan->id ? 'selected' : '' }}>
+                                    {{ ucfirst($jabatan->nama_jabatan) }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('jabatan_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -233,6 +252,24 @@
                                             @enderror
                                         </div>
 
+                                        {{-- Jabatan --}}
+                                        <div class="mb-3">
+                                            <label for="jabatan_id" class="form-label">Jabatan</label>
+                                            <select name="jabatan_id" id="jabatan_id"
+                                                class="form-control @error('jabatan_id') is-invalid @enderror" required>
+                                                <option value="">-- Pilih Jabatan --</option>
+                                                @foreach ($jabatans as $jabatan)
+                                                    <option value="{{ $jabatan->id }}"
+                                                        {{ old('jabatan_id') == $jabatan->id ? 'selected' : '' }}>
+                                                        {{ ucfirst($jabatan->nama_jabatan) }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('jabatan_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
                                         <div class="mb-3">
                                             <label for="mulai_menjabat" class="form-label">Mulai Masa Jabatan</label>
                                             <input type="date" name="mulai_menjabat" id="mulai_menjabat"
@@ -272,7 +309,6 @@
 <!-- End of Main Content -->
 
 {{-- Script untuk auto buka modal jika ada error --}}
-{{-- Script untuk auto buka modal Tambah RT jika ada error dari store --}}
 @if ($errors->any() && !old('_method'))
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -282,7 +318,6 @@
     </script>
 @endif
 
-{{-- Script untuk auto buka modal Edit RT jika ada error dari update --}}
 @if ($errors->any() && old('_method') === 'PUT' && old('id'))
     <script>
         document.addEventListener("DOMContentLoaded", function () {

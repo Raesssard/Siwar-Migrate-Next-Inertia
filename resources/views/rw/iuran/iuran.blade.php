@@ -97,8 +97,7 @@
                                         <th>Nominal</th>
                                         <th>Nama Iuran</th>
                                         <th>Tgl Tagih</th>
-                                        <th>Tgl Tempo</th>
-                                        <th>Jenis</th>
+                                        <th>Tgl Tempo</th>                                       
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -110,11 +109,6 @@
                                             <td>{{ $item->nama }}</td>
                                             <td>{{ \Carbon\Carbon::parse($item->tgl_tagih)->translatedFormat('d F Y') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($item->tgl_tempo)->translatedFormat('d F Y') }}</td>
-                                            <td>
-                                                <span class="badge bg-{{ $item->jenis == 'otomatis' ? 'primary' : 'secondary' }}">
-                                                    {{ ucfirst($item->jenis) }}
-                                                </span>
-                                            </td>
                                             <td>
                                                 <form action="{{ route('rw.iuran.destroy', $item->id) }}" method="POST" class="d-inline"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
@@ -146,65 +140,104 @@
                 </div>
             </div>
 
-            <!-- Tabel Iuran Otomatis -->
-            <div class="col-xl-12 col-lg-7">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-2 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Tabel Daftar Iuran Otomatis</h6>
-                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahIuran">
-                            <i class="fas fa-plus"></i> tambah
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive table-container">
-                            <table class="table table-hover table-sm scroll-table text-nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        @foreach ($golongan_list as $id => $golongan)
-                                            <th>Nominal {{ $golongan }}</th>
-                                        @endforeach
-                                        <th>Nama Iuran</th>
-                                        <th>Tgl Tagih</th>
-                                        <th>Tgl Tempo</th>
-                                        <th>Jenis</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($iuran->where('jenis','otomatis') as $item)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            @foreach ($golongan_list as $id => $golongan)
-                                                <td>
-                                                    Rp{{ number_format($item->iuran_golongan->firstWhere('id_golongan',$id)->nominal ?? 0,0,',','.') }}
-                                                </td>
-                                            @endforeach
-                                            <td>{{ $item->nama }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->tgl_tagih)->translatedFormat('d F Y') }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($item->tgl_tempo)->translatedFormat('d F Y') }}</td>
-                                            <td><span class="badge bg-primary">{{ ucfirst($item->jenis) }}</span></td>
-                                            <td>
-                                                <form action="{{ route('rw.iuran.destroy',$item->id) }}" method="POST" class="d-inline">
-                                                    @csrf @method('DELETE')
-                                                    <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus data ini?')">Hapus</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="{{ 6 + count($golongan_list) }}" class="text-center">Tidak ada data iuran otomatis.</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- Tabel Iuran Otomatis -->
+<div class="col-xl-12 col-lg-7">
+    <div class="card shadow mb-4">
+        <div class="card-header py-2 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Tabel Daftar Iuran Otomatis</h6>
+            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahIuran">
+                <i class="fas fa-plus"></i> tambah
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive table-container">
+                <table class="table table-hover table-sm scroll-table text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Iuran</th>
+                            <th>Golongan</th>
+                            <th>Nominal</th>
+                            <th>Tgl Tagih</th>
+                            <th>Tgl Tempo</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $no = 1; @endphp
+                        @forelse ($iuran->where('jenis','otomatis') as $item)
+                            @foreach ($item->iuran_golongan as $detail)
+                                <tr>
+                                    <td>{{ $no++ }}</td>
+                                    <td>{{ $item->nama }}</td>
+                                    <td>{{ $golongan_list[$detail->id_golongan] ?? '-' }}</td>
+                                    <td>Rp{{ number_format($detail->nominal,0,',','.') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->tgl_tagih)->translatedFormat('d F Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->tgl_tempo)->translatedFormat('d F Y') }}</td>
+                                    <td>
+                                        <!-- Tombol Edit -->
+                                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#modalEditOtomatis{{ $detail->id }}">
+                                            Edit
+                                        </button>
+                                        <!-- Tombol Hapus -->
+                                        <form action="{{ route('rw.iuran.destroy',$item->id) }}" 
+                                              method="POST" class="d-inline">
+                                            @csrf @method('DELETE')
+                                            <button class="btn btn-danger btn-sm" 
+                                                    onclick="return confirm('Hapus data ini?')">Hapus</button>
+                                        </form>
+                                    </td>
+                                </tr>
 
+                                <!-- Modal Edit Otomatis -->
+                                <div class="modal fade" id="modalEditOtomatis{{ $detail->id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-warning">
+                                                <h5 class="modal-title">Edit Iuran Otomatis</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('rw.iuran.updateOtomatis', $detail->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="mb-3">
+                                                        <label>Nominal</label>
+                                                        <input type="number" name="nominal" class="form-control"
+                                                            value="{{ $detail->nominal }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label>Tanggal Tagih</label>
+                                                        <input type="date" name="tgl_tagih" class="form-control"
+                                                            value="{{ $item->tgl_tagih }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label>Tanggal Tempo</label>
+                                                        <input type="date" name="tgl_tempo" class="form-control"
+                                                            value="{{ $item->tgl_tempo }}" required>
+                                                    </div>
+                                                    <div class="d-grid">
+                                                        <button type="submit" class="btn btn-warning">Simpan</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center">Tidak ada data iuran otomatis.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+</div>
+
 
     <!-- Modal Tambah Iuran -->
     <div class="modal fade" id="modalTambahIuran" tabindex="-1" aria-hidden="true">
