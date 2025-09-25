@@ -169,3 +169,87 @@ export function PasswordModal({ show }) {
         </>
     )
 }
+
+export function DetailPengumuman({ selectedData, detailShow, onClose }) {
+    if (!detailShow || !selectedData) return null
+    return (
+        <>
+            <div className="modal fade show" tabIndex="-1" style={{
+                display: "block",
+                backgroundColor: "rgba(0,0,0,0.5)"
+            }}>
+                <div className="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div className="modal-content shadow-lg border-0">
+                        <div className="modal-header bg-success text-white">
+                            <h5 className="modal-title mb-0">Detail Pengumuman</h5>
+                            <button
+                                type="button"
+                                className="btn-close btn-close-white"
+                                onClick={onClose}
+                            />
+                        </div>
+                        <div className="modal-body px-4 pt-4 pb-3">
+                            <h4 className="fw-bold text-success mb-2">{selectedData.judul}</h4>
+                            <div className="d-flex align-items-center mb-3">
+                                <span className="text-muted me-3">
+                                    <i className="bi bi-calendar me-1"></i>{new Date(selectedData.tanggal).toLocaleDateString("id-ID", {
+                                        weekday: "long",
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric"
+                                    })}
+                                </span>
+                                {selectedData.id_rt ?
+                                    <span className="text-dark fw-semibold">
+                                        <i className="me-1"></i>{`Dari RT: ${selectedData.rukun_tetangga?.rt ?? '-'}`}
+                                    </span>
+                                    :
+                                    <span className="text-dark fw-semibold">
+                                        <i className="me-1"></i>{`Dari RW: ${selectedData.rw?.nomor_rw ?? '-'}`}
+                                    </span>
+                                }
+                            </div>
+                            <ul className="list-unstyled mb-3 small">
+                                <li><strong>Kategori:</strong> <span className="ms-1">{selectedData.kategori ?? '-'}</span></li>
+                            </ul>
+                            <hr className="my-3" />
+                            <div className="mb-4">
+                                <h5 className="fw-bold text-success mb-2">Isi Pengumuman:</h5>
+                                <div className="border rounded bg-light p-3" style={{ lineHeight: "1.6" }}>
+                                    {selectedData.isi}
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <h5 className="fw-bold text-success mb-2">Dokumen Terlampir:</h5>
+                                {selectedData.dokumen_path ? (
+                                    <div className="border rounded bg-light p-3 d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <i className="bi bi-file-earmark-text me-2"></i>
+                                            <span>{selectedData.dokumen_name ?? 'Dokumen Terlampir'}</span>
+                                            <small className="text-muted d-block mt-1">Klik tombol di samping untuk melihat atau mengunduh.</small>
+                                        </div>
+                                        <a href={selectedData.dokumen_url} target="_blank" className="btn btn-primary btn-sm">
+                                            <i className="bi bi-download"></i> Unduh
+                                        </a>
+                                    </div>
+                                ) : (
+                                    <div className="text-muted p-3 border rounded bg-light">
+                                        Tidak ada dokumen yang terlampir.
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="modal-footer bg-light border-0 justify-content-end py-2">
+                            <button
+                                className="btn btn-outline-success"
+                                onClick={onClose}
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}

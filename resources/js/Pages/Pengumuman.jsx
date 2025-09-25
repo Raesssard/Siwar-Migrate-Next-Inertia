@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import Layout from "../Layouts/Layout"
 import { Head, Link, usePage } from "@inertiajs/react"
 import { Inertia } from "@inertiajs/inertia"
+import { DetailPengumuman } from "./Component/Modal"
 
 export default function Pengumuman() {
     const { title,
@@ -16,9 +17,15 @@ export default function Pengumuman() {
     const [tahun, setTahun] = useState(filters.tahun || "")
     const [bulan, setBulan] = useState(filters.bulan || "")
     const [kategori, setKategori] = useState(filters.kategori || "")
+    const [selected, setSelected] = useState(null)
+    const [showModal, setShowModal] = useState(false)
     const { props } = usePage()
     const role = props.auth?.currentRole
 
+    const modalDetail = (item) => {
+        setSelected(item)
+        setShowModal(true)
+    }
     const filter = (e) => {
         e.preventDefault()
 
@@ -136,8 +143,7 @@ export default function Pengumuman() {
                                                     <button
                                                         type="button"
                                                         className="btn-aksi btn btn-success btn-sm my-2"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target={`#modalDetailPengumuman${item.id}`}
+                                                        onClick={() => modalDetail(item)}
                                                     >
                                                         <i className="fas fa-book-open"></i>
                                                     </button>
@@ -151,11 +157,15 @@ export default function Pengumuman() {
                                             </td>
                                         </tr>
                                     )}
+                                    <DetailPengumuman
+                                        selectedData={selected}
+                                        detailShow={showModal}
+                                        onClose={() => setShowModal(false)}
+                                    />
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                     <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 px-4">
                         <div className="text-muted mb-2">
                             Menampilkan {pengumuman.from} - {pengumuman.to} dari total {pengumuman.total} data
