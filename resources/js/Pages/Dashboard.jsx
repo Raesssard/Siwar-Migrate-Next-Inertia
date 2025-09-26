@@ -22,10 +22,6 @@ export default function Dashboard() {
     };
     const { props } = usePage()
     const role = props.auth?.currentRole
-    const user = props.auth?.user;
-
-    console.log(props.auth?.currentRole)
-    console.log(props.auth?.permissions)
     return (
         <Layout>
             <Head title={`${title} ${role.length <= 2

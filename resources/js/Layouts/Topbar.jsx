@@ -6,7 +6,7 @@ import { Inertia } from "@inertiajs/inertia"
 import { PasswordModal } from "../Pages/Component/Modal"
 
 export default function Topbar({ modalShow }) {
-    const { url, props } = usePage()
+    const { props } = usePage()
     const user = props.auth?.user
     const roles = props.auth?.roles
     const [showPasswordModal, setShowPasswordModal] = useState(false)
@@ -30,39 +30,40 @@ export default function Topbar({ modalShow }) {
         setGantiAkun(!gantiAkun)
     }
 
-    const segments = url.split("/").filter(Boolean)
-    const segment = segments[1] ?? segments[0] ?? ""
+    const url = window.location.pathname
+    const segment = url.split("/").pop()
+
 
     let judulHalaman
     if (!segment && (url === "/" || url === "/dashboard-main")) {
-        judulHalaman = "Dashboard"
+        judulHalaman = "Dashboard";
     } else {
         switch (segment) {
             case "kk":
-                judulHalaman = "Data Kartu Keluarga"
-                break
+                judulHalaman = "Data Kartu Keluarga";
+                break;
             case "warga":
-                judulHalaman = "Dashboard"
-                break
-            case "warga_pengumuman":
-                judulHalaman = "Pengumuman"
-                break
+                judulHalaman = "Dashboard";
+                break;
+            case "pengumuman":
+                judulHalaman = "Pengumuman";
+                break;
             case "tagihan":
-                judulHalaman = "Tagihan Saya"
-                break
+                judulHalaman = "Tagihan Saya";
+                break;
             case "iuran":
-                judulHalaman = "Iuran"
-                break
+                judulHalaman = "Iuran";
+                break;
             case "transaksi":
-                judulHalaman = "Transaksi"
-                break
+                judulHalaman = "Transaksi";
+                break;
             case "pengaduan":
-                judulHalaman = "Pengaduan Saya"
-                break
+                judulHalaman = "Pengaduan Saya";
+                break;
             default:
                 judulHalaman =
                     segment.charAt(0).toUpperCase() +
-                    segment.slice(1).replace(/-/g, " ")
+                    segment.slice(1).replace(/-/g, " ");
         }
     }
 

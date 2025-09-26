@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import Layout from "../Layouts/Layout"
 import { Head, Link, usePage } from "@inertiajs/react"
 import { Inertia } from "@inertiajs/inertia"
+import { DetailPengumuman } from "./Component/Modal"
 
 export default function Pengumuman() {
     const { title,
@@ -10,20 +11,25 @@ export default function Pengumuman() {
         daftar_tahun,
         daftar_bulan,
         daftar_kategori,
-        total_pengumuman } = usePage().props
-    const [search, setSearch] = useState("")
-    const [tahun, setTahun] = useState("")
-    const [bulan, setBulan] = useState("")
-    const [kategori, setKategori] = useState("")
+        total_pengumuman,
+        filters } = usePage().props
+    const [search, setSearch] = useState(filters.search || "")
+    const [tahun, setTahun] = useState(filters.tahun || "")
+    const [bulan, setBulan] = useState(filters.bulan || "")
+    const [kategori, setKategori] = useState(filters.kategori || "")
+    const [selected, setSelected] = useState(null)
+    const [showModal, setShowModal] = useState(false)
     const { props } = usePage()
     const role = props.auth?.currentRole
 
+    const modalDetail = (item) => {
+        setSelected(item)
+        setShowModal(true)
+    }
     const filter = (e) => {
         e.preventDefault()
-        Inertia.get("/warga/pengumuman", { search, tahun, bulan, kategori }, {
-            preserveState: true,
-            replace: true,
-        })
+
+        Inertia.get('/warga/pengumuman', { search, tahun, bulan, kategori }, { preserveState: true })
     }
 
     return (
@@ -31,7 +37,7 @@ export default function Pengumuman() {
             <Head title={`${title} ${role.length <= 2
                 ? role.toUpperCase()
                 : role.charAt(0).toUpperCase() + role.slice(1)}`} />
-            <form onSubmit={filter} className="form-filter row g-2 px-3 pb-2 mb-2">
+            <form onChange={filter} className="form-filter row g-2 px-3 pb-2 mb-2">
                 <div className="col-md-5 col-12">
                     <div className="input-group input-group-sm">
                         <input
@@ -70,9 +76,9 @@ export default function Pengumuman() {
                         className="form-select form-select-sm w-auto flex-fill my-2"
                     >
                         <option value="">Semua Bulan</option>
-                        {daftar_bulan.map((bln) => (
-                            <option key={bln} value={bln}>
-                                {bln}
+                        {list_bulan.map((nama, index) => (
+                            <option key={index + 1} value={index + 1}>
+                                {nama.charAt(0).toUpperCase() + nama.slice(1)}
                             </option>
                         ))}
                     </select>
@@ -137,8 +143,7 @@ export default function Pengumuman() {
                                                     <button
                                                         type="button"
                                                         className="btn-aksi btn btn-success btn-sm my-2"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target={`#modalDetailPengumuman${item.id}`}
+                                                        onClick={() => modalDetail(item)}
                                                     >
                                                         <i className="fas fa-book-open"></i>
                                                     </button>
@@ -152,11 +157,15 @@ export default function Pengumuman() {
                                             </td>
                                         </tr>
                                     )}
+                                    <DetailPengumuman
+                                        selectedData={selected}
+                                        detailShow={showModal}
+                                        onClose={() => setShowModal(false)}
+                                    />
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                     <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 px-4">
                         <div className="text-muted mb-2">
                             Menampilkan {pengumuman.from} - {pengumuman.to} dari total {pengumuman.total} data
@@ -182,7 +191,6 @@ export default function Pengumuman() {
                             ))}
                         </div>
                     </div>
-
                 </div>
             </div>
         </Layout>

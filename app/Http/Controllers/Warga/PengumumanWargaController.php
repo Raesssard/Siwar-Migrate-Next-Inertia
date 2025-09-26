@@ -7,6 +7,7 @@ use App\Models\Pengumuman;
 use App\Models\Rukun_tetangga;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PengumumanWargaController extends Controller
@@ -25,7 +26,7 @@ class PengumumanWargaController extends Controller
             abort(403, 'Anda tidak terhubung dengan RT atau RW manapun untuk melihat pengumuman. Harap hubungi administrator.');
         }
 
-        $baseQuery = Pengumuman::query();
+        $baseQuery = Pengumuman::query()->with(['rukunTetangga', 'rw']);
 
         $baseQuery->where(function ($query) use ($userRtId, $userRwId) {
             if ($userRtId) {
@@ -78,11 +79,14 @@ class PengumumanWargaController extends Controller
             ->when($tahun, fn($q) => $q->whereYear('tanggal', $tahun))
             ->when($bulan, fn($q) => $q->whereMonth('tanggal', $bulan))
             ->when($kategori, fn($q) => $q->where('kategori', $kategori))
-            ->orderByDesc('created_at')
+            ->orderByDesc('tanggal')
             ->paginate(5)
             ->through(function ($item) {
                 $item->tanggal = \Carbon\Carbon::parse($item->tanggal)
                     ->translatedFormat('d F Y'); // contoh: 24 September 2025
+                $item->dokumen_url = $item->dokumen_path
+                    ? Storage::url($item->dokumen_path)
+                    : null;
                 return $item;
             })
             ->withQueryString();
@@ -136,7 +140,8 @@ class PengumumanWargaController extends Controller
             'daftar_bulan' => $daftar_bulan,
             'daftar_kategori' => $daftar_kategori,
             'total_pengumuman' => $total_pengumuman,
-            'list_bulan' => $list_bulan
+            'list_bulan' => $list_bulan,
+            'filters' => $request->only(['search', 'tahun', 'bulan', 'kategori']),
         ]);
     }
 
