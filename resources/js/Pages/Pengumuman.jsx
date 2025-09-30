@@ -1,7 +1,6 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Layout from "../Layouts/Layout"
-import { Head, Link, usePage } from "@inertiajs/react"
-import { Inertia } from "@inertiajs/inertia"
+import { Head, Link, usePage, useForm } from "@inertiajs/react"
 import { DetailPengumuman } from "./Component/Modal"
 
 export default function Pengumuman() {
@@ -9,27 +8,28 @@ export default function Pengumuman() {
         pengumuman,
         list_bulan,
         daftar_tahun,
-        daftar_bulan,
         daftar_kategori,
-        total_pengumuman,
-        filters } = usePage().props
-    const [search, setSearch] = useState(filters.search || "")
-    const [tahun, setTahun] = useState(filters.tahun || "")
-    const [bulan, setBulan] = useState(filters.bulan || "")
-    const [kategori, setKategori] = useState(filters.kategori || "")
+        total_pengumuman } = usePage().props
     const [selected, setSelected] = useState(null)
     const [showModal, setShowModal] = useState(false)
     const { props } = usePage()
+    const { get, data, setData } = useForm({
+        search: '',
+        tahun: '',
+        bulan: '',
+        kategori: ''
+    })
+
     const role = props.auth?.currentRole
 
     const modalDetail = (item) => {
         setSelected(item)
         setShowModal(true)
     }
+
     const filter = (e) => {
         e.preventDefault()
-
-        Inertia.get('/warga/pengumuman', { search, tahun, bulan, kategori }, { preserveState: true })
+        get('/warga/pengumuman')
     }
 
     return (
@@ -37,14 +37,14 @@ export default function Pengumuman() {
             <Head title={`${title} ${role.length <= 2
                 ? role.toUpperCase()
                 : role.charAt(0).toUpperCase() + role.slice(1)}`} />
-            <form onChange={filter} className="form-filter row g-2 px-3 pb-2 mb-2">
+            <form onSubmit={filter} className="form-filter row g-2 px-3 pb-2 mb-2">
                 <div className="col-md-5 col-12">
                     <div className="input-group input-group-sm">
                         <input
                             type="text"
                             name="search"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
+                            value={data.search}
+                            onChange={(e) => setData('search', e.target.value)}
                             className="form-control"
                             placeholder="Cari Judul/Isi/hari..."
                         />
@@ -57,8 +57,8 @@ export default function Pengumuman() {
                 <div className="col-md-7 col-12 d-flex flex-wrap gap-2">
                     <select
                         name="tahun"
-                        value={tahun}
-                        onChange={(e) => setTahun(e.target.value)}
+                        value={data.tahun}
+                        onChange={(e) => setData('tahun', e.target.value)}
                         className="form-select form-select-sm w-auto flex-fill my-2"
                     >
                         <option value="">Semua Tahun</option>
@@ -71,8 +71,8 @@ export default function Pengumuman() {
 
                     <select
                         name="bulan"
-                        value={bulan}
-                        onChange={(e) => setBulan(e.target.value)}
+                        value={data.bulan}
+                        onChange={(e) => setData('bulan', e.target.value)}
                         className="form-select form-select-sm w-auto flex-fill my-2"
                     >
                         <option value="">Semua Bulan</option>
@@ -85,8 +85,8 @@ export default function Pengumuman() {
 
                     <select
                         name="kategori"
-                        value={kategori}
-                        onChange={(e) => setKategori(e.target.value)}
+                        value={data.kategori}
+                        onChange={(e) => setData('kategori', e.target.value)}
                         className="form-select form-select-sm w-auto flex-fill my-2"
                     >
                         <option value="">Semua Kategori</option>
@@ -134,11 +134,15 @@ export default function Pengumuman() {
                                     {pengumuman.data.length ? (
                                         pengumuman.data.map((item, i) => (
                                             <tr key={item.id}>
-                                                <td>{i + 1}</td>
-                                                <td>{item.judul}</td>
-                                                <td>{item.kategori}</td>
-                                                <td>{item.isi.slice(0, 50)}...</td>
-                                                <td>{item.tanggal}</td>
+                                                <td className="pt-3">{i + 1}</td>
+                                                <td className="pt-3">{item.judul}</td>
+                                                <td className="pt-3">{item.kategori}</td>
+                                                {item.isi.length > 50 ? (
+                                                    <td className="pt-3">{item.isi.slice(0, 50)}...</td>
+                                                ) : (
+                                                    <td className="pt-3">{item.isi.slice(0, item.isi.length)}</td>
+                                                )}
+                                                <td className="pt-3">{item.tanggal}</td>
                                                 <td>
                                                     <button
                                                         type="button"
@@ -157,38 +161,42 @@ export default function Pengumuman() {
                                             </td>
                                         </tr>
                                     )}
-                                    <DetailPengumuman
-                                        selectedData={selected}
-                                        detailShow={showModal}
-                                        onClose={() => setShowModal(false)}
-                                    />
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    <DetailPengumuman
+                        selectedData={selected}
+                        detailShow={showModal}
+                        onClose={() => setShowModal(false)}
+                    />
                     <div className="d-flex flex-wrap justify-content-between align-items-center mb-3 px-4">
                         <div className="text-muted mb-2">
                             Menampilkan {pengumuman.from} - {pengumuman.to} dari total {pengumuman.total} data
                         </div>
 
                         <div className="d-flex flex-wrap gap-1">
-                            {pengumuman.links.map((link, index) => (
-                                link.url ? (
-                                    <Link
-                                        key={index}
-                                        href={link.url}
-                                        className={`px-3 py-1 border rounded ${link.active ? "bg-primary text-white" : "bg-light text-dark"
-                                            }`}
-                                        dangerouslySetInnerHTML={{ __html: link.label }}
-                                    />
-                                ) : (
-                                    <span
-                                        key={index}
-                                        className="px-3 py-1 border rounded text-muted"
-                                        dangerouslySetInnerHTML={{ __html: link.label }}
-                                    />
-                                )
-                            ))}
+                            {pengumuman.links.length > 3 &&
+                                (pengumuman.links.map((link, index) => (
+                                    link.url ? (
+                                        <Link
+                                            key={index}
+                                            href={link.url}
+                                            className={`px-3 py-1 border rounded ${link.active ? "bg-primary text-white" : "bg-light text-dark"
+                                                }`}
+                                            dangerouslySetInnerHTML={{ __html: link.label }}
+                                            style={{ textDecoration: 'none' }}
+                                        />
+                                    ) : (
+                                        <span
+                                            key={index}
+                                            className="px-3 py-1 border rounded text-muted"
+                                            dangerouslySetInnerHTML={{ __html: link.label }}
+                                            style={{ textDecoration: 'none', cursor: 'not-allowed' }}
+                                        />
+                                    )
+                                )))
+                            }
                         </div>
                     </div>
                 </div>

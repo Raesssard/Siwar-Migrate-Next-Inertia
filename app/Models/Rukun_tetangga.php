@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Rukun_tetangga extends Model
 {
     protected $table = 'rukun_tetangga';
-    protected $hidden = ['nik', 'no_kk'];
     protected $fillable = [
         'nik',
         'no_kk',

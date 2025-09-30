@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Rw extends Model
 {
     protected $table = 'rw';
-    protected $hidden = ['nik'];
     protected $fillable = [
         'nik',
         'nomor_rw',

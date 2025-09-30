@@ -14,6 +14,7 @@ class PengumumanWargaController extends Controller
 {
     public function index(Request $request)
     {
+        // dd($request->all());
         $search = $request->input('search');
         $tahun = $request->input('tahun');
         $bulan = $request->input('bulan');
@@ -81,6 +82,7 @@ class PengumumanWargaController extends Controller
             ->when($kategori, fn($q) => $q->where('kategori', $kategori))
             ->orderByDesc('tanggal')
             ->paginate(5)
+            ->withQueryString()
             ->through(function ($item) {
                 $item->tanggal = \Carbon\Carbon::parse($item->tanggal)
                     ->translatedFormat('d F Y'); // contoh: 24 September 2025
@@ -88,8 +90,7 @@ class PengumumanWargaController extends Controller
                     ? Storage::url($item->dokumen_path)
                     : null;
                 return $item;
-            })
-            ->withQueryString();
+            });
 
         $daftar_tahun = (clone $baseQuery)
             ->selectRaw('YEAR(tanggal) as tahun')
@@ -137,11 +138,9 @@ class PengumumanWargaController extends Controller
             'rukun_tetangga' => $rukun_tetangga,
             'title' => $title,
             'daftar_tahun' => $daftar_tahun,
-            'daftar_bulan' => $daftar_bulan,
             'daftar_kategori' => $daftar_kategori,
             'total_pengumuman' => $total_pengumuman,
             'list_bulan' => $list_bulan,
-            'filters' => $request->only(['search', 'tahun', 'bulan', 'kategori']),
         ]);
     }
 

@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Warga;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengaduan;
+use App\Models\PengaduanKomentar;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class PengaduanController extends Controller
 {
@@ -19,7 +21,7 @@ class PengaduanController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        $title = 'Pengaduan Saya';
+        $title = 'Pengaduan';
         if (!$user || !$user->hasRole('warga') || !$user->warga) {
             Log::warning("Akses tidak sah ke halaman tagihan warga atau data warga tidak ditemukan.", ['user_id' => $user->id ?? 'guest']);
             return redirect('/')->with('error', 'Anda tidak memiliki akses ke halaman ini atau data profil Anda tidak lengkap.');
@@ -32,7 +34,12 @@ class PengaduanController extends Controller
             return redirect('/')->with('error', 'Data Kartu Keluarga Anda tidak ditemukan. Silakan hubungi RT/RW Anda.');
         }
 
-        $pengaduanSaya = Pengaduan::where('nik_warga', $nik_warga);
+        $pengaduanSaya = Pengaduan::where('nik_warga', $nik_warga)->with([
+            'warga',
+            'komentar.user',
+            'warga.kartuKeluarga.rukunTetangga',
+            'warga.kartuKeluarga.rw'
+        ]);
 
         if ($request->filled('search')) {
             $hasil = $request->input('search');
@@ -41,11 +48,16 @@ class PengaduanController extends Controller
             });
         }
 
-        $pengaduan = $pengaduanSaya->orderBy('created_at', 'desc')->paginate(10);
+        $pengaduan = $pengaduanSaya->orderBy('created_at', 'desc')->get();
 
         $total_pengaduan = $pengaduan->count();
 
-        return view('warga.pengaduan.pengaduan', compact('pengaduan', 'title', 'total_pengaduan'));
+        // return view('warga.pengaduan.pengaduan', compact('pengaduan', 'title', 'total_pengaduan'));
+        return Inertia::render('Pengaduan', [
+            'pengaduan' => $pengaduan,
+            'title' => $title,
+            'total_pengaduan' => $total_pengaduan
+        ]);
     }
 
     /**
@@ -68,31 +80,37 @@ class PengaduanController extends Controller
             'level' => 'required|in:rt,rw',
         ]);
 
-        $nik_user = Auth::user()->warga->nik;
-        $filePath = null;
-        $fileName = null;
+        try {
+            $nik_user = Auth::user()->warga->nik;
+            $filePath = null;
+            $fileName = null;
 
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            // Simpan ke folder 'documents/pengumuman-rt' di disk 'public'
-            $filePath = $file->storeAs('file', $fileName, 'public');
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $filePath = $file->storeAs('file', $fileName, 'public');
+                Log::info("File uploaded: $filePath");
+            }
+
+            Pengaduan::create([
+                'nik_warga' => $nik_user,
+                'judul' => $request->judul,
+                'isi' => $request->isi,
+                'file_path' => $filePath,
+                'file_name' => $fileName,
+                'foto_bukti' => null,
+                'status' => 'belum',
+                'level' => $request->level,
+                'konfirmasi_rw' => $request->level === 'rt' ? 'belum' : 'menunggu',
+            ]);
+
+            return back()->with('success', 'Pengaduan berhasil dibuat.');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return back()->with('error', $e->getMessage());
         }
-
-        Pengaduan::create([
-            'nik_warga' => $nik_user,
-            'judul' => $request->judul,
-            'isi' => $request->isi,
-            'file_path' => $filePath,
-            'file_name' => $fileName,
-            'foto_bukti' => null,
-            'status' => 'belum',
-            'level' => $request->level,
-            'konfirmasi_rw' => $request->level === 'rt' ? 'belum' : 'menunggu',
-        ]);
-
-        return back()->with('success', 'Pengaduan berhasil dibuat.');
     }
+
 
     /**
      * Display the specified resource.
@@ -181,5 +199,23 @@ class PengaduanController extends Controller
 
         return redirect()->route('warga.pengaduan.index')
             ->with('success', 'Pengaduan berhasil diperbarui.');
+    }
+
+    public function komen(Request $request, $id)
+    {
+        $request->validate([
+            'isi_komentar' => 'required|string|max:255'
+        ]);
+
+        $pengaduan = Pengaduan::findOrFail($id);
+
+        $komentar = $pengaduan->komentar()->create([
+            'user_id' => Auth::id(),
+            'isi_komentar' => $request->isi_komentar
+        ]);
+
+        $komentar->load('user'); // biar ada nama user
+
+        return response()->json($komentar);
     }
 }

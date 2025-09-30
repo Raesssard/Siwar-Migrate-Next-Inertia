@@ -176,3 +176,119 @@ form.form-filter select.form-select {
     margin: auto;
     justify-content: center;
 }
+
+h4.fw-bold.text-success,
+h5.fw-bold.text-success {
+    font-weight: 500;
+    text-align: left;
+}
+
+div.card-body div.flex.gap-4 div.card-clickable {
+    text-align: center;
+    break-inside: avoid;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    width: 100%;
+}
+
+div.card-body div.flex.gap-4 div.card-clickable div.text-sm {
+    font-size: 0.75rem;
+}
+
+div.card-body.pengaduan {
+    min-height: 499px;
+    max-height: 499px;
+    overflow-y: auto;
+    padding-right: 8px;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+}
+
+div.card-body.pengaduan::-webkit-scrollbar {
+    display: none;
+}
+
+div.card-body.pengaduan button.scroll-top-btn {
+    position: sticky;
+    bottom: 10px;
+    left: calc(100% - 70px);
+    z-index: 10;
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+div.card-body.pengaduan button.scroll-top-btn.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+div.komen button {
+    border-radius: 0 0.35rem 0.35rem 0;
+}
+
+div.komen {
+    margin-top: auto;
+}
+
+ul.navbar-nav.sidebar#accordionSidebar {
+    position: fixed;
+    z-index: 1000;
+}
+
+div.modal-komen {
+    min-height: 700px;
+    max-height: 700px;
+}
+
+div.komen-section::-webkit-scrollbar {
+    display: none;
+}
+
+p.isi-pengaduan,
+p.komen {
+    word-wrap: break-word;
+    /* cadangan lama */
+    overflow-wrap: break-word;
+    /* standar modern */
+    word-break: break-word;
+    /* pecah kata panjang */
+    white-space: normal;
+    /* pastikan wrap */
+}
+
+p.isi-pengaduan.clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    /* potong di 3 baris */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+p.isi-pengaduan.expanded {
+    display: block;
+    /* tampil semua */
+}
+
+p.komen {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    /* tampil 3 baris dulu */
+    -webkit-box-orient: vertical;
+}
+
+p.komen.line-clamp-none {
+    -webkit-line-clamp: unset;
+}
+
+button.btn-expand {
+    font-size: 0.9rem;
+}
