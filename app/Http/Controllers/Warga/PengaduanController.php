@@ -34,12 +34,18 @@ class PengaduanController extends Controller
             return redirect('/')->with('error', 'Data Kartu Keluarga Anda tidak ditemukan. Silakan hubungi RT/RW Anda.');
         }
 
-        $pengaduanSaya = Pengaduan::where('nik_warga', $nik_warga)->with([
-            'warga',
-            'komentar.user',
-            'warga.kartuKeluarga.rukunTetangga',
-            'warga.kartuKeluarga.rw'
-        ]);
+        $tahun = $request->input('tahun');
+        $bulan = $request->input('bulan');
+
+        $pengaduanSaya = Pengaduan::query()
+            ->with([
+                'warga',
+                'komentar.user',
+                'warga.kartuKeluarga.rukunTetangga',
+                'warga.kartuKeluarga.rw'
+            ])
+            ->when($tahun, fn($q) => $q->whereYear('created_at', $tahun))
+            ->when($bulan, fn($q) => $q->whereMonth('created_at', $bulan));
 
         if ($request->filled('search')) {
             $hasil = $request->input('search');
@@ -48,15 +54,55 @@ class PengaduanController extends Controller
             });
         }
 
+        if ($request->filled('kategori')) {
+            if ($request->kategori === 'saya') {
+                $pengaduanSaya->where('nik_warga', $nik_warga);
+            } else {
+                $pengaduanSaya->where('level', $request->kategori);
+            }
+        }
+
         $pengaduan = $pengaduanSaya->orderBy('created_at', 'desc')->get();
 
-        $total_pengaduan = $pengaduan->count();
+        $total_pengaduan = Pengaduan::count();
+        $total_pengaduan_filtered = $pengaduan->count();
+
+        $list_bulan = [
+            'januari',
+            'februari',
+            'maret',
+            'april',
+            'mei',
+            'juni',
+            'juli',
+            'agustus',
+            'september',
+            'oktober',
+            'november',
+            'desember'
+        ];
+
+        $list_tahun = Pengaduan::query()
+            ->selectRaw('YEAR(created_at) as tahun')
+            ->groupBy('tahun')
+            ->orderByDesc('tahun')
+            ->pluck('tahun');
+
+        $list_level = Pengaduan::query()
+            ->select('level')
+            ->whereNotNull('level')
+            ->distinct()
+            ->pluck('level');
 
         // return view('warga.pengaduan.pengaduan', compact('pengaduan', 'title', 'total_pengaduan'));
         return Inertia::render('Pengaduan', [
             'pengaduan' => $pengaduan,
             'title' => $title,
-            'total_pengaduan' => $total_pengaduan
+            'total_pengaduan' => $total_pengaduan,
+            'total_pengaduan_filtered' => $total_pengaduan_filtered,
+            'list_bulan' => $list_bulan,
+            'list_tahun' => $list_tahun,
+            'list_level' => $list_level,
         ]);
     }
 
@@ -74,9 +120,9 @@ class PengaduanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'judul' => 'required',
-            'isi' => 'required',
-            'file' => 'required|file|mimes:jpg,jpeg,JPG,PNG,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480',
+            'judul' => 'required|string|max:255',
+            'isi' => 'required|string',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480',
             'level' => 'required|in:rt,rw',
         ]);
 
@@ -89,28 +135,32 @@ class PengaduanController extends Controller
                 $file = $request->file('file');
                 $fileName = time() . '_' . $file->getClientOriginalName();
                 $filePath = $file->storeAs('file', $fileName, 'public');
-                Log::info("File uploaded: $filePath");
             }
 
-            Pengaduan::create([
-                'nik_warga' => $nik_user,
-                'judul' => $request->judul,
-                'isi' => $request->isi,
-                'file_path' => $filePath,
-                'file_name' => $fileName,
-                'foto_bukti' => null,
-                'status' => 'belum',
-                'level' => $request->level,
+            $pengaduan = Pengaduan::create([
+                'nik_warga'   => $nik_user,
+                'judul'       => $request->judul,
+                'isi'         => $request->isi,
+                'file_path'   => $filePath,
+                'file_name'   => $fileName,
+                'foto_bukti'  => null,
+                'status'      => 'belum',
+                'level'       => $request->level,
                 'konfirmasi_rw' => $request->level === 'rt' ? 'belum' : 'menunggu',
             ]);
 
+            // load relasi biar React langsung dapat data lengkap
+            $pengaduan->load(['warga', 'komentar.user', 'warga.kartuKeluarga.rukunTetangga', 'warga.kartuKeluarga.rw']);
+
+            if ($request->wantsJson()) {
+                return response()->json($pengaduan);
+            }
+
             return back()->with('success', 'Pengaduan berhasil dibuat.');
         } catch (\Exception $e) {
-            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return back()->with('error', $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
 
     /**
      * Display the specified resource.
@@ -154,7 +204,6 @@ class PengaduanController extends Controller
             'isi' => $request->isi,
             'level' => $request->level,
         ];
-
         if ($request->hasFile('file')) {
             if ($pengaduan->file_path && Storage::disk('public')->exists($pengaduan->file_path)) {
                 Storage::disk('public')->delete($pengaduan->file_path);
@@ -174,6 +223,17 @@ class PengaduanController extends Controller
 
         $pengaduan->update($dataYangDiUpdate);
 
+        if ($request->wantsJson()) {
+            return response()->json(
+                $pengaduan->fresh([
+                    'warga',
+                    'komentar.user',
+                    'warga.kartuKeluarga.rukunTetangga',
+                    'warga.kartuKeluarga.rw'
+                ])
+            );
+        }
+
         return redirect()->route('warga.pengaduan.index')
             ->with('success', 'Pengaduan berhasil diperbarui.');
     }
@@ -181,7 +241,7 @@ class PengaduanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $nik_user = Auth::user()->warga->nik;
 
@@ -197,8 +257,13 @@ class PengaduanController extends Controller
 
         $pengaduan->delete();
 
+        return response()->json([
+            'message' => 'Pengaduan berhasil dihapus',
+            'id' => $id,
+        ]);
+
         return redirect()->route('warga.pengaduan.index')
-            ->with('success', 'Pengaduan berhasil diperbarui.');
+            ->with('success', 'Pengaduan berhasil dihapus.');
     }
 
     public function komen(Request $request, $id)

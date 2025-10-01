@@ -14,7 +14,6 @@ class PengumumanWargaController extends Controller
 {
     public function index(Request $request)
     {
-        // dd($request->all());
         $search = $request->input('search');
         $tahun = $request->input('tahun');
         $bulan = $request->input('bulan');
@@ -117,8 +116,6 @@ class PengumumanWargaController extends Controller
             'november',
             'desember'
         ];
-
-        $daftar_bulan = range(1, 12);
 
         $rukun_tetangga = $userRtId ? Rukun_tetangga::find($userRtId) : null;
         $title = 'Pengumuman';

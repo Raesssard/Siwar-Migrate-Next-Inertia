@@ -1,29 +1,39 @@
 import React, { useState, useEffect, useRef } from "react"
 import Layout from "../Layouts/Layout"
 import { Head, Link, usePage, useForm } from "@inertiajs/react"
-import { Inertia } from "@inertiajs/inertia"
 import Masonry from "react-masonry-css"
 import FileDisplay from "./Component/FileDisplay"
 import '../../css/card.css'
-import { DetailPengaduan } from "./Component/Modal"
+import { DetailPengaduan, TambahPengaduan } from "./Component/Modal"
+import { FilterPengaduan } from "./Component/Filter"
+import { Inertia } from "@inertiajs/inertia"
 
 export default function Pengaduan() {
-    const { pengaduan,
+    const { pengaduan: pengaduanFromServer,
         title,
-        total_pengaduan } = usePage().props
+        total_pengaduan,
+        total_pengaduan_filtered,
+        list_bulan,
+        list_tahun,
+        list_level } = usePage().props
     const { props } = usePage()
     const role = props.auth?.currentRole
     const user = props.auth?.user
     const [selected, setSelected] = useState(null)
-    const [showModal, setShowModal] = useState(false)
+    const [showModalDetail, setShowModalDetail] = useState(false)
+    const [showModalTambah, setShowModalTambah] = useState(false)
     const cardBodyRef = useRef(null)
     const [showButton, setShowButton] = useState(false)
+    const [pengaduanList, setPengaduanList] = useState(pengaduanFromServer)
     const { get, data, setData } = useForm({
-        komentar: '',
+        search: '',
+        tahun: '',
+        bulan: '',
+        kategori: ''
     })
     const modalDetail = (item) => {
         setSelected(item)
-        setShowModal(true)
+        setShowModalDetail(true)
     }
 
     const scrollToTop = () => {
@@ -34,6 +44,10 @@ export default function Pengaduan() {
             })
         }
     }
+
+    useEffect(() => {
+        setPengaduanList(pengaduanFromServer)
+    }, [pengaduanFromServer])
 
     useEffect(() => {
         const handleScroll = () => {
@@ -64,14 +78,13 @@ export default function Pengaduan() {
 
     const imgStyle = {
         width: "100%",
+        height: "100%",
         maxWidth: "350px",
         objectFit: "cover",
         marginBottom: "10px",
         borderRadius: "8px 8px 0 0",
-        display: "block"
+        display: "block",
     }
-
-
 
     const statusLabel = (status) => {
         switch (status) {
@@ -91,64 +104,35 @@ export default function Pengaduan() {
         }
     }
 
-    const cardClick = (card) => {
-        console.log(`Card ${card} ke klik`)
+    const filter = (e) => {
+        e.preventDefault()
+        get('/warga/pengaduan', { preserveState: true, preserveScroll: true })
+    }
+
+    const resetFilter = () => {
+        setData({
+            search: '',
+            tahun: '',
+            bulan: '',
+            kategori: ''
+        })
     }
 
     return (
         <Layout>
-            <Head title={`${title} ${role.length <= 2
+            <Head title={`${title} - ${role.length <= 2
                 ? role.toUpperCase()
                 : role.charAt(0).toUpperCase() + role.slice(1)}`} />
-            <form className="form-filter row g-2 px-3 pb-2 mb-2">
-                <div className="col-md-5 col-12">
-                    <div className="input-group input-group-sm">
-                        <input
-                            type="text"
-                            name="search"
-                            className="form-control"
-                            placeholder="Cari Pengaduan..."
-                        />
-                        <button className="btn-filter btn btn-primary" type="submit">
-                            <i className="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-                <div className="col-md-7 col-12 d-flex flex-wrap gap-2">
-                    <select
-                        name="tahun"
-                        className="form-select form-select-sm w-auto flex-fill my-2"
-                    >
-                        <option value="">Semua Tahun</option>
-                    </select>
-                    <select
-                        name="bulan"
-                        className="form-select form-select-sm w-auto flex-fill my-2"
-                    >
-                        <option value="">Semua Bulan</option>
-                    </select>
-                    <select
-                        name="kategori"
-                        className="form-select form-select-sm w-auto flex-fill my-2"
-                    >
-                        <option value="">Semua Pengaduan</option>
-                        <option value="saya">Pengaduan Saya</option>
-                        <option value="rt">Pengaduan RT</option>
-                        <option value="rw">Pengaduan RW</option>
-                    </select>
-                    <button type="submit" className="btn-input btn btn-sm btn-primary flex-fill" title="Filter">
-                        <i className="fas fa-filter"></i>
-                    </button>
-                    <Link href="/warga/pengaduan" className="btn-input btn btn-secondary btn-sm flex-fill my-auto" title="Reset">
-                        <i className="fas fa-undo"></i>
-                    </Link>
-                    <button type="button" className="btn-input btn btn-sm btn-success flex-fill">
-                        <i className="fas fa-plus mr-2"></i>
-                        Buat Pengaduan
-                    </button>
-                </div>
-
-            </form>
+            <FilterPengaduan
+                data={data}
+                setData={setData}
+                list_tahun={list_tahun}
+                list_bulan={list_bulan}
+                list_level={list_level}
+                filter={filter}
+                resetFilter={resetFilter}
+                tambahShow={() => setShowModalTambah(true)}
+            />
             <div className="d-flex justify-content-between align-items-center mb-3 mx-4 w-100">
                 <div className="d-flex align-items-center gap-1">
                     <i className="fas fa-paper-plane me-2 text-primary"></i>
@@ -158,19 +142,19 @@ export default function Pengaduan() {
                 </div>
 
                 <div className="text-muted">
-                    Menampilkan {pengaduan.to} dari total {pengaduan.total} data
+                    Menampilkan {total_pengaduan_filtered} dari total {total_pengaduan} data
                 </div>
             </div>
             <div className="col-12">
                 <div ref={cardBodyRef} className="card-body pengaduan">
-                    {pengaduan.length ? (
+                    {pengaduanList.length ? (
                         <>
                             <Masonry
                                 breakpointCols={breakpointColumnsObj}
                                 className="flex gap-4"
                                 columnClassName="space-y-4"
                             >
-                                {pengaduan.map((item, index) => (
+                                {pengaduanList.map((item, index) => (
                                     <div key={index} className="card-clickable" onClick={() => modalDetail(item)}>
                                         <FileDisplay
                                             filePath={`/storage/${item.file_path}`}
@@ -178,13 +162,19 @@ export default function Pengaduan() {
                                             displayStyle={imgStyle} />
                                         <h2 className="font-semibold text-lg mb-2 text-left mx-3">{item.judul}</h2>
                                         <div className="text-sm text-gray-500 mb-2 mx-3 flex justify-between">
-                                            <span><i className="fas fa-user"></i> {item.warga.nama}</span>
-                                            <span><i className="fas fa-clock"></i> {new Date(item.created_at).toLocaleDateString("id-ID", {
+                                            <span><i className="fas fa-user mr-1"></i>{item.warga.nama}</span>
+                                            <span><i className="fas fa-clock mr-1"></i>{new Date(item.created_at).toLocaleDateString("id-ID", {
                                                 day: "2-digit",
                                                 month: "short",
                                                 year: "numeric",
                                             })}</span>
                                         </div>
+                                        {item.nik_warga !== user.nik ? (
+                                            <div className="text-sm text-gray-500 mb-2 mx-3 flex justify-between">
+                                                <span><i className="fas fa-users mr-1"></i>RT {item.warga?.kartu_keluarga?.rukun_tetangga?.rt}/RW {item.warga?.kartu_keluarga?.rw?.nomor_rw}</span>
+                                            </div>
+                                        ) : ""
+                                        }
                                         <p className="isi-pengaduan text-gray-700 text-sm mb-3 mx-3 line-clamp-3">
                                             {item.isi.length > 100 ? item.isi.slice(0, 100) + "..." : item.isi}
                                         </p>
@@ -213,8 +203,30 @@ export default function Pengaduan() {
                 </div>
                 <DetailPengaduan
                     selectedData={selected}
-                    detailShow={showModal}
-                    onClose={() => setShowModal(false)}
+                    detailShow={showModalDetail}
+                    onClose={() => setShowModalDetail(false)}
+                    onUpdated={(updated) => {
+                        setSelected(updated)
+                        setPengaduanList(prev =>
+                            prev.map(item =>
+                                item.id === updated.id ? updated : item
+                            )
+                        )
+                    }}
+                    onDeleted={(deletedId) => {
+                        setPengaduanList(prev => prev.filter(item => item.id !== deletedId))
+                        setShowModalDetail(false)
+                    }}
+                    userData={user}
+                />
+                <TambahPengaduan
+                    tambahShow={showModalTambah}
+                    onClose={() => setShowModalTambah(false)}
+                    onAdded={(newPengaduan) => {
+                        setPengaduanList(prev => [newPengaduan, ...prev])
+                        setSelected(newPengaduan)
+                        setShowModalDetail(true)
+                    }}
                 />
             </div>
         </Layout>

@@ -11,13 +11,11 @@ export default function FilePreview({ filePath, judul, displayStyle }) {
 
     if (["pdf"].includes(extension)) {
         return (
-            <div
-                className="pdf-thumbnail-container cursor-pointer"
-                onClick={() => openDocumentModal(filePath, true)}
-            >
-                <i className="far fa-file-pdf pdf-icon text-red-600 text-3xl"></i>
-                <p className="pdf-filename">Lihat PDF</p>
-            </div>
+            <embed
+                src={`${filePath}#zoom=page-fit`}
+                type="application/pdf"
+                style={displayStyle}
+            />
         )
     }
 
@@ -26,7 +24,6 @@ export default function FilePreview({ filePath, judul, displayStyle }) {
             <img
                 src={filePath}
                 alt={`File ${judul ?? ""}`}
-                onClick={() => openDocumentModal(filePath, false)}
                 style={displayStyle}
             />
         )
@@ -50,7 +47,6 @@ export default function FilePreview({ filePath, judul, displayStyle }) {
         return (
             <div
                 className="doc-thumbnail-container cursor-pointer"
-                onClick={() => window.open(filePath, "_blank")}
                 style={displayStyle}
             >
                 <i className="far fa-file-word text-primary fa-3x"></i>
