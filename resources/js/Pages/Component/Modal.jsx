@@ -189,7 +189,63 @@ export function PasswordModal({ show }) {
 }
 
 export function DetailPengumuman({ selectedData, detailShow, onClose }) {
-    if (!detailShow || !selectedData) return null
+    const [komentar, setKomentar] = useState([])
+    const [newKomentar, setNewKomentar] = useState("")
+    const [captionExpanded, setCaptionExpanded] = useState(false)
+    const [commentExpanded, setCommentExpanded] = useState({})
+    const [isOverflowing, setIsOverflowing] = useState(false)
+    const textRef = useRef(null)
+    const komenRef = useRef(null)
+
+    const toggleExpand = (id) => {
+        setCommentExpanded((prev) => ({
+            ...prev,
+            [id]: !prev[id],
+        }))
+    }
+
+    useEffect(() => {
+        if (textRef.current) {
+            const el = textRef.current
+            setIsOverflowing(el.scrollHeight > el.clientHeight)
+        }
+    }, [selectedData])
+
+    useEffect(() => {
+        setKomentar(
+            (selectedData?.komen || []).sort(
+                (a, b) => new Date(b.created_at) - new Date(a.created_at)
+            )
+        )
+    }, [selectedData])
+
+    const handleSubmit = () => {
+        if (!newKomentar.trim()) return
+
+        axios.post(`/warga/pengumuman/${selectedData.id}/komentar`, {
+            isi_komentar: newKomentar
+        })
+            .then(res => {
+                setKomentar(prev => [res.data, ...prev])
+                setNewKomentar("")
+                if (komenRef.current) {
+                    komenRef.current.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    })
+                }
+            })
+            .catch(err => console.error(err))
+    }
+
+    useEffect(() => {
+        const handleEnter = (e) => {
+            if (e.key === "Enter") handleSubmit()
+        }
+        document.addEventListener("keydown", handleEnter)
+        return () => document.removeEventListener("keydown", handleEnter)
+    }, [newKomentar, selectedData])
+
     useEffect(() => {
         const handleEsc = (e) => {
             if (e.key === "Escape") onClose()
@@ -197,88 +253,157 @@ export function DetailPengumuman({ selectedData, detailShow, onClose }) {
         document.addEventListener("keydown", handleEsc)
         return () => document.removeEventListener("keydown", handleEsc)
     }, [onClose])
+
+    if (!detailShow || !selectedData) return null
+
+    const fileName = selectedData.dokumen_name?.toLowerCase() || ""
+
     return (
         <>
-            <div className="modal fade show" tabIndex="-1" style={{
-                display: "block",
-                backgroundColor: "rgba(0,0,0,0.5)"
-            }} onClick={onClose}>
+            <div
+                className="modal fade show"
+                tabIndex="-1"
+                style={{
+                    display: "block",
+                    backgroundColor: "rgba(0,0,0,0.5)"
+                }}
+                onClick={() => {
+                    onClose()
+                    setIsEdit(false)
+                }}
+            >
                 <div
                     className="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <div className="modal-content shadow-lg border-0">
-                        <div className="modal-header bg-success text-white">
-                            <h5 className="modal-title mb-0">Detail Pengumuman</h5>
-                            <button
-                                type="button"
-                                className="btn-close btn-close-white"
-                                onClick={onClose}
-                            />
-                        </div>
-                        <div className="modal-body px-4 pt-4 pb-3">
-                            <h4 className="fw-bold text-success mb-3">{selectedData.judul}</h4>
-                            <div className="d-flex flex-column align-items-start mb-3">
-                                <span className="text-muted mb-1">
-                                    <i className="bi bi-calendar me-1"></i>
-                                    {new Date(selectedData.tanggal).toLocaleDateString("id-ID", {
-                                        weekday: "long",
-                                        day: "numeric",
-                                        month: "long",
-                                        year: "numeric"
-                                    })}
-                                </span>
-
-                                {selectedData.id_rt ? (
-                                    <span className="text-dark fw-semibold">
-                                        <i className="me-1"></i>
-                                        {`Dari RT: ${selectedData.rukun_tetangga?.rt ?? '-'}`}
-                                    </span>
+                    <div className="modal-content modal-komen shadow-lg border-0">
+                        <div className="modal-body p-0">
+                            <div className="d-flex flex-row modal-komen">
+                                {selectedData?.dokumen_path ? (
+                                    <div className="flex-fill border-end bg-black d-flex align-items-center justify-content-center" style={{ maxWidth: "50%" }}>
+                                        {selectedData.dokumen_path ? (
+                                            <>
+                                                {fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png") || fileName.endsWith(".gif") ? (
+                                                    <img
+                                                        src={`/storage/${selectedData.dokumen_path}`}
+                                                        alt={selectedData.dokumen_name}
+                                                        className="img-fluid"
+                                                        style={{ maxHeight: "80vh", objectFit: "contain" }}
+                                                    />
+                                                ) : fileName.endsWith(".mp4") || fileName.endsWith(".webm") || fileName.endsWith(".avi") ? (
+                                                    <video
+                                                        src={`/storage/${selectedData.dokumen_path}`}
+                                                        controls
+                                                        autoPlay
+                                                        loop
+                                                        style={{ maxHeight: "80vh", objectFit: "contain", width: "100%" }}
+                                                    />
+                                                ) : fileName.endsWith(".pdf") ? (
+                                                    <embed
+                                                        src={`/storage/${selectedData.dokumen_path}`}
+                                                        type="application/pdf"
+                                                        className="pdf-preview"
+                                                    />
+                                                ) : (
+                                                    <div className="p-3 text-center text-white">
+                                                        <i className="bi bi-file-earmark-text fs-1"></i>
+                                                        <p className="mb-1">Dokumen Terlampir: {selectedData.dokumen_name}</p>
+                                                        <a href={`/storage/${selectedData.dokumen_path}`} target="_blank" className="btn btn-primary btn-sm">
+                                                            <i className="bi bi-download"></i> Unduh
+                                                        </a>
+                                                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className="text-muted">Tidak ada media</div>
+                                        )}
+                                    </div>
                                 ) : (
-                                    <span className="text-dark fw-semibold">
-                                        <i className="me-1"></i>
-                                        {`Dari RW: ${selectedData.rw?.nomor_rw ?? '-'}`}
-                                    </span>
+                                    ""
                                 )}
-                            </div>
+                                <div className="flex-fill d-flex flex-column" style={selectedData?.dokumen_path ? { maxWidth: "50%" } : { maxWidth: "100%" }}>
+                                    <div className="p-3 border-bottom caption-section">
+                                        <h5 className="fw-bold mb-1 mt-2">{selectedData.judul}</h5>
+                                        <small className="text-muted">
+                                            {selectedData.rukun_tetangga ? selectedData.rukun_tetangga.nama : selectedData.rw.nama_ketua_rw} • {" "}
+                                            {selectedData.rukun_tetangga
+                                                ? `${selectedData.rukun_tetangga.jabatan.nama_jabatan.charAt(0).toUpperCase()}${selectedData.rukun_tetangga.jabatan.nama_jabatan.slice(1)} RT`
+                                                : `${selectedData.rw.jabatan.nama_jabatan.charAt(0).toUpperCase()}${selectedData.rw.jabatan.nama_jabatan.slice(1)} RW`} •
+                                            RT {selectedData.rukun_tetangga?.rt}/{""}
+                                            RW {selectedData.rw?.nomor_rw}
+                                        </small>
+                                        <p
+                                            ref={textRef}
+                                            className={`mt-2 isi-pengumuman ${captionExpanded ? "expanded" : "clamped"}`}
+                                        >
+                                            {selectedData.isi}
+                                        </p>
+                                        {isOverflowing && (
+                                            <button
+                                                className="btn btn-link p-0 mt-1 text-decoration-none"
+                                                onClick={() => setCaptionExpanded(!captionExpanded)}
+                                            >
+                                                {captionExpanded ? "lebih sedikit" : "selengkapnya"}
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="flex-grow-1 overflow-auto p-3 komen-section" ref={komenRef}>
+                                        {komentar.length > 0 ? (
+                                            komentar.map((komen, i) => (
+                                                <div key={i} className="mb-3">{console.log(komen)}
+                                                    <small className="fw-bold"><strong>{komen.user?.nama}</strong></small>{" "}
+                                                    <small className="text-muted">
+                                                        {new Date(komen.created_at).toLocaleString("id-ID", {
+                                                            day: "2-digit",
+                                                            month: "short",
+                                                            year: "numeric",
+                                                            hour: "2-digit",
+                                                            minute: "2-digit",
+                                                        })}
+                                                    </small>
 
-                            <ul className="list-unstyled mb-3 small text-left">
-                                <li><strong>Kategori:</strong> <span className="ms-1">{selectedData.kategori ?? '-'}</span></li>
-                            </ul>
-                            <hr className="my-3" />
-                            <div className="mb-4">
-                                <h5 className="fw-bold text-success mb-2">Isi Pengumuman:</h5>
-                                <div className="border rounded bg-light p-3 text-left" style={{ lineHeight: "1.6" }}>
-                                    {selectedData.isi}
+                                                    <p
+                                                        className={`mb-2 komen ${commentExpanded[komen.id]
+                                                            ? "line-clamp-none"
+                                                            : "line-clamp-3"
+                                                            }`}
+                                                    >
+                                                        {komen.isi_komentar}
+                                                    </p>
+
+                                                    {komen.isi_komentar.length > 100 && (
+                                                        <button
+                                                            className="btn-expand btn btn-link p-0 text-decoration-none mt-0"
+                                                            onClick={() => toggleExpand(komen.id)}
+                                                        >
+                                                            {commentExpanded[komen.id]
+                                                                ? "lebih sedikit"
+                                                                : "selengkapnya"}
+                                                        </button>
+                                                    )}
+                                                    <hr className="my-0" />
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className="text-muted">Belum ada komentar</p>
+                                        )}
+                                    </div>
+                                    <div className="komen p-3 border-top">
+                                        <div className="input-group">
+                                            <input
+                                                type="text"
+                                                className="form-control komen"
+                                                placeholder="Tambah komentar..."
+                                                value={newKomentar}
+                                                onChange={(e) => setNewKomentar(e.target.value)}
+                                            />
+                                            <button className="btn btn-primary my-0" type="button" onClick={handleSubmit}>
+                                                <i className="far fa-paper-plane"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="mb-3">
-                                <h5 className="fw-bold text-success mb-2">Dokumen Terlampir:</h5>
-                                {selectedData.dokumen_path ? (
-                                    <div className="border rounded bg-light p-3 d-flex align-items-center justify-content-between">
-                                        <div>
-                                            <i className="bi bi-file-earmark-text me-2"></i>
-                                            <span>{selectedData.dokumen_name ?? 'Dokumen Terlampir'}</span>
-                                            <small className="text-muted d-block mt-1">Klik tombol di samping untuk melihat atau mengunduh.</small>
-                                        </div>
-                                        <a href={selectedData.dokumen_url} target="_blank" className="btn btn-primary btn-sm">
-                                            <i className="bi bi-download"></i> Unduh
-                                        </a>
-                                    </div>
-                                ) : (
-                                    <div className="text-muted p-3 border rounded bg-light">
-                                        Tidak ada dokumen yang terlampir.
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        <div className="modal-footer bg-light border-0 justify-content-end py-2">
-                            <button
-                                className="btn btn-outline-success"
-                                onClick={onClose}
-                            >
-                                Tutup
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -398,46 +523,50 @@ export function DetailPengaduan({ selectedData, detailShow, onClose, onUpdated, 
                                 />
                             ) : (
                                 <div className="d-flex flex-row modal-komen">
-                                    <div className="flex-fill border-end bg-black d-flex align-items-center justify-content-center" style={{ maxWidth: "50%" }}>
-                                        {selectedData.file_path ? (
-                                            <>
-                                                {fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png") || fileName.endsWith(".gif") ? (
-                                                    <img
-                                                        src={`/storage/${selectedData.file_path}`}
-                                                        alt={selectedData.file_name}
-                                                        className="img-fluid"
-                                                        style={{ maxHeight: "80vh", objectFit: "contain" }}
-                                                    />
-                                                ) : fileName.endsWith(".mp4") || fileName.endsWith(".webm") || fileName.endsWith(".avi") ? (
-                                                    <video
-                                                        src={`/storage/${selectedData.file_path}`}
-                                                        controls
-                                                        autoPlay
-                                                        loop
-                                                        className="w-100"
-                                                        style={{ maxHeight: "80vh", objectFit: "contain" }}
-                                                    />
-                                                ) : fileName.endsWith(".pdf") ? (
-                                                    <embed
-                                                        src={`/storage/${selectedData.file_path}`}
-                                                        type="application/pdf"
-                                                        className="pdf-preview"
-                                                    />
-                                                ) : (
-                                                    <div className="p-3 text-center text-white">
-                                                        <i className="bi bi-file-earmark-text fs-1"></i>
-                                                        <p className="mb-1">Dokumen Terlampir: {selectedData.file_name}</p>
-                                                        <a href={`/storage/${selectedData.file_path}`} target="_blank" className="btn btn-primary btn-sm">
-                                                            <i className="bi bi-download"></i> Unduh
-                                                        </a>
-                                                    </div>
-                                                )}
-                                            </>
-                                        ) : (
-                                            <div className="text-muted">Tidak ada media</div>
-                                        )}
-                                    </div>
-                                    <div className="flex-fill d-flex flex-column" style={{ maxWidth: "50%" }}>
+                                    {selectedData?.file_path ? (
+                                        <div className="flex-fill border-end bg-black d-flex align-items-center justify-content-center" style={{ maxWidth: "50%" }}>
+                                            {selectedData.file_path ? (
+                                                <>
+                                                    {fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png") || fileName.endsWith(".gif") ? (
+                                                        <img
+                                                            src={`/storage/${selectedData.file_path}`}
+                                                            alt={selectedData.file_name}
+                                                            className="img-fluid"
+                                                            style={{ maxHeight: "80vh", objectFit: "contain" }}
+                                                        />
+                                                    ) : fileName.endsWith(".mp4") || fileName.endsWith(".webm") || fileName.endsWith(".avi") ? (
+                                                        <video
+                                                            src={`/storage/${selectedData.file_path}`}
+                                                            controls
+                                                            autoPlay
+                                                            loop
+                                                            className="w-100"
+                                                            style={{ maxHeight: "80vh", objectFit: "contain" }}
+                                                        />
+                                                    ) : fileName.endsWith(".pdf") ? (
+                                                        <embed
+                                                            src={`/storage/${selectedData.file_path}`}
+                                                            type="application/pdf"
+                                                            className="pdf-preview"
+                                                        />
+                                                    ) : (
+                                                        <div className="p-3 text-center text-white">
+                                                            <i className="bi bi-file-earmark-text fs-1"></i>
+                                                            <p className="mb-1">Dokumen Terlampir: {selectedData.file_name}</p>
+                                                            <a href={`/storage/${selectedData.file_path}`} target="_blank" className="btn btn-primary btn-sm">
+                                                                <i className="bi bi-download"></i> Unduh
+                                                            </a>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <div className="text-muted">Tidak ada media</div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        ""
+                                    )}
+                                    <div className="flex-fill d-flex flex-column" style={selectedData?.file_path ? { maxWidth: "50%" } : { maxWidth: "100%" }}>
                                         <div className="p-3 border-bottom caption-section">
                                             {userData.nik === selectedData.nik_warga ? (
                                                 <div className="d-flex justify-between">
@@ -652,37 +781,39 @@ export function EditPengaduan({ toggle, onUpdated, onDeleted, pengaduan }) {
 
     return (
         <div className="d-flex flex-row modal-komen">
-            {/* Preview */}
-            <div className="flex-fill border-end bg-black d-flex align-items-center justify-content-center" style={{ maxWidth: "50%" }}>
-                <div id="preview">
-                    {previewUrl && previewUrl.type === "image" && (
-                        <img
-                            src={getFileUrl(previewUrl.src)}
-                            alt="Preview"
-                            style={{ maxHeight: "80vh", objectFit: "contain" }}
-                        />
-                    )}
-                    {previewUrl && previewUrl.type === "video" && (
-                        <video
-                            src={getFileUrl(previewUrl.src)}
-                            controls
-                            autoPlay
-                            loop
-                            style={{ maxHeight: "80vh", objectFit: "contain" }}
-                        />
-                    )}
-                    {previewUrl && previewUrl.type === "pdf" && (
-                        <embed
-                            src={getFileUrl(previewUrl.src)}
-                            type="application/pdf"
-                            className="pdf-preview"
-                        />
-                    )}
-                    {previewUrl && previewUrl.type === "other" && <p>File dipilih: {previewUrl.name}</p>}
+            {previewUrl ? (
+                <div className="flex-fill border-end bg-black d-flex align-items-center justify-content-center" style={{ maxWidth: "50%" }}>
+                    <div id="preview">
+                        {previewUrl && previewUrl.type === "image" && (
+                            <img
+                                src={getFileUrl(previewUrl.src)}
+                                alt="Preview"
+                                style={{ maxHeight: "80vh", objectFit: "contain" }}
+                            />
+                        )}
+                        {previewUrl && previewUrl.type === "video" && (
+                            <video
+                                src={getFileUrl(previewUrl.src)}
+                                controls
+                                autoPlay
+                                loop
+                                style={{ maxHeight: "80vh", objectFit: "contain" }}
+                            />
+                        )}
+                        {previewUrl && previewUrl.type === "pdf" && (
+                            <embed
+                                src={getFileUrl(previewUrl.src)}
+                                type="application/pdf"
+                                className="pdf-preview"
+                            />
+                        )}
+                        {previewUrl && previewUrl.type === "other" && <p>File dipilih: {previewUrl.name}</p>}
+                    </div>
                 </div>
-            </div>
-
-            <div className="flex-fill d-flex flex-column" style={{ maxWidth: "50%" }}>
+            ) : (
+                ""
+            )}
+            <div className="flex-fill d-flex flex-column" style={previewUrl ? { maxWidth: "50%" } : { maxWidth: "100%" }}>
                 <div className="p-3" style={{ height: "100%" }}>
                     <div className="d-flex justify-content-end w-100 mb-2">
                         <button
@@ -803,6 +934,7 @@ export function TambahPengaduan({ tambahShow, onClose, onAdded }) {
     }, { forceFormData: true })
 
     const [previewUrl, setPreviewUrl] = useState(null)
+    const fileInputRef = useRef(null)
 
     useEffect(() => {
         const handleEsc = (e) => {
@@ -851,6 +983,16 @@ export function TambahPengaduan({ tambahShow, onClose, onAdded }) {
             .then(res => {
                 if (onAdded) {
                     onAdded(res.data)
+                }
+                setData({
+                    judul: "",
+                    isi: "",
+                    level: "",
+                    file: null,
+                })
+                setPreviewUrl(null)
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = "" // Clear file input
                 }
                 onClose()
             })
@@ -964,6 +1106,7 @@ export function TambahPengaduan({ tambahShow, onClose, onAdded }) {
 
                                             <div className="mb-3">
                                                 <input
+                                                    ref={fileInputRef}
                                                     type="file"
                                                     id="fileInput"
                                                     name="file"

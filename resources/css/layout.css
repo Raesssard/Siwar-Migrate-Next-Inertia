@@ -199,7 +199,8 @@ div.card-body div.flex.gap-4 div.card-clickable div.text-sm {
     font-size: 0.75rem;
 }
 
-div.card-body.pengaduan {
+div.card-body.pengaduan,
+div.card-body.pengumuman {
     min-height: 63vh;
     max-height: 63vh;
     overflow-y: auto;
@@ -208,11 +209,14 @@ div.card-body.pengaduan {
     border-bottom: 1px solid lightgray;
 }
 
-div.card-body.pengaduan::-webkit-scrollbar {
+div.card-body.pengaduan::-webkit-scrollbar,
+div.card-body.pengumuman::-webkit-scrollbar {
     display: none;
 }
 
-div.card-body.pengaduan button.scroll-top-btn {
+div.card-body.pengaduan button.scroll-top-btn,
+div.card-body.pengumuman button.scroll-top-btn
+ {
     position: sticky;
     bottom: 10px;
     left: calc(100% - 70px);
@@ -223,7 +227,9 @@ div.card-body.pengaduan button.scroll-top-btn {
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-div.card-body.pengaduan button.scroll-top-btn.show {
+div.card-body.pengaduan button.scroll-top-btn.show,
+div.card-body.pengumuman button.scroll-top-btn.show
+ {
     opacity: 1;
     transform: translateY(0);
 }
@@ -303,6 +309,7 @@ div.komen-section::-webkit-scrollbar {
 }
 
 p.isi-pengaduan,
+p.isi-pengumuman,
 p.komen {
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -310,7 +317,8 @@ p.komen {
     white-space: normal;
 }
 
-p.isi-pengaduan.clamped {
+p.isi-pengaduan.clamped,
+p.isi-pengumuman.clamped {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -318,7 +326,8 @@ p.isi-pengaduan.clamped {
     text-overflow: ellipsis;
 }
 
-p.isi-pengaduan.expanded {
+p.isi-pengaduan.expanded,
+p.isi-pengumuman.expanded {
     display: block;
 }
 

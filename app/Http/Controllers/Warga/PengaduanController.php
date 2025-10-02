@@ -38,7 +38,9 @@ class PengaduanController extends Controller
         $bulan = $request->input('bulan');
 
         $pengaduanSaya = Pengaduan::query()
-            ->with([
+            ->whereHas('warga.kartuKeluarga', function ($q) use ($user) {
+                $q->where('id_rw', $user->id_rw);
+            })->with([
                 'warga',
                 'komentar.user',
                 'warga.kartuKeluarga.rukunTetangga',
@@ -64,7 +66,9 @@ class PengaduanController extends Controller
 
         $pengaduan = $pengaduanSaya->orderBy('created_at', 'desc')->get();
 
-        $total_pengaduan = Pengaduan::count();
+        $total_pengaduan = Pengaduan::whereHas('warga.kartuKeluarga', function ($q) use ($user) {
+            $q->where('id_rw', $user->id_rw);
+        })->count();
         $total_pengaduan_filtered = $pengaduan->count();
 
         $list_bulan = [

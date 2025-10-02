@@ -126,7 +126,7 @@ class Rt_pengumumanController extends Controller
             'isi' => 'required',
             'kategori' => 'required',
             'tanggal' => 'required|date',
-            'dokumen' => 'nullable|file|mimes:doc,docx,pdf|max:2048', // <-- Tambahkan validasi ini
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480', // <-- Tambahkan validasi ini
         ]);
 
         $dokumenPath = null;
@@ -243,7 +243,7 @@ class Rt_pengumumanController extends Controller
             'kategori' => 'required|string|max:255',
             'isi' => 'required|string',
             'tanggal' => 'required|date',
-            'dokumen' => 'nullable|file|mimes:doc,docx,pdf|max:2048', // <-- Tambahkan validasi ini
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480', // <-- Tambahkan validasi ini
             'hapus_dokumen_lama' => 'nullable|boolean', // <-- Tambahkan validasi ini untuk checkbox hapus
         ]);
 

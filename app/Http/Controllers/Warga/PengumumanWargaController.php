@@ -18,6 +18,7 @@ class PengumumanWargaController extends Controller
         $tahun = $request->input('tahun');
         $bulan = $request->input('bulan');
         $kategori = $request->input('kategori');
+        $level = $request->input('level');
 
         $userRtId = Auth::user()->warga->kartuKeluarga->rukunTetangga->id ?? null;
         $userRwId = Auth::user()->warga->kartuKeluarga->rw->id ?? null;
@@ -26,7 +27,14 @@ class PengumumanWargaController extends Controller
             abort(403, 'Anda tidak terhubung dengan RT atau RW manapun untuk melihat pengumuman. Harap hubungi administrator.');
         }
 
-        $baseQuery = Pengumuman::query()->with(['rukunTetangga', 'rw']);
+        $baseQuery = Pengumuman::query()->with([
+            'rukunTetangga',
+            'rw',
+            'komen',
+            'komen.user',
+            'rukunTetangga.jabatan',
+            'rw.jabatan',
+        ]);
 
         $baseQuery->where(function ($query) use ($userRtId, $userRwId) {
             if ($userRtId) {
@@ -44,7 +52,8 @@ class PengumumanWargaController extends Controller
             });
         });
 
-        $total_pengumuman = (clone $baseQuery)->count();
+        $total_pengumuman = Pengumuman::where('id_rw', $userRwId)->count();
+        $total_pengumuman_filtered = (clone $baseQuery)->count();
 
         $pengumuman = (clone $baseQuery)
             ->when($search, function ($query) use ($search) {
@@ -79,17 +88,15 @@ class PengumumanWargaController extends Controller
             ->when($tahun, fn($q) => $q->whereYear('tanggal', $tahun))
             ->when($bulan, fn($q) => $q->whereMonth('tanggal', $bulan))
             ->when($kategori, fn($q) => $q->where('kategori', $kategori))
+            ->when($level, function ($q) use ($request) {
+                if ($request->level === 'rt') {
+                    $q->whereNotNull('id_rt');
+                } else {
+                    $q->whereNull('id_rt');
+                }
+            })
             ->orderByDesc('tanggal')
-            ->paginate(5)
-            ->withQueryString()
-            ->through(function ($item) {
-                $item->tanggal = \Carbon\Carbon::parse($item->tanggal)
-                    ->translatedFormat('d F Y'); // contoh: 24 September 2025
-                $item->dokumen_url = $item->dokumen_path
-                    ? Storage::url($item->dokumen_path)
-                    : null;
-                return $item;
-            });
+            ->get();
 
         $daftar_tahun = (clone $baseQuery)
             ->selectRaw('YEAR(tanggal) as tahun')
@@ -137,6 +144,7 @@ class PengumumanWargaController extends Controller
             'daftar_tahun' => $daftar_tahun,
             'daftar_kategori' => $daftar_kategori,
             'total_pengumuman' => $total_pengumuman,
+            'total_pengumuman_filtered' => $total_pengumuman_filtered,
             'list_bulan' => $list_bulan,
         ]);
     }
@@ -160,5 +168,23 @@ class PengumumanWargaController extends Controller
             'minggu' => 'Sunday',
         ];
         return $map[strtolower($indoDay)] ?? null;
+    }
+
+    public function komen(Request $request, $id)
+    {
+        $request->validate([
+            'isi_komentar' => 'required|string|max:255'
+        ]);
+
+        $pengaduan = Pengumuman::findOrFail($id);
+
+        $komentar = $pengaduan->komen()->create([
+            'user_id' => Auth::id(),
+            'isi_komentar' => $request->isi_komentar
+        ]);
+
+        $komentar->load('user'); // biar ada nama user
+
+        return response()->json($komentar);
     }
 }
