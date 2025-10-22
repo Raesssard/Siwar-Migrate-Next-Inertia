@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Rw;
+
 use App\Http\Controllers\Controller;
 
 use App\Models\Pengumuman;
@@ -16,11 +17,16 @@ class PengumumanController extends Controller
      * Display a listing of the resource.
      */
 
-private function indoToEnglishDay(string $day): string
+    private function indoToEnglishDay(string $day): string
     {
         $map = [
-            'senin' => 'Monday', 'selasa' => 'Tuesday', 'rabu' => 'Wednesday',
-            'kamis' => 'Thursday', 'jumat' => 'Friday', 'sabtu' => 'Saturday', 'minggu' => 'Sunday',
+            'senin' => 'Monday',
+            'selasa' => 'Tuesday',
+            'rabu' => 'Wednesday',
+            'kamis' => 'Thursday',
+            'jumat' => 'Friday',
+            'sabtu' => 'Saturday',
+            'minggu' => 'Sunday',
         ];
         return $map[strtolower($day)] ?? '';
     }
@@ -44,9 +50,9 @@ private function indoToEnglishDay(string $day): string
             $query = Pengumuman::where('id_rw', $userRwId)->whereNull('id_rt');
 
             $query->when($search, function ($query, $search) {
-                $query->where(function($q) use ($search) {
+                $query->where(function ($q) use ($search) {
                     $q->where('judul', 'like', '%' . $search . '%')
-                      ->orWhere('isi', 'like', '%' . $search . '%');
+                        ->orWhere('isi', 'like', '%' . $search . '%');
                 });
                 $searchLower = strtolower($search);
                 $hariList = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'];
@@ -61,11 +67,11 @@ private function indoToEnglishDay(string $day): string
             });
 
             $pengumuman = $query->when($tahun, fn($q) => $q->whereYear('tanggal', $tahun))
-                                ->when($bulan, fn($q) => $q->whereMonth('tanggal', $bulan))
-                                ->when($kategori, fn($q) => $q->where('kategori', $kategori))
-                                ->orderBy('created_at', 'desc')
-                                ->paginate(5)
-                                ->withQueryString();
+                ->when($bulan, fn($q) => $q->whereMonth('tanggal', $bulan))
+                ->when($kategori, fn($q) => $q->where('kategori', $kategori))
+                ->orderBy('created_at', 'desc')
+                ->paginate(5)
+                ->withQueryString();
 
             $total_pengumuman = Pengumuman::where('id_rw', $userRwId)->whereNull('id_rt')->count();
         }
@@ -108,45 +114,45 @@ private function indoToEnglishDay(string $day): string
     /**
      * Store a newly created resource in storage.
      */
-     public function store(Request $request)
-{
-    $request->validate([
-        'judul' => 'required|string|max:255',
-        'isi' => 'required|string',
-        'kategori' => 'required|string|max:255',
-        'tanggal' => 'required|date',
-        // Validasi mimes dan max Anda di sini
-        'dokumen' => 'nullable|file|mimes:doc,docx,pdf|max:2048',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'isi' => 'required|string',
+            'kategori' => 'required|string|max:255',
+            'tanggal' => 'required|date',
+            // Validasi mimes dan max Anda di sini
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480',
+        ]);
 
-    $dokumenPath = null;
-    $dokumenName = null;
+        $dokumenPath = null;
+        $dokumenName = null;
 
-    if ($request->hasFile('dokumen')) {
-        $file = $request->file('dokumen');
-        $dokumenName = time() . '_' . $file->getClientOriginalName();
+        if ($request->hasFile('dokumen')) {
+            $file = $request->file('dokumen');
+            $dokumenName = time() . '_' . $file->getClientOriginalName();
 
-        // Pastikan Anda menyimpan ke disk 'public'
-        // 'documents/pengumuman' adalah folder di dalam 'storage/app/public'
-        $dokumenPath = $file->storeAs('documents/pengumuman', $dokumenName, 'public');
-                                                              // ^^^^^^ Ini yang penting!
+            // Pastikan Anda menyimpan ke disk 'public'
+            // 'documents/pengumuman' adalah folder di dalam 'storage/app/public'
+            $dokumenPath = $file->storeAs('documents/pengumuman', $dokumenName, 'public');
+            // ^^^^^^ Ini yang penting!
+        }
+        $id_rw = Auth::check() ? Auth::user()->id_rw : null;
+
+        // Buat data pengumuman
+        Pengumuman::create([
+            'judul' => $request->judul,
+            'isi' => $request->isi,
+            'kategori' => $request->kategori,
+            'tanggal' => $request->tanggal,
+            'dokumen_path' => $dokumenPath, // Akan menjadi 'documents/pengumuman/namafile.docx'
+            'dokumen_name' => $dokumenName,
+            'id_rw' => $id_rw, // Pastikan id_rw diisi dari user yang sedang login
+        ]);
+
+        // ... redirect atau response lainnya
+        return redirect()->route('rw.pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan!');
     }
-    $id_rw = Auth::check() ? Auth::user()->id_rw : null;
-
-    // Buat data pengumuman
-    Pengumuman::create([
-        'judul' => $request->judul,
-        'isi' => $request->isi,
-        'kategori' => $request->kategori,
-        'tanggal' => $request->tanggal,
-        'dokumen_path' => $dokumenPath, // Akan menjadi 'documents/pengumuman/namafile.docx'
-        'dokumen_name' => $dokumenName,
-        'id_rw' => $id_rw, // Pastikan id_rw diisi dari user yang sedang login
-    ]);
-
-    // ... redirect atau response lainnya
-    return redirect()->route('rw.pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan!');
-}
 
     /**
      * Display the specified resource.
@@ -171,7 +177,7 @@ private function indoToEnglishDay(string $day): string
     /**
      * Update the specified resource in storage.
      */
-      public function update(Request $request, string $id)
+    public function update(Request $request, string $id)
     {
         // Temukan pengumuman berdasarkan ID
         $pengumuman = Pengumuman::findOrFail($id);
@@ -182,16 +188,8 @@ private function indoToEnglishDay(string $day): string
             'kategori' => 'nullable|string|max:255',
             'isi' => 'required|string',
             'tanggal' => 'required|date',
-            'dokumen' => 'nullable|file|mimes:doc,docx,pdf|max:2048',
+            'dokumen' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,mov,avi,mkv,doc,docx,pdf|max:20480',
             'hapus_dokumen_lama' => 'nullable|boolean', // Untuk checkbox hapus dokumen
-        ], [
-            'judul.required' => 'Judul pengumuman harus diisi.',
-            'isi.required' => 'Isi pengumuman harus diisi.',
-            'tanggal.required' => 'Tanggal pengumuman harus diisi.',
-            'kategori.string' => 'Kategori harus berupa teks.',
-            'dokumen.file' => 'Input dokumen harus berupa file.',
-            'dokumen.mimes' => 'Format dokumen harus .doc, .docx, atau .pdf.',
-            'dokumen.max' => 'Ukuran dokumen tidak boleh melebihi 2MB.',
         ]);
 
         $dataToUpdate = [

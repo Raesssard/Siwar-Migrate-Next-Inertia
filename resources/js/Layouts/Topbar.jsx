@@ -49,7 +49,7 @@ export default function Topbar({ modalShow }) {
                 judulHalaman = "Pengumuman";
                 break;
             case "tagihan":
-                judulHalaman = "Tagihan Saya";
+                judulHalaman = "Tagihan";
                 break;
             case "iuran":
                 judulHalaman = "Iuran";
@@ -58,7 +58,7 @@ export default function Topbar({ modalShow }) {
                 judulHalaman = "Transaksi";
                 break;
             case "pengaduan":
-                judulHalaman = "Pengaduan Saya";
+                judulHalaman = "Pengaduan";
                 break;
             default:
                 judulHalaman =

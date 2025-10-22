@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pengumuman extends Model
 {
@@ -19,6 +20,11 @@ class Pengumuman extends Model
         'dokumen_path', // Tambahkan ini
         'dokumen_name', // Tambahkan ini
     ];
+
+    public function komen(): HasMany
+    {
+        return $this->hasMany(PengumumanKomentar::class, 'pengumuman_id', 'id');
+    }
 
     public function rukunTetangga()
     {

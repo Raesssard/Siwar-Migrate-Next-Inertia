@@ -12,22 +12,6 @@ class Warga extends Model
     protected $primaryKey = 'nik';
     public $incrementing = false;
     protected $keyType = 'string';
-    // sembunyiin data sensitifnya pake protected $hidden
-    protected $hidden = [
-        'nik',
-        'no_kk',
-        'no_paspor',
-        'tgl_terbit_paspor',
-        'tgl_berakhir_paspor',
-        'no_kitas',
-        'tgl_terbit_kitas',
-        'tgl_berakhir_kitas',
-        'no_kitap',
-        'tgl_terbit_kitap',
-        'tgl_berakhir_kitap',
-        'alamat_asal',
-        'alamat_domisili',
-    ];
     protected $fillable = [
         'nik',
         'no_kk',

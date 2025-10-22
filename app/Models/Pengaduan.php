@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 class Pengaduan extends Model
 {
     protected $table = 'pengaduan';
-    protected $hidden = ['nik_warga'];
     protected $fillable = [
         'nik_warga',
         'judul',

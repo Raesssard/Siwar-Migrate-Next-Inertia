@@ -222,6 +222,10 @@ Route::prefix('warga')->as('warga.')->middleware(['auth', 'role:warga'])->group(
     Route::get('tagihan', [WargatagihanController::class, 'index'])->name('tagihan');
     Route::get('transaksi', [WargatransaksiController::class, 'index'])->name('transaksi');
     Route::resource('pengaduan', PengaduanController::class);
+    Route::post('/pengaduan/{id}/komentar', [PengaduanController::class, 'komen'])
+        ->name('pengaduan.komentar.komen');
+    Route::post('/pengumuman/{id}/komentar', [PengumumanWargaController::class, 'komen'])
+        ->name('pengumuman.komentar.komen');
 });
 
 /*

@@ -51,8 +51,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'nik',    // biar nik sama no_kk gk muncul
-        'no_kk',
     ];
 
     protected function casts(): array

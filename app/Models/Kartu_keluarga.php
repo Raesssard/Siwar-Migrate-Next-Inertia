@@ -12,11 +12,6 @@ class Kartu_keluarga extends Model
     protected $primaryKey = 'no_kk';
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $hidden = [
-        'no_kk',
-        'no_registrasi',
-        'alamat',
-    ];
     protected $fillable = [
         'no_kk',
         'no_registrasi',
